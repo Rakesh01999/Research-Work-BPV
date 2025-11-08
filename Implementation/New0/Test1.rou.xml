@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<routes xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="http://sumo.dlr.de/xsd/routes_file.xsd">
+
+    <!-- Vehicle Types -->
+    <vType id="car" accel="1.0" decel="5.0" sigma="0.5"
+           length="5.0" maxSpeed="20" color="1,0,0"/>
+    <vType id="bus" accel="0.8" decel="4.0" sigma="0.5"
+           length="12.0" maxSpeed="15" color="0,0,1"/>
+
+    <!-- Routes -->
+    <!-- Route 1: from Node7 → Node5 → Node6 → Node2 → Node3 → Node4 → Node13 -->
+    <route id="r1" edges="E17 E11 E10 E1 E2 E3"/>
+
+    <!-- Route 2: from Node7 → Node8 → Node12 → Node13 -->
+    <route id="r2" edges="E18 E14 E15"/>
+
+    <!-- Route 3: from Node2 (back edge -E0) → Node1 → Node5 → Node6 → Node2 → Node3 → Node4 → Node13 -->
+    <route id="r3" edges="-E0 E4 E11 E10 E1 E2 E3"/>
+
+    <!-- Vehicles -->
+    <vehicle id="veh0" type="car" route="r1" depart="0"/>
+    <vehicle id="veh1" type="car" route="r1" depart="5"/>
+    <vehicle id="veh2" type="bus" route="r2" depart="10"/>
+    <vehicle id="veh3" type="car" route="r2" depart="15"/>
+    <vehicle id="veh4" type="car" route="r3" depart="20"/>
+    <vehicle id="veh5" type="bus" route="r3" depart="25"/>
+
+</routes>

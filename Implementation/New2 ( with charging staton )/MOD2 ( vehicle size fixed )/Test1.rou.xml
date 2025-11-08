@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<routes xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="http://sumo.dlr.de/xsd/routes_file.xsd">
+
+    <!-- ELECTRIC VEHICLE TYPES ONLY (Bangladesh Context - Fixed Sizes) -->
+    
+    <!-- Electric Motorcycle/Easy Bike (Most common) -->
+    <vType id="easyBike" accel="1.2" decel="4.5" sigma="0.8" 
+           length="2.2" width="0.8" height="1.4" maxSpeed="19.44" color="0.9,0.3,0.9" 
+           minGap="0.5" tau="0.9" speedFactor="1.05" 
+           emissionClass="Energy/unknown"/>
+    
+    <!-- Electric Rickshaw (E-Rickshaw) -->
+    <vType id="eRickshaw" accel="0.6" decel="2.5" sigma="0.7" 
+           length="2.5" width="1.0" height="1.8" maxSpeed="6.94" color="0,0.9,0" 
+           minGap="0.8" tau="2.0" speedFactor="0.8" 
+           emissionClass="Energy/unknown"/>
+    
+    <!-- Electric Van (Battery Van) -->
+    <vType id="eVan" accel="0.7" decel="3.2" sigma="0.6" 
+           length="2.5" width="2.0" height="2.2" maxSpeed="13.89" color="0.2,0.6,0.9" 
+           minGap="2.0" tau="1.8" speedFactor="0.85" 
+           emissionClass="Energy/unknown"/>
+
+    <!-- ROUTES (Based on network topology) -->
+    
+    <!-- Main arterial route: N1 → N2 → N3 → N4 → N13 -->
+    <route id="main_arterial" edges="E0 E1 E2 E3"/>
+    
+    <!-- Alternative route via N5: N1 → N5 → N6 → N2 → N3 → N4 → N13 -->
+    <route id="via_n5_route" edges="E4 E11 E10 E1 E2 E3"/>
+    
+    <!-- Southern route via N7-N8: N1 → N5 → N7 → N8 → N12 → N13 -->
+    <route id="southern_route" edges="E4 E17 E18 E14 E15"/>
+
+    <!-- ELECTRIC VEHICLES WITH PROPER SIZING -->
+    
+    <!-- Electric Easy Bikes (60% of traffic in Bangladesh) -->
+    <vehicle id="easybike01" type="easyBike" route="main_arterial" depart="0" departLane="0"/>
+    <vehicle id="easybike02" type="easyBike" route="via_n5_route" depart="2" departLane="0"/>
+    <vehicle id="easybike03" type="easyBike" route="main_arterial" depart="4" departLane="0"/>
+    <vehicle id="easybike04" type="easyBike" route="via_n5_route" depart="6" departLane="0"/>
+    <vehicle id="easybike05" type="easyBike" route="southern_route" depart="8" departLane="0"/>
+    <vehicle id="easybike06" type="easyBike" route="main_arterial" depart="10" departLane="0"/>
+    <vehicle id="easybike07" type="easyBike" route="via_n5_route" depart="12" departLane="0"/>
+    <vehicle id="easybike08" type="easyBike" route="main_arterial" depart="14" departLane="0"/>
+    <vehicle id="easybike09" type="easyBike" route="southern_route" depart="16" departLane="0"/>
+    <vehicle id="easybike10" type="easyBike" route="via_n5_route" depart="18" departLane="0"/>
+    
+    <!-- Electric Rickshaws (E-Rickshaw) -->
+    <vehicle id="erickshaw01" type="eRickshaw" route="via_n5_route" depart="5" departLane="0"/>
+    <vehicle id="erickshaw02" type="eRickshaw" route="via_n5_route" depart="15" departLane="0"/>
+    <vehicle id="erickshaw03" type="eRickshaw" route="main_arterial" depart="25" departLane="0"/>
+    <vehicle id="erickshaw04" type="eRickshaw" route="via_n5_route" depart="35" departLane="0"/>
+    <vehicle id="erickshaw05" type="eRickshaw" route="southern_route" depart="45" departLane="0"/>
+    
+    <!-- Electric Vans -->
+    <vehicle id="evan01" type="eVan" route="main_arterial" depart="20" departLane="0"/>
+    <vehicle id="evan02" type="eVan" route="southern_route" depart="30" departLane="0"/>
+    <vehicle id="evan03" type="eVan" route="via_n5_route" depart="40" departLane="0"/>
+    <vehicle id="evan04" type="eVan" route="main_arterial" depart="50" departLane="0"/>
+
+    <!-- CONTINUOUS ELECTRIC TRAFFIC FLOWS -->
+    
+    <!-- Electric easy bike flows (dominant in Bangladesh) -->
+    <flow id="easybike_flow_main" type="easyBike" route="main_arterial" 
+          begin="65" end="100" vehsPerHour="180" departLane="0"/>
+    <flow id="easybike_flow_alt" type="easyBike" route="via_n5_route" 
+          begin="65" end="100" vehsPerHour="120" departLane="0"/>
+    <flow id="easybike_flow_south" type="easyBike" route="southern_route" 
+          begin="65" end="100" vehsPerHour="90" departLane="0"/>
+    
+    <!-- Electric rickshaw flows -->
+    <flow id="erickshaw_flow_main" type="eRickshaw" route="main_arterial" 
+          begin="70" end="100" vehsPerHour="60" departLane="0"/>
+    <flow id="erickshaw_flow_alt" type="eRickshaw" route="via_n5_route" 
+          begin="70" end="100" vehsPerHour="80" departLane="0"/>
+    <flow id="erickshaw_flow_south" type="eRickshaw" route="southern_route" 
+          begin="70" end="100" vehsPerHour="40" departLane="0"/>
+    
+    <!-- Electric van flows -->
+    <flow id="evan_flow_main" type="eVan" route="main_arterial" 
+          begin="75" end="100" vehsPerHour="35" departLane="0"/>
+    <flow id="evan_flow_alt" type="eVan" route="via_n5_route" 
+          begin="75" end="100" vehsPerHour="25" departLane="0"/>
+    <flow id="evan_flow_south" type="eVan" route="southern_route" 
+          begin="85" end="100" vehsPerHour="30" departLane="0"/>
+
+</routes>

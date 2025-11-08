@@ -1,0 +1,32 @@
+Not checked
+
+From drive's Summary :
+
+
+Done-28.Electric Vehicle Charging Load Demand Forecasting in Different Functional Areas of Cities with Weighted UKF
+
+
+Done-29.Electric Vehicle Charging Demand Prediction Model Based on Spatiotemporal Attention Mechanism
+
+
+Done-30.Enhanced Load Forecasting for EV Charging Stations Using Hybrid Random Forest-Convolutional Neural Network
+
+
+Done-31.Optimizing EV Charging with Integrated Renewables: Cloud-Based Forecasting for Eco-Sustainability
+
+
+
+Done-35.Spatial-Temporal Load Forecasting of EV Charging Stations Based on Graph Neural Network
+
+
+
+
+
+
+
+
+
+
+
+
+

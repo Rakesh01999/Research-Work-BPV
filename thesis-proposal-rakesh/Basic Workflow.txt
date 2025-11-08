@@ -1,0 +1,91 @@
+First Step (Bangladesh Perspective):
+Collect/Generate localized data related to BPV usage in cities like Khulna or Jashore.
+Since real data may be scarce, begin by:
+
+Using OpenStreetMap (OSM) for road networks
+
+Simulating BPV movement and charging scenarios in SUMO
+
+Integrating weather and time patterns to create synthetic datasets for model input
+
+🔧 Step-by-Step Thesis Workflow
+🔹 Phase 1: Literature Review & Tool Setup (Month 1–3)
+Study recent works on BPV load forecasting and smart grid applications
+
+Identify modeling gaps relevant to Bangladesh
+
+Set up tools: Python, SUMO, OSM, Jupyter, Google Colab, KNIME, OMNeT++
+
+🔹 Phase 2: Data Collection & Preprocessing (Month 3–4)
+Use OSM to extract city-level maps for SUMO
+
+Simulate BPV traffic in SUMO using TraCI framework
+
+Add synthetic data for:
+
+Traffic flow
+
+Charging station locations
+
+Temperature/weather (using APIs or historical data)
+
+Preprocess data using Pandas/KNIME
+
+🔹 Phase 3: Baseline Model Development (Month 5–6)
+Train baseline models:
+
+Linear Regression
+
+Random Forest
+
+XGBoost
+
+Evaluate using RMSE, MAE, MAPE
+
+Tune hyperparameters
+
+🔹 Phase 4: Advanced Modeling (Month 7–8)
+Implement time-series models:
+
+LSTM
+
+Quantile LSTM (for uncertainty range)
+
+Compare performance with baseline models
+
+🔹 Phase 5: Scenario Simulation & Visualization (Month 9)
+Simulate real-world conditions:
+
+Rush hours vs. non-rush hours
+
+Weekdays vs. weekends
+
+Peak summer vs. winter loads
+
+Use Streamlit for interactive visualization
+
+Show heatmaps or line graphs of load forecasts
+
+🔹 Phase 6: Report Writing & Result Analysis (Month 10–11)
+Analyze model accuracy
+
+Interpret results in context of Bangladesh’s power grid
+
+Discuss limitations and future improvements
+
+Draft the full thesis with figures/tables
+
+🔹 Phase 7: Supervisor Review & Final Submission (Month 12)
+Revise based on supervisor’s feedback
+
+Finalize formatting, references, diagrams
+
+Submit hard copy and soft copy
+
+🔁 Tools Summary (At Each Stage)
+Stage	Key Tools
+Literature & Setup	Google Scholar, Colab, KNIME, SUMO, OMNeT++
+Data Collection	SUMO, OSM, Python (requests/pandas), APIs
+Modeling	Scikit-learn, XGBoost, TensorFlow/Keras
+Evaluation & Visualization	Matplotlib, Seaborn, Streamlit
+Documentation	MS Word / LaTeX, Zotero / Mendeley (for refs)

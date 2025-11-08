@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<routes xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="http://sumo.dlr.de/xsd/routes_file.xsd">
+
+    <!-- Vehicle Types -->
+    <vType id="car" accel="1.0" decel="5.0" sigma="0.5"
+           length="5.0" maxSpeed="20" color="1,0,0"/>
+    <vType id="bus" accel="0.8" decel="4.0" sigma="0.5"
+           length="12.0" maxSpeed="15" color="0,0,1"/>
+    <vType id="eCar" accel="1.0" decel="5.0" sigma="0.5" 
+           length="5.0" maxSpeed="20" color="0,1,0"/>
+    <vType id="eBus" accel="0.8" decel="4.0" sigma="0.5" 
+           length="12.0" maxSpeed="15" color="0,0.7,1"/>
+
+    <!-- ROUTES FROM NODE1 TO NODE13 -->
+    
+    <!-- Route 1: Direct path Node1 → Node2 → Node3 → Node4 → Node13 -->
+    <route id="route_direct" edges="E0 E1 E2 E3"/>
+    
+    <!-- Route 2: Via Node5 path Node1 → Node5 → Node6 → Node2 → Node3 → Node4 → Node13 -->
+    <route id="route_via_node5" edges="E4 E11 E10 E1 E2 E3"/>
+
+    <!-- VEHICLES WITH MIXED CONVENTIONAL AND ELECTRIC -->
+    
+    <vehicle id="car01" type="car" route="route_direct" depart="0"/>
+    <vehicle id="ecar01" type="eCar" route="route_via_node5" depart="5"/>
+    <vehicle id="car02" type="car" route="route_direct" depart="10"/>
+    <vehicle id="ecar02" type="eCar" route="route_via_node5" depart="15"/>
+    <vehicle id="car03" type="car" route="route_direct" depart="20"/>
+    <vehicle id="ecar03" type="eCar" route="route_via_node5" depart="25"/>
+    <vehicle id="car04" type="car" route="route_direct" depart="30"/>
+    <vehicle id="ecar04" type="eCar" route="route_via_node5" depart="35"/>
+    <vehicle id="car05" type="car" route="route_direct" depart="40"/>
+    <vehicle id="ecar05" type="eCar" route="route_via_node5" depart="45"/>
+    
+    <vehicle id="bus01" type="bus" route="route_direct" depart="50"/>
+    <vehicle id="ebus01" type="eBus" route="route_via_node5" depart="55"/>
+    <vehicle id="bus02" type="bus" route="route_direct" depart="60"/>
+    <vehicle id="ebus02" type="eBus" route="route_via_node5" depart="65"/>
+    <vehicle id="bus03" type="bus" route="route_direct" depart="70"/>
+    <vehicle id="ebus03" type="eBus" route="route_via_node5" depart="75"/>
+    
+    <vehicle id="mix01" type="car" route="route_direct" depart="80"/>
+    <vehicle id="emix01" type="eCar" route="route_via_node5" depart="85"/>
+    <vehicle id="mix02" type="eBus" route="route_via_node5" depart="90"/>
+    <vehicle id="mix03" type="bus" route="route_direct" depart="95"/>
+
+    <!-- CONTINUOUS TRAFFIC FLOWS WITH ELECTRIC VEHICLES -->
+    <flow id="flow_conventional_cars" type="car" route="route_direct" 
+          begin="100" end="200" vehsPerHour="60"/>
+    <flow id="flow_electric_cars" type="eCar" route="route_via_node5" 
+          begin="100" end="200" vehsPerHour="60"/>
+    <flow id="flow_conventional_buses" type="bus" route="route_direct" 
+          begin="100" end="200" vehsPerHour="30"/>
+    <flow id="flow_electric_buses" type="eBus" route="route_via_node5" 
+          begin="100" end="200" vehsPerHour="30"/>
+
+</routes>

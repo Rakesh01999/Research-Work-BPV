@@ -1,0 +1,57 @@
+The latest data on vehicle accidents in Bangladesh, including information about electric vehicles (EVs), battery-powered vehicles (BPVs), and electric three-wheelers (E3Ws).Let me search for more specific data about electric vehicles and battery-powered vehicles in road accidents:Let me search for the most recent 2025 data:Based on my search results, I've found the most recent data on vehicle accidents in Bangladesh. Here's what I found for **2024-2025**:
+
+## **Latest Road Accident Data for Bangladesh (2024)**
+
+There are two major reports with slightly different figures for 2024:
+
+### **Report 1: Road Safety Foundation (January 2025)**
+Bangladesh witnessed 7,294 deaths and 12,019 injuries from 6,927 road accidents in 2024.
+
+**Fatalities by Vehicle Type (2024):**
+- Motorcycles: 2,609 deaths (35.76%)
+- Three-wheelers (all types): 1,392 deaths (19.08%)
+- Goods-carrying vehicles (trucks/pickups): 499 deaths (6.84%)
+- Buses: 369 deaths (5.05%)
+- Private cars/microbuses/SUVs: 363 deaths (4.97%)
+- Locally made vehicles (Nasimon/Korimon): 331 deaths (4.53%)
+- Bicycles and rickshaws: 196 deaths (2.68%)
+
+### **Report 2: Passenger Welfare Association of Bangladesh (January 2025)**
+8,543 people were killed in road accidents in 2024.
+
+**Vehicle Involvement in Accidents (2024):**
+- Motorcycles: 36.62% of total accidents (2,329 accidents), causing 30.08% of deaths (2,570 people)
+- Trucks, pickups, and covered vans: 23.33%
+- **Battery-powered rickshaws and easy bikes: 16.56%**
+- Buses: 13.45%
+- Improvised three-wheelers (Nasimon, Karimon, Mahindra, Laguna): 7.37%
+- Cars, jeeps, microbuses: 6.21%
+- CNG-powered auto-rickshaws: 5.57%
+
+## **Electric Vehicles/Battery-Powered Vehicles (EVs/BPVs/E3Ws) Data:**
+
+### **2024 Data:**
+- Battery-powered rickshaws and easy bikes were involved in 16.56% of crashes in 2024
+
+### **2023 Data:**
+- Battery-operated rickshaws and easybikes accounted for 14.47% of vehicles involved in accidents in 2023
+
+### **Historical Context:**
+- In 2019, 8% of fatal accidents in Dhaka district were caused by E3Ws, which was 13% for the whole country
+- Approximately 1 million electric three-wheelers were operating in Bangladesh, projected to grow to 2.5 million by 2025
+
+## **Key Observations:**
+
+1. **Motorcycles remain the leading cause** of road accidents, accounting for over 35% of both accidents and fatalities
+
+2. **Battery-powered vehicles (BPVs/E3Ws) have increased significantly**, rising from 14.47% in 2023 to 16.56% in 2024
+
+3. **Three-wheelers combined** (including battery-powered, CNG, and improvised types) account for approximately 29-39% of all accidents
+
+4. The vehicle fleet in Bangladesh is dominated by two-wheelers at 72%, followed by light-duty vehicles at 14%, and three-wheelers at 6%
+
+The data shows that electric/battery-powered three-wheelers are becoming an increasingly significant factor in road accidents, though they still trail behind motorcycles as the primary vehicle type involved in crashes.
+
+
+
+===> Based on it, can you make me a proper organized, oriented graphs/chart like the attached photo . 

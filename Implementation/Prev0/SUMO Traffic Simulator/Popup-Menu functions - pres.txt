@@ -1,0 +1,4 @@
+doc link:https://sumo.dlr.de/docs/Netedit/index.html
+
+during creating edge -> right click -> edge operations =>
+

@@ -1,0 +1,22 @@
+Artificial Neural Network (ANN)
+
+Gated Recurrent Unit (GRU) is a type of Recurrent Neural Network (RNN) 
+
+ReLU (Rectified Linear Unit)
+
+Support Vector Regression (SVR)
+
+non-linear relationship extraction (NRE)
+
+augmented reality (AR)
+
+CDA-LSTM, or Convolutional Dual-Attention LSTM
+
+wavelet packet decomposition combined with Long Short-Term Memory networks (WPD-LSTM) 
+
+
+
+Link:https://ev.caltech.edu/dataset
+
+Link:https://ev.caltech.edu/assets/pub/ACN_Data_Analysis_and_Applications.pdf
+

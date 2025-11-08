@@ -1,0 +1,645 @@
+1.Rupsha Ferry Ghat -> Rupsha Traffic More -> Rupsha Bus Terminal --> Notun Bazar Launch Ghat -> 1 No Custom Ghat  -> Circuit House Playground -> Inter Distric Bus Station -> Power House More -> Shib Bari -> Joraget More -> Boyra College More bus stop -> Goalkhali Bus stand -> Noyabati More  -> Notun Rasta 
+
+Rupsha Ferry Ghat => 
+
+Rupsha Ferry Ghat - 0 km 
+
+Rupsha Traffic Mor - 0.3 km
+
+Rupsha Bus terminal - 0.51 km
+
+Notun Bazar Launch Ghat - 1.1 km
+
+Khulna Panchagar Stone - 1.3 km
+
+1 No Custom Ghat - 1.9 km
+
+Circuit House Playground - 2.6 km
+
+Inter District Bus Station - 3.3 km
+
+Power House More - 3.4 km
+
+Shib Bari More - 4.1 km
+
+Joraget More - 4.8 km
+
+Boyra College Mor Bus Stop - 6.2 km 
+
+Goalkhali Bus Stand - 8.2 km
+
+Noyabati More - 8.6 km
+
+Notun Rasta More - 9.2 km
+
+
+
+
+2.Rupsha Ferry Ghat -> Rupsha Traffic More -> Koylaghata Baptist Church -> Rupsha Stand & Gagan Babu rd -> Koilaghat Kalibari Temple -> Mollah Tower -> Divisional Statistics Office  -> Circuit House Playground -> Inter Distric Bus Station -> Power House More -> Shib Bari -> Joraget More -> Boyra College More bus stop -> Goalkhali Bus stand -> Noyabati More  -> Notun Rasta 
+
+
+Rupsha Ferry Ghat => 
+
+Rupsha Ferry Ghat - 0 km 
+
+Rupsha Traffic Mor - 0.3 km
+
+Koylaghata Baptist Church - 0.7 km
+
+Rupsha stand & Gagan Babu rd - 1.0 km
+
+Koilaghat Kalibari temple - 1.3 km
+
+Mollah Tower - 1.4 km
+
+Divisional Statistics Office - 1.6 km
+
+Circuit House Playground - 2.2 km
+
+Inter District Bus Station - 3.4 km
+
+Power House More - 3.6 km
+
+Shib Bari More - 4.3 km
+
+Joraget More - 5 km
+
+Boyra College Mor Bus Stop - 6.4 km 
+
+Goalkhali Bus Stand - 8.4 km
+
+Noyabati More - 8.8 km
+
+Notun Rasta More - 9.4 km
+
+
+
+
+
+
+3.Rupsha Ferry Ghat -> Royal More --> Inter District Bus Station --> Shib Bari  --> Boyra College Mor Bus Stop  --> Notun Rasta More     
+
+
+
+Rupsha Ferry Ghat => 
+
+Rupsha Ferry Ghat - 0 km 
+
+Rupsha Traffic Mor - 0.3 km
+
+KCC Women's College - 0.65 km
+
+Tootpara Model Govt Primary School - 1.6 km
+
+Royal More - 2.3 km
+
+Inter District Bus Station - 3.2 km
+
+Power House More - 3.4 km
+
+Shib Bari More - 4.6 km
+
+Joraget More - 5.3 km
+
+Boyra College Mor Bus Stop - 6.7 km 
+
+Goalkhali Bus Stand - 8.7 km
+
+Noyabati More - 9.1 km
+
+Notun Rasta More - 9.7 km
+
+
+
+4.Rupsha Ferry Ghat -> Royal More ---> 7 rasta more --> Khulna Rent a car --> Shib Bari more --> Boyra College Mor Bus Stop  --> Notun Rasta More     
+
+
+
+Rupsha Ferry Ghat => 
+
+Rupsha Ferry Ghat - 0 km 
+
+Rupsha Traffic Mor - 0.3 km
+
+KCC Women's College - 0.65 km
+
+Royal More - 2.3 km
+
+7 Rasta More - 2.4 km
+
+Shib Bari More - 4.1 km
+
+Joraget More - 5 km
+
+Boyra College More Bus stop - 6.4 km
+
+Goalkhali Bus Stand - 8.3 km
+
+Noyabati More - 8.7 km
+
+Notun Rasta More - 9.4 km
+
+
+
+
+
+
+5.Rupsha Ferry Ghat -> Royal More ---> 7 rasta more --> Khulna Rent a car/ Moylapota By pass --> Amtolar more --> Gollamari bus stop --> Sonadanga Bus Terminal --> Shib Bari  --> Boyra College Mor Bus Stop  --> Notun Rasta More     
+
+
+
+Rupsha Ferry Ghat => 
+
+Rupsha Ferry Ghat - 0 km 
+
+Rupsha Traffic Mor - 0.3 km
+
+KCC Women's College - 0.65 km
+
+Royal More - 2.3 km
+
+7 Rasta More - 2.4 km
+
+Khulna Rent a car/ Moylapota By pass more -2.9 km
+
+Amtolar More - 3.5 km
+
+Gollamari More - 5.4 km
+
+Sonadanga Bus Terminal - 7.3 km
+
+Shib Bari More - 8.5 km
+
+Joraget More - 9.2 km
+
+Boyra College More Bus stop - 10.6 km
+
+Goalkhali Bus Stand - 12.6 km
+
+Noyabati More - 13 km
+
+Notun Rasta More - 13.7 km
+
+
+
+
+
+6.Rupsha Ferry Ghat -> Royal More ---> 7 rasta more --> Khulna Rent a car --> Moylapota more --> Amtolar more --> Gollamari bus stop --> Sonadanga Bus Terminal --> Boyra Bus Stand --> Boyra College Mor Bus Stop  --> Notun Rasta More     
+
+
+
+Rupsha Ferry Ghat => 
+
+Rupsha Ferry Ghat - 0 km 
+
+Rupsha Traffic Mor - 0.3 km
+
+KCC Women's College - 0.65 km
+
+Royal More - 2.3 km
+
+7 Rasta More - 2.4 km
+
+Khulna Rent a car/ Moylapota By pass more -2.9 km
+
+Amtolar More - 3.5 km
+
+Gollamari More - 5.4 km
+
+Sonadanga Bus Terminal - 7.3 km
+
+Boyra Bus stand - 9.8 km
+
+Boyra College More Bus stop - 10.7 km
+
+Goalkhali Bus Stand - 12.7 km
+
+Noyabati More - 13.1 km
+
+Notun Rasta More - 13.7 km
+
+
+
+
+
+
+7.Rupsha Ferry Ghat -> Royal More ---> 7 rasta more --> Khulna Rent a car --> Moylapota more --> Amtolar more --> Gollamari bus stop --> Sonadanga Bus Terminal --> Boyra Bus Stand --> BN College rd more --> Goalkhali more  --> Notun Rasta More     
+
+
+
+
+Rupsha Ferry Ghat => 
+
+Rupsha Ferry Ghat - 0 km 
+
+Rupsha Traffic Mor - 0.3 km
+
+KCC Women's College - 0.65 km
+
+Royal More - 2.3 km
+
+7 Rasta More - 2.4 km
+
+Khulna Rent a car/ Moylapota By pass more -2.9 km
+
+Amtolar More - 3.5 km
+
+Gollamari More - 5.4 km
+
+Sonadanga Bus Terminal - 7.3 km
+
+Boyra Bus stand - 9.8 km
+
+BN College Rd (Abu Naser Bus Stop)More - 11.7 km
+
+Goalkhali Bus Stand - 12.5 km
+
+Noyabati More - 12.9 km
+
+Notun Rasta More - 13.6 km
+
+
+
+
+
+8.Rupsha Ferry Ghat -> Royal More ---> 7 rasta more --> Khulna Rent a car --> Moylapota more --> Amtolar more --> Gollamari bus stop --> Sonadanga Bus Terminal --> Boyra Bus Stand --> BN College rd more --> Kobir Bottola More  --> Notun Rasta More     
+
+
+
+
+Rupsha Ferry Ghat => 
+
+Rupsha Ferry Ghat - 0 km 
+
+Rupsha Traffic Mor - 0.3 km
+
+KCC Women's College - 0.65 km
+
+Royal More - 2.3 km
+
+7 Rasta More - 2.4 km
+
+Khulna Rent a car/ Moylapota By pass more -2.9 km
+
+Amtolar More - 3.5 km
+
+Gollamari More - 5.4 km
+
+Sonadanga Bus Terminal - 7.3 km
+
+Boyra Bus stand - 10 km
+
+BN College Rd (Abu Naser Bus Stop)More - 11.9 km
+
+Kobir Bottola - 13.1 km
+
+Notun Rasta More - 13.5 km
+
+
+
+
+
+9.Rupsha Ferry Ghat -> Royal More ---> 7 rasta more --> Khulna Rent a car --> Moylapota more --> Shib Bari --> Joraget Kacha Bazar --> Navy Check Post --> Polytechnic Institute Field --> Polytechnic Institute Field --> Jebunnesa Nursing Home and Diagnostic complex --> Goalkhali Graveyard back rd --> Railway Krocing --> Goalkhali Bus Stand -->  Noyabati More --> Notun Rasta More 
+
+
+
+
+Rupsha Ferry Ghat => 
+
+Rupsha Ferry Ghat - 0 km 
+
+Rupsha Traffic Mor - 0.3 km
+
+KCC Women's College - 0.65 km
+
+Royal More - 2.3 km
+
+7 Rasta More - 2.4 km
+
+Khulna Rent a car/ Moylapota By pass more -2.9 km
+
+Shib Bari - 4.2 km 
+
+Joraget More(Plane) --> 4.9 km
+
+Bondor Gate - 5.6 km
+
+Navy Check Post - 6.6 km
+
+Polytechnic Institute Field - 6.9 km
+
+NSI Metro Bhabon - 7.4 km
+
+Graveyard Back Road - 8.1 km 
+
+Goalkhali Bus stand - 8.3 km
+
+Noyabati More -8.7 km
+
+Notun Rasta More - 9.4 km
+
+
+
+
+
+10.Rupsha Ferry Ghat -> Royal More ---> 7 rasta more --> Khulna Rent a car --> Moylapota more --> Shib Bari --> Joraget -->  Navy Check Post --> Polytechnic Institute Field --> Jebunnesa Nursing Home and Diagnostic complex --> NSI (Metro Bhabon) --> Baitul Mamur Jame Masjid --> Katha Pre-Cadet Scl --> Councilor Office --> Pegion Hut --> TL Customer Care --> Notun Rasta More
+
+
+
+
+Rupsha Ferry Ghat => 
+
+Rupsha Ferry Ghat - 0 km 
+
+Rupsha Traffic Mor - 0.3 km
+
+KCC Women's College - 0.65 km
+
+Royal More - 2.3 km
+
+7 Rasta More - 2.4 km
+
+Khulna Rent a car/ Moylapota By pass more -2.9 km
+
+Shib Bari - 4.2 km 
+
+Joraget More(Plane) --> 4.9 km
+
+Bondor Gate - 5.6 km
+
+Navy Check Post - 6.6 km
+
+Polytechnic Institute Field - 6.9 km
+
+NSI Metro Bhabon - 7.4 km
+
+Baitul Mamun Jame Masjid - 8.4 km
+
+Katha Pre-Cadet School - 8.7 km
+
+Councilor office (Wrd10) - 9 km
+
+Pegion Hut - 9.2 km
+
+TL Customer Care - 9.7 km
+
+Notun Rasta More - 9.9 km
+
+
+
+
+
+11.Rupsha Ferry Ghat -> Royal More ---> 7 rasta more --> Khulna Rent a car --> Moylapota more --> Shib Bari --> Joraget -->  Navy Check Post --> Polytechnic Institute Field --> NSI (Metro Bhabon) --> SR Computer --> Rose Mary Kindergarten --> Sagar Party Centre --> Park er More(Wonderland) --> Peoples Square --> TL Customer Care --> Notun Rasta More
+
+
+
+
+Rupsha Ferry Ghat => 
+
+Rupsha Ferry Ghat - 0 km 
+
+Rupsha Traffic Mor - 0.3 km
+
+KCC Women's College - 0.65 km
+
+Royal More - 2.3 km
+
+7 Rasta More - 2.4 km
+
+Khulna Rent a car/ Moylapota By pass more -2.9 km
+
+Shib Bari - 4.2 km 
+
+Joraget More(Plane) --> 4.9 km
+
+Bondor Gate - 5.6 km
+
+Navy Check Post - 6.6 km
+
+Polytechnic Institute Field - 6.9 km
+
+NSI Metro Bhabon - 7.4 km
+
+SR Computer - 7.7 km
+
+Rose Mary Kindergarten - 7.8 km
+
+Sagar Party Centre - 8.2 km
+
+Park er More - 8.6 km
+
+People's Square- 9.1 km
+
+TL Customer Care - 10.1 km
+
+Notun Rasta More - 10.2 km
+
+
+
+
+
+
+12.Rupsha Ferry Ghat -> Royal More ---> 7 rasta more --> Khulna Rent a car --> Moylapota more --> Shib Bari --> Joraget -->  Navy Check Post --> Polytechnic Institute Field --> NSI (Metro Bhabon) --> Khalishpur Police Station --> Kohinur More --> 12 No. Commissioner Office --> T & T More --> Platinum 2nd Gate --> Smrity Kindergarten School --> People's Square --> TL Customer Care --> Notun Rasta More
+
+
+
+
+
+Rupsha Ferry Ghat => 
+
+Rupsha Ferry Ghat - 0 km 
+
+Rupsha Traffic Mor - 0.3 km
+
+KCC Women's College - 0.65 km
+
+Royal More - 2.3 km
+
+7 Rasta More - 2.4 km
+
+Khulna Rent a car/ Moylapota By pass more -2.9 km
+
+Shib Bari - 4.2 km 
+
+Joraget More(Plane) --> 4.9 km
+
+Bondor Gate - 5.6 km
+
+Navy Check Post - 6.6 km
+
+Polytechnic Institute Field - 6.9 km
+
+NSI Metro Bhabon - 7.4 km
+
+Khalishpur Police Station - 15.7 km
+
+T&T More - 16.7 km
+
+Platinum 2nd Gate - 16.9 km
+
+Smrity Kindergarten - 17.2 km
+
+People's Square- 17.6 km
+
+TL Customer Care - 18.5 km
+
+Notun Rasta More - 18.7 km
+
+
+
+
+13.Rupsha Ferry Ghat -> Royal More ---> 7 rasta more --> Khulna Rent a car --> Moylapota more --> Shib Bari --> Joraget -->  Navy Check Post --> Polytechnic Institute Field --> IDEB Bhabon --> City Polytechniq Institute field --> Alomnagar More --> Newsprint Masjid --> Bonoful Bus counter --> BRTC --> People's Square --> TL Customer Care --> Notun Rasta More
+
+
+
+
+
+Rupsha Ferry Ghat => 
+
+Rupsha Ferry Ghat - 0 km 
+
+Rupsha Traffic Mor - 0.3 km
+
+KCC Women's College - 0.65 km
+
+Royal More - 2.3 km
+
+7 Rasta More - 2.4 km
+
+Khulna Rent a car/ Moylapota By pass more -2.9 km
+
+Shib Bari - 4.2 km 
+
+Joraget More(Plane) --> 4.9 km
+
+Bondor Gate - 5.6 km
+
+Navy Check Post - 6.6 km
+
+Polytechnic Institute Field - 6.9 km
+
+IDEB Bhabon - 7.1 km
+
+City Polytechnic Institute Gubtola More - 7.4 km
+
+Alomnagar More - 7.8 km
+
+Newsprint Masjid - 8.2 km
+
+Bonoful Bus Counter - 8.8 km
+
+BRTC - 9.4 km
+
+People's Square- 9.8 km
+
+TL Customer Care - 10.7 km
+
+Notun Rasta More - 10.9 km
+
+
+
+
+14.Rupsha Ferry Ghat --> Coca-Cola --> Shipyard Scl & Clg --> Shipyard Main Gate --> BWD board --> Rayhan Bekari(Rupsha Bridge approaches & Shipyard more) --> Harintana Gate --> Zero Point --> Mostofar More --> Boyra Bus Stand --> Notun Rasta 
+
+
+
+Rupsha Ferry Ghat => 
+
+Rupsha Ferry Ghat - 0 km
+
+Coca-Cola - 0.85 km
+
+Shipyard Scl & Clg - 1.7 km
+
+Labanchara Bazar - 2.4 km
+
+Bangladesh Water Dev board - 2.9 km
+
+Rayhan Bekari, Rupsha Bridge Approach Rd - 3.3 km
+
+Harintana Gate - 4.5 km
+
+Zero Point - 9.7 km
+
+Mostofar More  - 13.6 km
+
+Boyra Bus Stand - 16.2 km
+
+Notun Rasta -19 km
+
+
+
+
+15.Rupsha Ferry Ghat --> Coca-Cola --> Shipyard Scl & Clg --> Shipyard Main Gate --> BWD board --> Rayhan Bekari(Rupsha Bridge approaches & Shipyard more) --> Harintana Gate --> Zero Point --> Gollamari Bus stop --> Sonadanga Bus terminal --> Boyra Bus Stand --> Notun Rasta 
+
+
+
+
+Rupsha Ferry Ghat => 
+
+Rupsha Ferry Ghat - 0 km
+
+Coca-Cola - 0.85 km
+
+Shipyard Scl & Clg - 1.7 km
+
+Labanchara Bazar - 2.4 km
+
+Bangladesh Water Dev board - 2.9 km
+
+Rayhan Bekari, Rupsha Bridge Approach Rd - 3.3 km
+
+Harintana Gate - 4.5 km
+
+Zero Point - 9.7 km
+
+
+Gollamari Bus Stop - 11 km
+
+Sonadanga Bus terminal - 11.6 km
+
+Boyra Bus Stand - 14.2 km
+
+Notun Rasta -17.5 km
+
+
+
+
+
+
+16.Rupsha Ferry Ghat --> Coca-Cola --> Shipyard Scl & Clg --> Shipyard Main Gate --> BWD board --> Rayhan Bekari(Rupsha Bridge approaches & Shipyard more) --> Harintana Gate --> Zero Point --> Gollamari Bus stop --> Moylapota More --> Shib Bari More --> Boyra College More --> Notun Rasta 
+
+
+
+
+Rupsha Ferry Ghat => 
+
+Rupsha Ferry Ghat - 0 km
+
+Coca-Cola - 0.85 km
+
+Shipyard Scl & Clg - 1.7 km
+
+Labanchara Bazar - 2.4 km
+
+Bangladesh Water Dev board - 2.9 km
+
+Rayhan Bekari, Rupsha Bridge Approach Rd - 3.3 km
+
+Harintana Gate - 4.5 km
+
+Zero Point - 9.7 km
+
+Gollamari Bus stop - 11 km
+
+Moylapota More - 13.6 km 
+
+Shib Bari More - 14.8 km
+
+Boyra College More - 17.1 km
+
+Notun Rasta - 20.2 km
+
+
+
+

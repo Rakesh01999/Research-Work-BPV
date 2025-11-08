@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- generated on 2025-09-22 05:42:04 by Eclipse SUMO GUI Version 1.22.0
+<sumoConfiguration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://sumo.dlr.de/xsd/sumoConfiguration.xsd">
+
+    <input>
+        <net-file value="D:\JUST\Thesis\Implementation\New2 ( with charging staton )\MOD2 ( vehicle size fixed )\Test1.net.xml"/>
+        <route-files value="D:\JUST\Thesis\Implementation\New2 ( with charging staton )\MOD2 ( vehicle size fixed )\Test1.rou.xml"/>
+        <additional-files value="D:\JUST\Thesis\Implementation\New2 ( with charging staton )\MOD2 ( vehicle size fixed )\Test1.add.xml"/>
+    </input>
+
+    <output>
+        <emission-output value="D:\JUST\Thesis\Implementation\New2 ( with charging staton )\MOD2 ( vehicle size fixed )\emissions.xml"/>
+        <battery-output value="D:\JUST\Thesis\Implementation\New2 ( with charging staton )\MOD2 ( vehicle size fixed )\battery.xml"/>
+        <chargingstations-output value="D:\JUST\Thesis\Implementation\New2 ( with charging staton )\MOD2 ( vehicle size fixed )\chargingstations.xml"/>
+        <fcd-output value="D:\JUST\Thesis\Implementation\New2 ( with charging staton )\MOD2 ( vehicle size fixed )\fcd.xml"/>
+        <summary-output value="D:\JUST\Thesis\Implementation\New2 ( with charging staton )\MOD2 ( vehicle size fixed )\summary.xml"/>
+        <tripinfo-output value="D:\JUST\Thesis\Implementation\New2 ( with charging staton )\MOD2 ( vehicle size fixed )\tripinfo.xml"/>
+    </output>
+
+    <time>
+        <begin value="0"/>
+        <end value="200"/>
+        <step-length value="0.5"/>
+    </time>
+
+    <processing>
+        <lateral-resolution value="0.8"/>
+        <ignore-junction-blocker value="5"/>
+        <ignore-route-errors value="true"/>
+        <collision.check-junctions value="true"/>
+    </processing>
+
+    <report>
+        <verbose value="true"/>
+        <duration-log.statistics value="true"/>
+    </report>
+
+    <emissions>
+        <device.emissions.probability value="1"/>
+    </emissions>
+
+    <battery>
+        <device.battery.probability value="1"/>
+    </battery>
+
+</sumoConfiguration>
+-->
+
+<tripinfos xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://sumo.dlr.de/xsd/tripinfo_file.xsd">
+    <tripinfo id="easybike01" depart="0.00" departLane="E0_0" departPos="2.30" departPosLat="0.00" departSpeed="0.00" departDelay="0.00" arrival="257.00" arrivalLane="E3_0" arrivalPos="1300.00" arrivalPosLat="0.00" arrivalSpeed="15.37" duration="257.00" routeLength="3061.58" waitingTime="22.00" waitingCount="1" stopTime="0.00" timeLoss="57.81" rerouteNo="0" devices="tripinfo_easybike01 emissions_easybike01 battery_easybike01 fcd_easybike01" vType="easyBike" speedFactor="1.11" vaporized="">
+        <emissions CO_abs="0" CO2_abs="0" HC_abs="0" PMx_abs="0" NOx_abs="0" fuel_abs="0" electricity_abs="340.811450"/>
+        <battery depleted="0" actualBatteryCapacity="17159.19" totalEnergyConsumed="580.05" totalEnergyRegenerated="239.23"/>
+    </tripinfo>
+    <tripinfo id="easybike03" depart="4.00" departLane="E0_0" departPos="2.30" departPosLat="0.00" departSpeed="0.00" departDelay="0.00" arrival="264.50" arrivalLane="E3_0" arrivalPos="1300.00" arrivalPosLat="0.00" arrivalSpeed="14.53" duration="260.50" routeLength="3061.58" waitingTime="14.50" waitingCount="1" stopTime="0.00" timeLoss="51.97" rerouteNo="0" devices="tripinfo_easybike03 emissions_easybike03 battery_easybike03 fcd_easybike03" vType="easyBike" speedFactor="1.06" vaporized="">
+        <emissions CO_abs="0" CO2_abs="0" HC_abs="0" PMx_abs="0" NOx_abs="0" fuel_abs="0" electricity_abs="326.746177"/>
+        <battery depleted="0" actualBatteryCapacity="17173.25" totalEnergyConsumed="575.76" totalEnergyRegenerated="249.01"/>
+    </tripinfo>
+    <tripinfo id="easybike06" depart="10.00" departLane="E0_0" departPos="2.30" departPosLat="0.00" departSpeed="0.00" departDelay="0.00" arrival="295.00" arrivalLane="E3_0" arrivalPos="1300.00" arrivalPosLat="0.00" arrivalSpeed="11.86" duration="285.00" routeLength="3061.58" waitingTime="0.00" waitingCount="0" stopTime="0.00" timeLoss="34.28" rerouteNo="0" devices="tripinfo_easybike06 emissions_easybike06 battery_easybike06 fcd_easybike06" vType="easyBike" speedFactor="0.88" vaporized="">
+        <emissions CO_abs="0" CO2_abs="0" HC_abs="0" PMx_abs="0" NOx_abs="0" fuel_abs="0" electricity_abs="280.360944"/>
+        <battery depleted="0" actualBatteryCapacity="17219.64" totalEnergyConsumed="505.80" totalEnergyRegenerated="225.44"/>
+    </tripinfo>
+    <tripinfo id="easybike08" depart="14.00" departLane="E0_0" departPos="2.30" departPosLat="0.00" departSpeed="0.00" departDelay="0.00" arrival="296.00" arrivalLane="E3_0" arrivalPos="1300.00" arrivalPosLat="0.00" arrivalSpeed="12.82" duration="282.00" routeLength="3061.58" waitingTime="0.00" waitingCount="0" stopTime="0.00" timeLoss="46.13" rerouteNo="0" devices="tripinfo_easybike08 emissions_easybike08 battery_easybike08 fcd_easybike08" vType="easyBike" speedFactor="0.94" vaporized="">
+        <emissions CO_abs="0" CO2_abs="0" HC_abs="0" PMx_abs="0" NOx_abs="0" fuel_abs="0" electricity_abs="289.759660"/>
+        <battery depleted="0" actualBatteryCapacity="17210.24" totalEnergyConsumed="525.75" totalEnergyRegenerated="235.99"/>
+    </tripinfo>
+    <tripinfo id="easybike02" depart="2.00" departLane="E4_0" departPos="2.30" departPosLat="0.00" departSpeed="0.00" departDelay="0.00" arrival="328.00" arrivalLane="E3_0" arrivalPos="1300.00" arrivalPosLat="0.00" arrivalSpeed="13.70" duration="326.00" routeLength="3449.11" waitingTime="35.50" waitingCount="1" stopTime="0.00" timeLoss="72.49" rerouteNo="0" devices="tripinfo_easybike02 emissions_easybike02 battery_easybike02 fcd_easybike02" vType="easyBike" speedFactor="0.99" vaporized="">
+        <emissions CO_abs="0" CO2_abs="0" HC_abs="0" PMx_abs="0" NOx_abs="0" fuel_abs="0" electricity_abs="345.727029"/>
+        <battery depleted="0" actualBatteryCapacity="17154.27" totalEnergyConsumed="657.32" totalEnergyRegenerated="311.59"/>
+    </tripinfo>
+    <tripinfo id="easybike04" depart="6.00" departLane="E4_0" departPos="2.30" departPosLat="0.00" departSpeed="0.00" departDelay="0.00" arrival="329.00" arrivalLane="E3_0" arrivalPos="1300.00" arrivalPosLat="0.00" arrivalSpeed="14.04" duration="323.00" routeLength="3449.11" waitingTime="33.00" waitingCount="1" stopTime="0.00" timeLoss="101.43" rerouteNo="0" devices="tripinfo_easybike04 emissions_easybike04 battery_easybike04 fcd_easybike04" vType="easyBike" speedFactor="1.13" vaporized="">
+        <emissions CO_abs="0" CO2_abs="0" HC_abs="0" PMx_abs="0" NOx_abs="0" fuel_abs="0" electricity_abs="354.858591"/>
+        <battery depleted="0" actualBatteryCapacity="17145.14" totalEnergyConsumed="725.82" totalEnergyRegenerated="370.96"/>
+    </tripinfo>
+    <tripinfo id="erickshaw03" depart="25.00" departLane="E0_0" departPos="2.60" departPosLat="0.00" departSpeed="0.00" departDelay="0.00" arrival="516.00" arrivalLane="E3_0" arrivalPos="1300.00" arrivalPosLat="0.00" arrivalSpeed="6.87" duration="491.00" routeLength="3061.28" waitingTime="21.00" waitingCount="1" stopTime="0.00" timeLoss="49.08" rerouteNo="0" devices="tripinfo_erickshaw03 emissions_erickshaw03 battery_erickshaw03 fcd_erickshaw03" vType="eRickshaw" speedFactor="0.89" vaporized="">
+        <emissions CO_abs="0" CO2_abs="0" HC_abs="0" PMx_abs="0" NOx_abs="0" fuel_abs="0" electricity_abs="208.646059"/>
+        <battery depleted="0" actualBatteryCapacity="17291.35" totalEnergyConsumed="271.27" totalEnergyRegenerated="62.62"/>
+    </tripinfo>
+    <tripinfo id="evan04" depart="50.00" departLane="E0_0" departPos="2.60" departPosLat="0.00" departSpeed="0.00" departDelay="0.00" arrival="518.00" arrivalLane="E3_0" arrivalPos="1300.00" arrivalPosLat="0.00" arrivalSpeed="7.86" duration="468.00" routeLength="3061.28" waitingTime="15.50" waitingCount="1" stopTime="0.00" timeLoss="241.10" rerouteNo="0" devices="tripinfo_evan04 emissions_evan04 battery_evan04 fcd_evan04" vType="eVan" speedFactor="0.97" vaporized="">
+        <emissions CO_abs="0" CO2_abs="0" HC_abs="0" PMx_abs="0" NOx_abs="0" fuel_abs="0" electricity_abs="218.926881"/>
+        <battery depleted="0" actualBatteryCapacity="17281.07" totalEnergyConsumed="315.28" totalEnergyRegenerated="96.35"/>
+    </tripinfo>
+    <tripinfo id="easybike_flow_main.0" depart="65.00" departLane="E0_0" departPos="2.30" departPosLat="0.00" departSpeed="0.00" departDelay="0.00" arrival="519.50" arrivalLane="E3_0" arrivalPos="1300.00" arrivalPosLat="0.00" arrivalSpeed="8.54" duration="454.50" routeLength="3061.58" waitingTime="14.50" waitingCount="1" stopTime="0.00" timeLoss="242.33" rerouteNo="0" devices="tripinfo_easybike_flow_main.0 emissions_easybike_flow_main.0 battery_easybike_flow_main.0 fcd_easybike_flow_main.0" vType="easyBike" speedFactor="1.04" vaporized="">
+        <emissions CO_abs="0" CO2_abs="0" HC_abs="0" PMx_abs="0" NOx_abs="0" fuel_abs="0" electricity_abs="234.898119"/>
+        <battery depleted="0" actualBatteryCapacity="17265.10" totalEnergyConsumed="471.24" totalEnergyRegenerated="236.34"/>
+    </tripinfo>
+    <tripinfo id="erickshaw_flow_main.0" depart="70.00" departLane="E0_0" departPos="2.60" departPosLat="0.00" departSpeed="0.00" departDelay="0.00" arrival="532.00" arrivalLane="E3_0" arrivalPos="1300.00" arrivalPosLat="0.00" arrivalSpeed="6.76" duration="462.00" routeLength="3061.28" waitingTime="0.00" waitingCount="0" stopTime="0.00" timeLoss="20.47" rerouteNo="0" devices="tripinfo_erickshaw_flow_main.0 emissions_erickshaw_flow_main.0 battery_erickshaw_flow_main.0 fcd_erickshaw_flow_main.0" vType="eRickshaw" speedFactor="0.74" vaporized="">
+        <emissions CO_abs="0" CO2_abs="0" HC_abs="0" PMx_abs="0" NOx_abs="0" fuel_abs="0" electricity_abs="206.924193"/>
+        <battery depleted="0" actualBatteryCapacity="17293.08" totalEnergyConsumed="258.89" totalEnergyRegenerated="51.97"/>
+    </tripinfo>
+    <tripinfo id="evan_flow_main.0" depart="75.00" departLane="E0_0" departPos="2.60" departPosLat="0.00" departSpeed="0.00" departDelay="0.00" arrival="534.50" arrivalLane="E3_0" arrivalPos="1300.00" arrivalPosLat="0.00" arrivalSpeed="8.35" duration="459.50" routeLength="3061.28" waitingTime="0.00" waitingCount="0" stopTime="0.00" timeLoss="204.65" rerouteNo="0" devices="tripinfo_evan_flow_main.0 emissions_evan_flow_main.0 battery_evan_flow_main.0 fcd_evan_flow_main.0" vType="eVan" speedFactor="0.87" vaporized="">
+        <emissions CO_abs="0" CO2_abs="0" HC_abs="0" PMx_abs="0" NOx_abs="0" fuel_abs="0" electricity_abs="215.013083"/>
+        <battery depleted="0" actualBatteryCapacity="17284.99" totalEnergyConsumed="290.88" totalEnergyRegenerated="75.87"/>
+    </tripinfo>
+    <tripinfo id="easybike_flow_main.1" depart="85.00" departLane="E0_0" departPos="2.30" departPosLat="0.00" departSpeed="0.00" departDelay="0.00" arrival="535.50" arrivalLane="E3_0" arrivalPos="1300.00" arrivalPosLat="0.00" arrivalSpeed="8.55" duration="450.50" routeLength="3061.58" waitingTime="0.00" waitingCount="0" stopTime="0.00" timeLoss="235.11" rerouteNo="0" devices="tripinfo_easybike_flow_main.1 emissions_easybike_flow_main.1 battery_easybike_flow_main.1 fcd_easybike_flow_main.1" vType="easyBike" speedFactor="1.02" vaporized="">
+        <emissions CO_abs="0" CO2_abs="0" HC_abs="0" PMx_abs="0" NOx_abs="0" fuel_abs="0" electricity_abs="227.035760"/>
+        <battery depleted="0" actualBatteryCapacity="17272.96" totalEnergyConsumed="460.62" totalEnergyRegenerated="233.58"/>
+    </tripinfo>
+    <tripinfo id="easybike07" depart="12.00" departLane="E4_0" departPos="2.30" departPosLat="0.00" departSpeed="0.00" departDelay="0.00" arrival="581.00" arrivalLane="E3_0" arrivalPos="1300.00" arrivalPosLat="0.00" arrivalSpeed="14.83" duration="569.00" routeLength="3449.11" waitingTime="297.50" waitingCount="1" stopTime="0.00" timeLoss="340.38" rerouteNo="0" devices="tripinfo_easybike07 emissions_easybike07 battery_easybike07 fcd_easybike07" vType="easyBike" speedFactor="1.10" vaporized="">
+        <emissions CO_abs="0" CO2_abs="0" HC_abs="0" PMx_abs="0" NOx_abs="0" fuel_abs="0" electricity_abs="380.249011"/>
+        <battery depleted="0" actualBatteryCapacity="17119.75" totalEnergyConsumed="708.47" totalEnergyRegenerated="328.22"/>
+    </tripinfo>
+</tripinfos>

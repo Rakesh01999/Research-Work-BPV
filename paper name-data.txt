@@ -1,0 +1,106 @@
+// ======= d-5-05-25 ================
+
+
+1.2017_Prediction of EV Charging Behavior using Machine Learning.pdf
+2. 2024_ Machine Learning Based Forecasting of EV Charging Load in a Parking Lot for Optimal.pdf
+3.2025_Demand Forecasting for Electric Vehicle Charging Stations using Multivariate Time-Series Analysis.pdf
+4.Appl. Sci. 2019_Short-Term Load Forecasting for Electric Vehicle Charging Stations Based on Deep Learning Approaches.pdf
+5.Appl. Sci. 2019_Short-Term_Load_Forecasting_for_Electric_Vehicle_C.pdf
+6.Document 10.pdf
+7.Elsevier_2019_EV load forecasting using a refined CNN-LSTM-AM.pdf
+8.Energies_2019_Electric Vehicle Charging Load Forecasting_A Comparative Study of Deep Learning Approaches.pdf
+9.Energies_2023_Multi-Feature Data Fusion-Based Load Forecasting of Electric Vehicle Charging Stations Using a Deep Learning Model.pdf
+10.IEEE_Prediction of Electric Vehicle Charging Using _Machine Learning.pdf
+11.IEEE_TRANSACTIONS_ON_INTELLIGENT_TRANSPORTATION_SYSTEMS_2021_A physics-informed and attention-based graph learning approach for regional electric vehicle charging demand prediction.pdf
+12.Research on Machine Learning-Based Method for Predicting.pdf
+13.Sustainability_2023_Prediction of Electric Vehicles Charging Demand A Transformer-Based Deep Learning Approach.pdf
+14.Using Machine Learning Models to Forecast.pdf
+
+
+// ====== 8-05-25 ======
+
+
+15.arXiv_2025_Dynamic Load Balancing for EV Charging Stations.pdf
+16.Electric Power Systems Research_2025_Multi-step Load Forecasting.pdf
+17.ElectricVehicleChargingDemandPredictionUsingaNovelMachineLearning-BasedTechnique.pdf
+19.Energies_2024_Electric Vehicle Charging Load Prediction.pdf
+20.Frontiers in Energy Research_2023_Electric vehicle charging load prediction.pdf
+21.IEEE Transactions on Industry Applications_2024_Coherent Hierarchical Probabilistic Forecasting of.pdf
+22.The Journal of Supercomputing _2025_A comprehensive benchmark of machine learning‑based.pdf
+23.World Electric Vehicle Journal_2024_Electric Vehicle Charging Load Forecasting Based on  K-Means++-GRU-KSVR.pdf
+24.World Electric Vehicle Journal_2025_Data-Driven Modeling of Electric Vehicle Charging Sessions.pdf
+
+
+// ========== 12-05-25 ==========
+
+
+
+25.2021_Machine Learning-Based Prediction for EV Charging Station Availability and Wait-Time Estimation.pdf
+26.2025_Bayesian Deep Learning for EV Charging Station Forecasting.pdf
+29.E3S Web of Conferences_2024_Machine Learning Models for Predicting and Managing Electric Vehicle Load in Smart Grids.pdf
+31.Predicting Electric Vehicle Demand for Charging Stations Time Series and . ..pdf
+32.Prediction of Electric Vehicles Charging Load Using Long Short-Term.pdf
+34.Sustainability_2022_Hybrid Predictive Modeling for Charging Demand Prediction of Electric Vehicles.pdf
+
+
+
+// ========== 13-05-25 ==========
+
+35.Electric Vehicle Charging Load Forecasting Method Based on  Improved Long Short-Term Memory Model with Particle  SwarmOptimization.pdf
+36.Location based Probabilistic Load Forecasting of-Deep Transfer Learning with.pdf
+37.Machine learning optimization for hybrid electric vehicle charging.pdf
+38.Multiscale Spatio-Temporal Enhanced Short-term  Load Forecasting of Electric Vehicle Charging.pdf
+39.Non-Intrusive Load Monitoring for Feeder-Level- Sliding Window-based.pdf
+40.Optimizing demand response and load balancing in smart EV charging networks using AI.pdf
+41.Probabilistic forecast of electric vehicle charging demand -analysis of different aggregation levels and energy procurement.pdf
+42.Short‑term aggregate electric vehicle charging load forecasting in diverse conditions with minimal data using.pdf
+43.Study_of_Electric_Vehicle_Charging_Prediction_using_Different_Machine_Learning_Algorithms.pdf
+44.The Journal of Engineering - 2024 - Tang - Electric vehicle charging load prediction based on graph attention networks and.pdf
+
+
+// ========== 18-05-25 ==========
+
+
+
+45.applsci-Charging Strategies for Electric Vehicles Using a Machine Learning Load Forecasting Approach for Residential Buildings.pdf
+46.DiffPLF-A Conditional Diffusion Model for.pdf
+47.Divide-Conquer Transformer Learning for  Predicting Electric Vehicle Charging Events.pdf
+48.Electric Load Prediction of Electric Vehicle Charging Stations  Based on Moving Average–Gated Recurrent Unit.pdf
+49.Electric Vehicle charging station load forecasting with an integrated DeepBoostapproach.pdf
+50.Electric_Vehicle_Charging_Load_Time-Series_Prediction_Based_on_Broad_Learning_System.pdf
+51.Electronics Letters - 2024 - Alam - Machine learning‐based multivariate forecasting of electric vehicle charging station.pdf
+52.Evaluating machine learning algorithms for energy consumption prediction in electric vehicles -A comparative study.pdf
+53.Forecasting Battery Electric Vehicle Charging Behavior-A Deep Learning Approach Equipped with Micro-Clustering and SMOTE Techniques.pdf
+
+
+
+
+// =========== 21-05-25 ============
+
+
+ 
+54.Charging Strategies for Electric Vehicles Using a Machine.pdf
+58.Electric Vehicle Charging Demand Prediction Model Based on.pdf
+59.Electric Vehicle Charging Load Demand Forecasting in Different.pdf
+62.Electric vehicle charging station demand prediction model deploying.pdf
+64.Enhanced Load Forecasting for Electric Vehicle Charging Stations.pdf
+66.Optimizing Electric Vehicle (EV) Charging with Integrated Renewable Energy Sources A Cloud-Based Forecasting Approach for Eco-Sustainability.pdf
+67.Predicting EV Charging Demand in Renewable-Energy-Powered Grids Using Explainable Machine Learning.pdf
+68.Quantifying the Uncertainty of Electric Vehicle Charging with Probabilistic Load Forecasting.pdf
+70.Research on electric vehicle load forecasting considering regional special event characteristics.pdf
+73.Spatial-temporal load forecasting of electric vehicle charging stations based on graph neural network.pdf
+75.TOWARDS USING MACHINE LEARNING TO GENERATIVELY.pdf
+
+
+
+// =============
+
+Now Extract all the data from them and make a table . put the data list there , in organized way/tabular format .
+
+Extract all the data from them and make a table . put all the data there , in organized way/tabular format . Each and every single data should be there in the table . 
+
+
+please make a downloadable excel file for me with this given data .Extract all the data from them and make a table . put all the data there , in organized way/tabular format . Each and every single data should be there in the table . 
+
+
+

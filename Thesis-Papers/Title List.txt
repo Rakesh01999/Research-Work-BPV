@@ -1,0 +1,5 @@
+1.  Predictive Modeling of Electric Vehicle Charging Load on the Power Grid: A Machine Learning Approach
+2.  Optimizing Power Grid Stability Through Machine Learning-Driven Electric Vehicle Charging Strategies
+3.  Understanding for Enhanced Forecasting and Management of Electric Vehicle Impact on Power Consumption 
+ 
+

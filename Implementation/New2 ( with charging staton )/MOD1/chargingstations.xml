@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- generated on 2025-09-21 10:19:12 by Eclipse SUMO GUI Version 1.22.0
+<sumoConfiguration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://sumo.dlr.de/xsd/sumoConfiguration.xsd">
+
+    <input>
+        <net-file value="D:\JUST\Thesis\Implementation\New2 ( with charging staton )\MOD1\Test1.net.xml"/>
+        <route-files value="D:\JUST\Thesis\Implementation\New2 ( with charging staton )\MOD1\Test1.rou.xml"/>
+        <additional-files value="D:\JUST\Thesis\Implementation\New2 ( with charging staton )\MOD1\Test1.add.xml"/>
+    </input>
+
+    <output>
+        <emission-output value="D:\JUST\Thesis\Implementation\New2 ( with charging staton )\MOD1\emissions.xml"/>
+        <battery-output value="D:\JUST\Thesis\Implementation\New2 ( with charging staton )\MOD1\battery.xml"/>
+        <chargingstations-output value="D:\JUST\Thesis\Implementation\New2 ( with charging staton )\MOD1\chargingstations.xml"/>
+        <fcd-output value="D:\JUST\Thesis\Implementation\New2 ( with charging staton )\MOD1\fcd.xml"/>
+        <summary-output value="D:\JUST\Thesis\Implementation\New2 ( with charging staton )\MOD1\summary.xml"/>
+        <tripinfo-output value="D:\JUST\Thesis\Implementation\New2 ( with charging staton )\MOD1\tripinfo.xml"/>
+    </output>
+
+    <time>
+        <begin value="0"/>
+        <end value="200"/>
+        <step-length value="0.5"/>
+    </time>
+
+    <processing>
+        <lateral-resolution value="0.8"/>
+        <ignore-junction-blocker value="5"/>
+        <ignore-route-errors value="true"/>
+        <collision.check-junctions value="true"/>
+    </processing>
+
+    <report>
+        <verbose value="true"/>
+        <duration-log.statistics value="true"/>
+    </report>
+
+    <emissions>
+        <device.emissions.probability value="1"/>
+    </emissions>
+
+    <battery>
+        <device.battery.probability value="1"/>
+    </battery>
+
+</sumoConfiguration>
+-->
+
+<chargingstations-export>
+    <chargingStation id="dest_charger_n12" totalEnergyCharged="0.00" chargingSteps="0"/>
+    <chargingStation id="ebike_swap_n1" totalEnergyCharged="0.00" chargingSteps="0"/>
+    <chargingStation id="ebike_swap_n6" totalEnergyCharged="0.00" chargingSteps="0"/>
+    <chargingStation id="ebus_depot_n3" totalEnergyCharged="0.00" chargingSteps="0"/>
+    <chargingStation id="erickshaw_hub_n2" totalEnergyCharged="0.00" chargingSteps="0"/>
+    <chargingStation id="erickshaw_hub_n5" totalEnergyCharged="0.00" chargingSteps="0"/>
+    <chargingStation id="fast_charger_n2" totalEnergyCharged="0.00" chargingSteps="0"/>
+    <chargingStation id="fast_charger_n8" totalEnergyCharged="0.00" chargingSteps="0"/>
+    <chargingStation id="medium_charger_n6" totalEnergyCharged="0.00" chargingSteps="0"/>
+    <chargingStation id="range_extender_860" totalEnergyCharged="0.00" chargingSteps="0"/>
+    <chargingStation id="range_extender_900" totalEnergyCharged="0.00" chargingSteps="0"/>
+    <chargingStation id="standard_charger_n5" totalEnergyCharged="0.00" chargingSteps="0"/>
+    <chargingStation id="ultra_fast_n3" totalEnergyCharged="0.00" chargingSteps="0"/>
+</chargingstations-export>

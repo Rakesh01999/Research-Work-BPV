@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- generated on 2025-09-20 22:11:01 by Eclipse SUMO GUI Version 1.22.0
+<sumoConfiguration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://sumo.dlr.de/xsd/sumoConfiguration.xsd">
+
+    <input>
+        <net-file value="D:\JUST\Thesis\Implementation\New2 ( with charging staton )\MOD0\Test1.net.xml"/>
+        <route-files value="D:\JUST\Thesis\Implementation\New2 ( with charging staton )\MOD0\Test1.rou.xml"/>
+        <additional-files value="D:\JUST\Thesis\Implementation\New2 ( with charging staton )\MOD0\Test1.add.xml"/>
+    </input>
+
+    <output>
+        <emission-output value="D:\JUST\Thesis\Implementation\New2 ( with charging staton )\MOD0\emissions.xml"/>
+        <battery-output value="D:\JUST\Thesis\Implementation\New2 ( with charging staton )\MOD0\battery.xml"/>
+        <chargingstations-output value="D:\JUST\Thesis\Implementation\New2 ( with charging staton )\MOD0\chargingstations.xml"/>
+        <fcd-output value="D:\JUST\Thesis\Implementation\New2 ( with charging staton )\MOD0\fcd.xml"/>
+        <summary-output value="D:\JUST\Thesis\Implementation\New2 ( with charging staton )\MOD0\summary.xml"/>
+        <tripinfo-output value="D:\JUST\Thesis\Implementation\New2 ( with charging staton )\MOD0\tripinfo.xml"/>
+    </output>
+
+    <time>
+        <begin value="0"/>
+        <end value="100"/>
+        <step-length value="0.5"/>
+    </time>
+
+    <processing>
+        <lateral-resolution value="0.8"/>
+        <ignore-junction-blocker value="5"/>
+        <ignore-route-errors value="true"/>
+        <collision.check-junctions value="true"/>
+    </processing>
+
+    <report>
+        <verbose value="true"/>
+        <duration-log.statistics value="true"/>
+    </report>
+
+    <emissions>
+        <device.emissions.probability value="1"/>
+    </emissions>
+
+    <battery>
+        <device.battery.probability value="1"/>
+    </battery>
+
+</sumoConfiguration>
+-->
+
+<tripinfos xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://sumo.dlr.de/xsd/tripinfo_file.xsd">
+    <tripinfo id="ebike01" depart="0.00" departLane="E0_0" departPos="2.10" departPosLat="0.00" departSpeed="0.00" departDelay="0.00" arrival="35.00" arrivalLane="E3_0" arrivalPos="83.08" arrivalPosLat="0.00" arrivalSpeed="12.44" duration="35.00" routeLength="246.70" waitingTime="0.00" waitingCount="0" stopTime="0.00" timeLoss="17.92" rerouteNo="0" devices="tripinfo_ebike01 emissions_ebike01 battery_ebike01 fcd_ebike01" vType="eBike" speedFactor="1.11" vaporized="">
+        <emissions CO_abs="0" CO2_abs="0" HC_abs="0" PMx_abs="0" NOx_abs="0" fuel_abs="0" electricity_abs="61.935622"/>
+        <battery depleted="0" actualBatteryCapacity="17438.06" totalEnergyConsumed="103.33" totalEnergyRegenerated="41.40"/>
+    </tripinfo>
+    <tripinfo id="ebike03" depart="4.00" departLane="E0_0" departPos="2.10" departPosLat="0.00" departSpeed="0.00" departDelay="0.00" arrival="39.00" arrivalLane="E3_0" arrivalPos="83.08" arrivalPosLat="0.00" arrivalSpeed="11.67" duration="35.00" routeLength="246.70" waitingTime="0.00" waitingCount="0" stopTime="0.00" timeLoss="17.70" rerouteNo="0" devices="tripinfo_ebike03 emissions_ebike03 battery_ebike03 fcd_ebike03" vType="eBike" speedFactor="1.06" vaporized="">
+        <emissions CO_abs="0" CO2_abs="0" HC_abs="0" PMx_abs="0" NOx_abs="0" fuel_abs="0" electricity_abs="56.660310"/>
+        <battery depleted="0" actualBatteryCapacity="17443.34" totalEnergyConsumed="98.50" totalEnergyRegenerated="41.84"/>
+    </tripinfo>
+    <tripinfo id="ebike06" depart="10.00" departLane="E0_0" departPos="2.10" departPosLat="0.00" departSpeed="0.00" departDelay="0.00" arrival="44.50" arrivalLane="E3_0" arrivalPos="83.08" arrivalPosLat="0.00" arrivalSpeed="12.05" duration="34.50" routeLength="246.70" waitingTime="0.00" waitingCount="0" stopTime="0.00" timeLoss="13.58" rerouteNo="0" devices="tripinfo_ebike06 emissions_ebike06 battery_ebike06 fcd_ebike06" vType="eBike" speedFactor="0.88" vaporized="">
+        <emissions CO_abs="0" CO2_abs="0" HC_abs="0" PMx_abs="0" NOx_abs="0" fuel_abs="0" electricity_abs="59.221335"/>
+        <battery depleted="0" actualBatteryCapacity="17440.78" totalEnergyConsumed="98.10" totalEnergyRegenerated="38.88"/>
+    </tripinfo>
+    <tripinfo id="ebike02" depart="2.00" departLane="E4_0" departPos="2.10" departPosLat="0.00" departSpeed="0.00" departDelay="0.00" arrival="76.00" arrivalLane="E3_0" arrivalPos="83.08" arrivalPosLat="0.00" arrivalSpeed="12.00" duration="74.00" routeLength="300.64" waitingTime="26.50" waitingCount="1" stopTime="0.00" timeLoss="49.47" rerouteNo="0" devices="tripinfo_ebike02 emissions_ebike02 battery_ebike02 fcd_ebike02" vType="eBike" speedFactor="0.99" vaporized="">
+        <emissions CO_abs="0" CO2_abs="0" HC_abs="0" PMx_abs="0" NOx_abs="0" fuel_abs="0" electricity_abs="66.215707"/>
+        <battery depleted="0" actualBatteryCapacity="17433.78" totalEnergyConsumed="128.62" totalEnergyRegenerated="62.41"/>
+    </tripinfo>
+    <tripinfo id="ebike04" depart="6.00" departLane="E4_0" departPos="2.10" departPosLat="0.00" departSpeed="0.00" departDelay="0.00" arrival="78.50" arrivalLane="E3_0" arrivalPos="83.08" arrivalPosLat="0.00" arrivalSpeed="12.12" duration="72.50" routeLength="300.64" waitingTime="21.00" waitingCount="1" stopTime="0.00" timeLoss="51.00" rerouteNo="0" devices="tripinfo_ebike04 emissions_ebike04 battery_ebike04 fcd_ebike04" vType="eBike" speedFactor="1.13" vaporized="">
+        <emissions CO_abs="0" CO2_abs="0" HC_abs="0" PMx_abs="0" NOx_abs="0" fuel_abs="0" electricity_abs="66.199752"/>
+        <battery depleted="0" actualBatteryCapacity="17433.80" totalEnergyConsumed="123.53" totalEnergyRegenerated="57.33"/>
+    </tripinfo>
+</tripinfos>
