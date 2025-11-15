@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<additional xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+            xsi:noNamespaceSchemaLocation="http://sumo.dlr.de/xsd/additional_file.xsd">
+
+    <!-- ELECTRIC VEHICLE CHARGING NETWORK -->
+    
+    <!-- Fast Charging Station at N2 (Major intersection) -->
+    <chargingStation id="fast_charger_n2" lane="E0_0" startPos="400" endPos="420" 
+                     power="50000" efficiency="0.92" 
+                     friendlyPos="true" name="Dhaka_FastCharger_N2"/>
+    
+    <!-- Ultra-Fast Charging Station at N3 (Before destination) -->
+    <chargingStation id="ultra_fast_n3" lane="E1_0" startPos="450" endPos="470" 
+                     power="150000" efficiency="0.95" 
+                     friendlyPos="true" name="Chittagong_UltraFast_N3"/>
+    
+    <!-- Standard Charging Station at N5 (Alternative route) -->
+    <chargingStation id="standard_charger_n5" lane="E4_0" startPos="200" endPos="220" 
+                     power="22000" efficiency="0.88" 
+                     friendlyPos="true" name="Sylhet_Standard_N5"/>
+    
+    <!-- Medium Charging Station at N6 -->
+    <chargingStation id="medium_charger_n6" lane="E11_0" startPos="130" endPos="150" 
+                     power="30000" efficiency="0.90" 
+                     friendlyPos="true" name="Khulna_Medium_N6"/>
+    
+    <!-- Fast Charging Station at N8 (Southern route) -->
+    <chargingStation id="fast_charger_n8" lane="E18_0" startPos="350" endPos="370" 
+                     power="75000" efficiency="0.93" 
+                     friendlyPos="true" name="Barisal_Fast_N8"/>
+    
+    <!-- Destination Charging at N12 -->
+    <chargingStation id="dest_charger_n12" lane="E14_0" startPos="450" endPos="470" 
+                     power="11000" efficiency="0.85" 
+                     friendlyPos="true" name="Rangpur_Dest_N12"/>
+
+    <!-- E-RICKSHAW CHARGING HUBS (Common in Bangladesh) -->
+    <chargingStation id="erickshaw_hub_n2" lane="E10_0" startPos="60" endPos="75" 
+                     power="5000" efficiency="0.80" 
+                     friendlyPos="true" name="ERickshaw_Hub_N2"/>
+    
+    <chargingStation id="erickshaw_hub_n5" lane="E11_0" startPos="200" endPos="215" 
+                     power="5000" efficiency="0.80" 
+                     friendlyPos="true" name="ERickshaw_Hub_N5"/>
+
+    <!-- ELECTRIC BUS CHARGING STATIONS -->
+    <chargingStation id="ebus_depot_n3" lane="E1_0" startPos="800" endPos="830" 
+                     power="200000" efficiency="0.96" 
+                     friendlyPos="true" name="ElectricBus_Depot_N3"/>
+
+    <!-- E-BIKE BATTERY SWAP STATIONS -->
+    <chargingStation id="ebike_swap_n1" lane="E0_0" startPos="50" endPos="65" 
+                     power="3000" efficiency="0.75" 
+                     friendlyPos="true" name="EBike_BatterySwap_N1"/>
+    
+    <chargingStation id="ebike_swap_n6" lane="E10_0" startPos="100" endPos="115" 
+                     power="3000" efficiency="0.75" 
+                     friendlyPos="true" name="EBike_BatterySwap_N6"/>
+
+    <!-- PARKING AREAS FOR ELECTRIC VEHICLES -->
+    <parkingArea id="ev_parking_n2" lane="E1_0" startPos="100" endPos="130" 
+                 roadsideCapacity="15" friendlyPos="true" name="EV_Parking_N2"/>
+    
+    <parkingArea id="ev_parking_n3" lane="E2_0" startPos="5" endPos="25" 
+                 roadsideCapacity="20" friendlyPos="true" name="EV_Parking_N3"/>
+    
+    <parkingArea id="erickshaw_parking_n5" lane="E4_0" startPos="300" endPos="325" 
+                 roadsideCapacity="25" friendlyPos="true" name="ERickshaw_Parking_N5"/>
+
+    <!-- BUS STOPS FOR ELECTRIC BUSES -->
+    <busStop id="ebus_stop_n2" lane="E0_0" startPos="750" endPos="770" 
+             friendlyPos="true" name="Electric_Bus_Stop_N2"/>
+    
+    <busStop id="ebus_stop_n3" lane="E1_0" startPos="600" endPos="620" 
+             friendlyPos="true" name="Electric_Bus_Stop_N3"/>
+    
+    <busStop id="ebus_stop_n6" lane="E10_0" startPos="200" endPos="220" 
+             friendlyPos="true" name="Electric_Bus_Stop_N6"/>
+
+    <!-- DISTANCE-BASED CHARGING ZONES -->
+    <!-- These are strategically placed based on your network distances -->
+    
+    <!-- At 860m mark (N1-N2 edge) -->
+    <chargingStation id="range_extender_860" lane="E0_0" startPos="650" endPos="670" 
+                     power="25000" efficiency="0.88" 
+                     friendlyPos="true" name="RangeExtender_860m"/>
+    
+    <!-- At 900m mark (N2-N3 edge) -->
+    <chargingStation id="range_extender_900" lane="E1_0" startPos="300" endPos="320" 
+                     power="25000" efficiency="0.88" 
+                     friendlyPos="true" name="RangeExtender_900m"/>
+
+</additional>
