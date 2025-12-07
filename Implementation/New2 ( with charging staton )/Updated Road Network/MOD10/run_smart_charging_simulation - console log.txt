@@ -1,0 +1,87 @@
+
+
+⏱️  Time: 600s | Vehicles: 64 | Alerts: 11420
+
+✓ Simulation completed at 600.0s
+ (2ms ~= 50.00*RT, ~32000.00UPS, TraCI: 88ms, vehicles TOT 136 ACT 64 BUF 0)  
+Simulation ended at time: 600.00.
+Reason: TraCI requested termination.
+Performance:
+ Duration: 64.68s
+ TraCI-Duration: 47.98s
+ Real time factor: 9.27716
+ UPS: 4812.029378
+Vehicles:
+ Inserted: 136
+ Running: 64
+ Waiting: 0
+ Emergency Braking: 2
+Statistics (avg of 72):
+ RouteLength: 3114.16
+ Speed: 11.49
+ Duration: 282.97
+ WaitingTime: 4.94
+ TimeLoss: 29.97
+ DepartDelay: 0.93
+
+======================================================================
+EXPORTING RESULTS
+======================================================================
+✓ Vehicle SOC tracking: simulation_outputs\vehicle_soc_tracking_20251123_201952.csv
+  Records: 31110
+✓ Low SOC alerts: simulation_outputs\low_soc_alerts_20251123_201952.csv
+  Alerts: 11420
+
+📊 LOW SOC SUMMARY:
+  Total alerts: 11420
+  Unique vehicles: 92
+  Average SOC deficit: 1.72%
+  Most used station: CS_Node8_E8
+✓ Charging events: simulation_outputs\charging_events_20251123_201952.csv
+  Events: 6
+🔌 CHARGING SUMMARY:
+  Total charging sessions: 6
+  Average duration: 300.0s
+  Average SOC gain: 6.55%
+  Total energy charged: 3150.00 Wh
+✓ Threshold analysis report: simulation_outputs\threshold_analysis_20251123_201952.txt
+======================================================================
+
+  Average SOC gain: 6.55%
+  Total energy charged: 3150.00 Wh
+✓ Threshold analysis report: simulation_outputs\threshold_analysis_20251123_201952.txt
+======================================================================
+
+  Total energy charged: 3150.00 Wh
+✓ Threshold analysis report: simulation_outputs\threshold_analysis_20251123_201952.txt
+======================================================================
+
+======================================================================
+✓ Threshold analysis report: simulation_outputs\threshold_analysis_20251123_201952.txt
+======================================================================
+
+======================================================================
+52.txt
+======================================================================
+
+======================================================================
+======================================================================
+
+======================================================================
+✓ SIMULATION COMPLETE!
+
+======================================================================
+✓ SIMULATION COMPLETE!
+Output folder: simulation_outputs/
+======================================================================
+✓ SIMULATION COMPLETE!
+Output folder: simulation_outputs/
+======================================================================
+✓ SIMULATION COMPLETE!
+Output folder: simulation_outputs/
+======================================================================
+
+Output folder: simulation_outputs/
+======================================================================
+
+
