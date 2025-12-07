@@ -1,0 +1,232 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<additional xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+            xsi:noNamespaceSchemaLocation="http://sumo.dlr.de/xsd/additional_file.xsd">
+
+    <!-- ============================================================ -->
+    <!-- OFF-ROAD CHARGING STATIONS FOR BANGLADESH EV NETWORK -->
+    <!-- Parking areas with multiple charging pads -->
+    <!-- Vehicles exit main road, charge, then rejoin traffic -->
+    <!-- ============================================================ -->
+
+    <!-- ============================================================ -->
+    <!-- CHARGING FACILITY AT NODE2 -->
+    <!-- Location: After E0->E1 transition, before Node3 -->
+    <!-- ============================================================ -->
+    
+    <!-- Parking Area for Charging (5 pads) -->
+    <parkingArea id="ChargingHub_Node2" lane="E1_0" startPos="50" endPos="150" 
+                 roadsideCapacity="5" angle="0" length="20">
+        
+        <!-- Individual Charging Spots -->
+        <space x="25" y="140" width="3" length="5" angle="90"/>
+        <space x="25" y="135" width="3" length="5" angle="90"/>
+        <space x="25" y="130" width="3" length="5" angle="90"/>
+        <space x="25" y="125" width="3" length="5" angle="90"/>
+        <space x="25" y="120" width="3" length="5" angle="90"/>
+    </parkingArea>
+
+    <!-- Charging Station Equipment at Parking Area -->
+    <chargingStation id="CS_Node2_Pad1" lane="E1_0" startPos="50" endPos="70"
+                     power="5000" efficiency="0.90" 
+                     chargeInTransit="false" 
+                     chargeDelay="120"
+                     parkingArea="ChargingHub_Node2">
+        <param key="friendlyName" value="Node2 Charging Hub - Pad 1"/>
+        <param key="chargingType" value="AC_Standard_220V"/>
+    </chargingStation>
+
+    <chargingStation id="CS_Node2_Pad2" lane="E1_0" startPos="70" endPos="90"
+                     power="5000" efficiency="0.90" 
+                     chargeInTransit="false" 
+                     chargeDelay="120"
+                     parkingArea="ChargingHub_Node2">
+        <param key="friendlyName" value="Node2 Charging Hub - Pad 2"/>
+    </chargingStation>
+
+    <chargingStation id="CS_Node2_Pad3" lane="E1_0" startPos="90" endPos="110"
+                     power="5000" efficiency="0.90" 
+                     chargeInTransit="false" 
+                     chargeDelay="120"
+                     parkingArea="ChargingHub_Node2">
+        <param key="friendlyName" value="Node2 Charging Hub - Pad 3"/>
+    </chargingStation>
+
+    <chargingStation id="CS_Node2_Pad4" lane="E1_0" startPos="110" endPos="130"
+                     power="5000" efficiency="0.90" 
+                     chargeInTransit="false" 
+                     chargeDelay="120"
+                     parkingArea="ChargingHub_Node2">
+        <param key="friendlyName" value="Node2 Charging Hub - Pad 4"/>
+    </chargingStation>
+
+    <chargingStation id="CS_Node2_Pad5" lane="E1_0" startPos="130" endPos="150"
+                     power="5000" efficiency="0.90" 
+                     chargeInTransit="false" 
+                     chargeDelay="120"
+                     parkingArea="ChargingHub_Node2">
+        <param key="friendlyName" value="Node2 Charging Hub - Pad 5"/>
+    </chargingStation>
+
+
+    <!-- ============================================================ -->
+    <!-- CHARGING FACILITY AT NODE3 (MAJOR INTERSECTION) -->
+    <!-- Fast charging with 5 pads - High traffic area -->
+    <!-- ============================================================ -->
+    
+    <parkingArea id="ChargingHub_Node3" lane="E1_1" startPos="700" endPos="790" 
+                 roadsideCapacity="5" angle="0" length="18">
+        <space x="246" y="148" width="3" length="5" angle="90"/>
+        <space x="246" y="143" width="3" length="5" angle="90"/>
+        <space x="246" y="138" width="3" length="5" angle="90"/>
+        <space x="246" y="133" width="3" length="5" angle="90"/>
+        <space x="246" y="128" width="3" length="5" angle="90"/>
+    </parkingArea>
+
+    <!-- Fast Charging Pads -->
+    <chargingStation id="CS_Node3_Pad1" lane="E1_1" startPos="700" endPos="718"
+                     power="7000" efficiency="0.92" 
+                     chargeInTransit="false" 
+                     chargeDelay="90"
+                     parkingArea="ChargingHub_Node3">
+        <param key="friendlyName" value="Node3 Fast Charging - Pad 1"/>
+        <param key="chargingType" value="AC_Fast_220V"/>
+    </chargingStation>
+
+    <chargingStation id="CS_Node3_Pad2" lane="E1_1" startPos="718" endPos="736"
+                     power="7000" efficiency="0.92" 
+                     chargeInTransit="false" 
+                     chargeDelay="90"
+                     parkingArea="ChargingHub_Node3">
+        <param key="friendlyName" value="Node3 Fast Charging - Pad 2"/>
+    </chargingStation>
+
+    <chargingStation id="CS_Node3_Pad3" lane="E1_1" startPos="736" endPos="754"
+                     power="7000" efficiency="0.92" 
+                     chargeInTransit="false" 
+                     chargeDelay="90"
+                     parkingArea="ChargingHub_Node3">
+        <param key="friendlyName" value="Node3 Fast Charging - Pad 3"/>
+    </chargingStation>
+
+    <chargingStation id="CS_Node3_Pad4" lane="E1_1" startPos="754" endPos="772"
+                     power="7000" efficiency="0.92" 
+                     chargeInTransit="false" 
+                     chargeDelay="90"
+                     parkingArea="ChargingHub_Node3">
+        <param key="friendlyName" value="Node3 Fast Charging - Pad 4"/>
+    </chargingStation>
+
+    <chargingStation id="CS_Node3_Pad5" lane="E1_1" startPos="772" endPos="790"
+                     power="7000" efficiency="0.92" 
+                     chargeInTransit="false" 
+                     chargeDelay="90"
+                     parkingArea="ChargingHub_Node3">
+        <param key="friendlyName" value="Node3 Fast Charging - Pad 5"/>
+    </chargingStation>
+
+
+    <!-- ============================================================ -->
+    <!-- CHARGING FACILITY AT NODE5 -->
+    <!-- Standard charging with 4 pads -->
+    <!-- ============================================================ -->
+    
+    <parkingArea id="ChargingHub_Node5" lane="E5_0" startPos="10" endPos="90" 
+                 roadsideCapacity="4" angle="0" length="20">
+        <space x="-218" y="15" width="3" length="5" angle="0"/>
+        <space x="-218" y="10" width="3" length="5" angle="0"/>
+        <space x="-218" y="5" width="3" length="5" angle="0"/>
+        <space x="-218" y="0" width="3" length="5" angle="0"/>
+    </parkingArea>
+
+    <chargingStation id="CS_Node5_Pad1" lane="E5_0" startPos="10" endPos="30"
+                     power="5000" efficiency="0.88" 
+                     chargeInTransit="false" 
+                     chargeDelay="120"
+                     parkingArea="ChargingHub_Node5">
+        <param key="friendlyName" value="Node5 Charging - Pad 1"/>
+    </chargingStation>
+
+    <chargingStation id="CS_Node5_Pad2" lane="E5_0" startPos="30" endPos="50"
+                     power="5000" efficiency="0.88" 
+                     chargeInTransit="false" 
+                     chargeDelay="120"
+                     parkingArea="ChargingHub_Node5">
+        <param key="friendlyName" value="Node5 Charging - Pad 2"/>
+    </chargingStation>
+
+    <chargingStation id="CS_Node5_Pad3" lane="E5_0" startPos="50" endPos="70"
+                     power="5000" efficiency="0.88" 
+                     chargeInTransit="false" 
+                     chargeDelay="120"
+                     parkingArea="ChargingHub_Node5">
+        <param key="friendlyName" value="Node5 Charging - Pad 3"/>
+    </chargingStation>
+
+    <chargingStation id="CS_Node5_Pad4" lane="E5_0" startPos="70" endPos="90"
+                     power="5000" efficiency="0.88" 
+                     chargeInTransit="false" 
+                     chargeDelay="120"
+                     parkingArea="ChargingHub_Node5">
+        <param key="friendlyName" value="Node5 Charging - Pad 4"/>
+    </chargingStation>
+
+
+    <!-- ============================================================ -->
+    <!-- CHARGING FACILITY AT NODE8 (MAJOR INTERSECTION) -->
+    <!-- Fast charging with 5 pads on E7 approach -->
+    <!-- ============================================================ -->
+    
+    <parkingArea id="ChargingHub_Node8" lane="E7_1" startPos="800" endPos="890" 
+                 roadsideCapacity="5" angle="0" length="18">
+        <space x="242" y="-102" width="3" length="5" angle="90"/>
+        <space x="242" y="-106" width="3" length="5" angle="90"/>
+        <space x="242" y="-110" width="3" length="5" angle="90"/>
+        <space x="242" y="-114" width="3" length="5" angle="90"/>
+        <space x="242" y="-118" width="3" length="5" angle="90"/>
+    </parkingArea>
+
+    <chargingStation id="CS_Node8_Pad1" lane="E7_1" startPos="800" endPos="818"
+                     power="7000" efficiency="0.92" 
+                     chargeInTransit="false" 
+                     chargeDelay="90"
+                     parkingArea="ChargingHub_Node8">
+        <param key="friendlyName" value="Node8 Fast Charging - Pad 1"/>
+    </chargingStation>
+
+    <chargingStation id="CS_Node8_Pad2" lane="E7_1" startPos="818" endPos="836"
+                     power="7000" efficiency="0.92" 
+                     chargeInTransit="false" 
+                     chargeDelay="90"
+                     parkingArea="ChargingHub_Node8">
+        <param key="friendlyName" value="Node8 Fast Charging - Pad 2"/>
+    </chargingStation>
+
+    <chargingStation id="CS_Node8_Pad3" lane="E7_1" startPos="836" endPos="854"
+                     power="7000" efficiency="0.92" 
+                     chargeInTransit="false" 
+                     chargeDelay="90"
+                     parkingArea="ChargingHub_Node8">
+        <param key="friendlyName" value="Node8 Fast Charging - Pad 3"/>
+    </chargingStation>
+
+    <chargingStation id="CS_Node8_Pad4" lane="E7_1" startPos="854" endPos="872"
+                     power="7000" efficiency="0.92" 
+                     chargeInTransit="false" 
+                     chargeDelay="90"
+                     parkingArea="ChargingHub_Node8">
+        <param key="friendlyName" value="Node8 Fast Charging - Pad 4"/>
+    </chargingStation>
+
+    <chargingStation id="CS_Node8_Pad5" lane="E7_1" startPos="872" endPos="890"
+                     power="7000" efficiency="0.92" 
+                     chargeInTransit="false" 
+                     chargeDelay="90"
+                     parkingArea="ChargingHub_Node8">
+        <param key="friendlyName" value="Node8 Fast Charging - Pad 5"/>
+    </chargingStation>
+
+
+    <!-- Traffic lights are defined in Test1_with_TLS.net.xml -->
+    <!-- DO NOT duplicate tlLogic here -->
+
+</additional>
