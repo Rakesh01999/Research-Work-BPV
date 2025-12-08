@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<additional xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://sumo.dlr.de/xsd/additional_file.xsd">
+
+    <!-- ============================================================ -->
+    <!-- CHARGING STATIONS WITH CHARGING DELAYS -->
+    <!-- chargeDelay: Time vehicle must wait before charging starts (seconds) -->
+    <!-- Realistic values: 60-180 seconds for setup and charging -->
+    <!-- ============================================================ -->
+
+    <!-- Charging Station at Node2 (E0 -> E1 transition) -->
+    <chargingStation id="CS_Node2" lane="E1_0" startPos="10" endPos="50" 
+                     power="5000" efficiency="0.90" 
+                     chargeInTransit="false" 
+                     chargeDelay="15">
+        <param key="friendlyName" value="Node2 Charging Hub"/>
+        <param key="chargingType" value="AC_Standard"/>
+        <param key="voltage" value="220"/>
+    </chargingStation>
+
+    <!-- Charging Station at Node3 (Major intersection - E1 incoming) -->
+    <chargingStation id="CS_Node3_E1" lane="E1_1" startPos="750" endPos="790" 
+                     power="7000" efficiency="0.92" 
+                     chargeInTransit="false" 
+                     chargeDelay="10">
+        <param key="friendlyName" value="Node3 Main Charging Station"/>
+        <param key="chargingType" value="AC_Fast"/>
+        <param key="voltage" value="220"/>
+    </chargingStation>
+
+    <!-- Additional charging on E2 exit from Node3 -->
+    <chargingStation id="CS_Node3_E2" lane="E2_0" startPos="5" endPos="40" 
+                     power="7000" efficiency="0.92" 
+                     chargeInTransit="false" 
+                     chargeDelay="10">
+        <param key="friendlyName" value="Node3 E2 Exit Charging"/>
+        <param key="chargingType" value="AC_Fast"/>
+        <param key="voltage" value="220"/>
+    </chargingStation>
+
+    <!-- Charging Station at Node5 (E4 -> E5 transition) -->
+    <chargingStation id="CS_Node5" lane="E5_0" startPos="5" endPos="45" 
+                     power="5000" efficiency="0.88" 
+                     chargeInTransit="false" 
+                     chargeDelay="15">
+        <param key="friendlyName" value="Node5 Charging Point"/>
+        <param key="chargingType" value="AC_Standard"/>
+        <param key="voltage" value="220"/>
+    </chargingStation>
+
+    <!-- Charging Station at Node6 (E5 -> E6 transition) -->
+    <chargingStation id="CS_Node6" lane="E6_0" startPos="10" endPos="50" 
+                     power="5000" efficiency="0.88" 
+                     chargeInTransit="false" 
+                     chargeDelay="15">
+        <param key="friendlyName" value="Node6 Charging Hub"/>
+        <param key="chargingType" value="AC_Standard"/>
+        <param key="voltage" value="220"/>
+    </chargingStation>
+
+    <!-- Charging Station at Node8 (Major intersection - E7 incoming) -->
+    <chargingStation id="CS_Node8_E7" lane="E7_1" startPos="850" endPos="890" 
+                     power="7000" efficiency="0.92" 
+                     chargeInTransit="false" 
+                     chargeDelay="10">
+        <param key="friendlyName" value="Node8 Main Charging Station"/>
+        <param key="chargingType" value="AC_Fast"/>
+        <param key="voltage" value="220"/>
+    </chargingStation>
+
+    <!-- Additional charging on E8 exit from Node8 -->
+    <chargingStation id="CS_Node8_E8" lane="E8_0" startPos="5" endPos="45" 
+                     power="7000" efficiency="0.92" 
+                     chargeInTransit="false" 
+                     chargeDelay="10">
+        <param key="friendlyName" value="Node8 E8 Exit Charging"/>
+        <param key="chargingType" value="AC_Fast"/>
+        <param key="voltage" value="220"/>
+    </chargingStation>
+
+</additional>
