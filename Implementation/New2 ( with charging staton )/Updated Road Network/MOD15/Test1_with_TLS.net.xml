@@ -259,16 +259,34 @@
     </edge>
 
     <tlLogic id="Node3" type="static" programID="0" offset="0">
-        <phase duration="42" state="rrGGGGGg"/>
-        <phase duration="3"  state="rrGyyyyy"/>
-        <phase duration="42" state="GGGrrrrr"/>
-        <phase duration="3"  state="yyGrrrrr"/>
+        <!-- Main road green, side road red -->
+        <phase duration="42" state="rrGGGGGG"/>  
+
+        <!-- Main road yellow, side road red -->
+        <phase duration="3" state="rryyyyyy"/>
+
+        <!-- Side road green, main road red -->
+        <!-- <phase duration="42" state="GGGrrrrr"/> -->
+        <phase duration="42" state="GGrrrrrr"/>
+
+        <!-- Side road yellow, main road red -->
+        <phase duration="3" state="yyyrrrrr"/>
     </tlLogic>
+    
     <tlLogic id="Node8" type="static" programID="0" offset="0">
-        <phase duration="42" state="GGgrrGGG"/>
-        <phase duration="3"  state="yyyrrGyy"/>
-        <phase duration="42" state="rrrGGGrr"/>
-        <phase duration="3"  state="rrryyGrr"/>
+        <!-- Main road green, cross road red -->
+        <phase duration="42" state="GGGrrGGG"/>
+
+        <!-- Main road yellow -->
+        <!-- <phase duration="3" state="yyyrryyy"/> -->
+        <phase duration="3" state="yyyrrrrr"/>
+
+        <!-- Cross road green -->
+        <!-- <phase duration="42" state="rrrGGGrr"/> -->
+        <phase duration="42" state="rrrGGrrr"/>
+
+        <!-- Cross road yellow -->
+        <phase duration="3" state="rrryyyrr"/>
     </tlLogic>
 
     <junction id="Node1" type="priority" x="-419.66" y="264.54" incLanes="-E0_0 -E0_1 -E4_0 -E4_1" intLanes=":Node1_0_0 :Node1_0_1 :Node1_2_0 :Node1_2_1" shape="-414.41,256.85 -411.69,269.36 -415.79,269.86 -419.27,269.47 -422.14,268.17 -424.39,265.98 -426.03,262.88 -427.05,258.87">
