@@ -1,0 +1,40 @@
+Yes! The error shows that the script is repeatedly trying to set a parking area stop that's not on the vehicle's current route. The issue is that even though we find a route TO the station, we're not ensuring the station is actually ON that route before setting the stop.
+
+Here's the fully fixed version:## Complete Fixes Applied:
+
+### 1. **Downstream Validation** (Main Fix)
+- Added `is_station_downstream()` method that verifies the station edge is:
+  - Actually present in the route
+  - Located AFTER the vehicle's current position
+- This prevents the "not downstream the current route" error
+
+### 2. **Failure Tracking System**
+- Added `routing_failures` dictionary to track failed attempts
+- After 3 failed attempts to route to a specific station, that vehicle won't try that station again
+- Prevents infinite retry loops that spam error messages
+
+### 3. **Two-Step Validation**
+- First checks if station edge is in the route found by `findRoute()`
+- Then verifies it's actually downstream from current position
+- Only proceeds if both checks pass
+
+### 4. **Proper Error Recovery**
+- If `setRoute()` fails, marks as failure and doesn't attempt `setParkingAreaStop()`
+- If `setParkingAreaStop()` fails, marks as failure so vehicle can try different station
+- Cleans up routing failures when vehicles depart
+
+### 5. **Order of Operations**
+- `setRoute()` is called FIRST
+- Only if successful, then `setParkingAreaStop()` is called
+- Both must succeed for operation to be marked as successful
+
+### 6. **Better Station Selection**
+- Skips stations that have repeatedly failed for this vehicle
+- Allows vehicle to try alternative stations automatically
+
+## Result:
+- **No more repeated "not downstream" errors** - if routing fails, it's recorded and the vehicle either tries a different station or gives up after max attempts
+- **Silent failure handling** - failed routing attempts don't spam the console
+- **Better success rate** - vehicles find stations they can actually reach
+
+The simulation should now run cleanly without those repetitive error messages!
