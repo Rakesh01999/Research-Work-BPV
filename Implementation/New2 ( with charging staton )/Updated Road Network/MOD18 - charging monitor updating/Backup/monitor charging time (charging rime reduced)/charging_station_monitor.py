@@ -1,6 +1,7 @@
 """
 Enhanced Smart Charging Simulation with Detailed Station Monitoring
 Tracks: Station occupancy, vehicle IDs, charging duration, and power load per station
+MODIFIED: Reduced charging time to 0-60 seconds
 """
 
 import os
@@ -21,13 +22,11 @@ import pandas as pd
 
 class SmartChargingStationMonitor:
     
-    # ========== Configuration ==========
+    # ========== Configuration (MODIFIED FOR SHORTER CHARGING) ==========
     SOC_THRESHOLD = 30.0
     SOC_TARGET = 70.0
-    MIN_CHARGE_TIME = 30
-    MAX_CHARGE_TIME = 300
-    # MIN_CHARGE_TIME = 10
-    # MAX_CHARGE_TIME = 50
+    MIN_CHARGE_TIME = 10      # CHANGED: Was 30, now 10 seconds minimum
+    MAX_CHARGE_TIME = 60      # CHANGED: Was 300, now 60 seconds maximum
     
     # Charging stations (matching your XML)
     CHARGING_STATIONS = {
@@ -64,6 +63,7 @@ class SmartChargingStationMonitor:
         
         print("✓ Enhanced Charging Station Monitor Initialized")
         print(f"  SOC: {self.SOC_THRESHOLD}% → {self.SOC_TARGET}%")
+        print(f"  Charging Time: {self.MIN_CHARGE_TIME}-{self.MAX_CHARGE_TIME} seconds")  # ADDED
         print(f"  Stations: {len(self.CHARGING_STATIONS)} ({sum(s['capacity'] for s in self.CHARGING_STATIONS.values())} total slots)")
     
     def get_battery_info(self, vid):
@@ -183,6 +183,10 @@ class SmartChargingStationMonitor:
         return best
     
     def calculate_charge_time(self, batt, station):
+        """
+        MODIFIED: Calculate charging time with reduced duration (10-60 seconds)
+        Uses a scaling factor to simulate faster charging
+        """
         soc = batt.get('soc_percent', 0.0)
         cap = batt.get('capacity_Wh', 0.0)
         needed = max(0.0, (self.SOC_TARGET - soc) / 100.0 * cap)
@@ -190,10 +194,17 @@ class SmartChargingStationMonitor:
         eff = station.get('efficiency', 0.95)
         
         if power * eff > 0 and needed > 0:
-            time = (needed / (power * eff)) * 3600.0
+            # Original calculation
+            realistic_time = (needed / (power * eff)) * 3600.0
+            
+            # MODIFIED: Apply aggressive scaling to fit 10-60 second range
+            # Scale down by factor of 10-20x to get faster charging
+            scaling_factor = 15.0  # Adjust this to fine-tune (higher = shorter times)
+            time = realistic_time / scaling_factor
         else:
             time = self.MIN_CHARGE_TIME
         
+        # Clamp to 10-60 second range
         return max(self.MIN_CHARGE_TIME, min(self.MAX_CHARGE_TIME, time))
     
     def reroute_and_schedule_charge(self, vid, choice, batt):
