@@ -347,6 +347,7 @@ Average deficit: 3.45%
 Maximum deficit: 12.87%
 Minimum SOC reached: 17.13%
 
+
 VEHICLE-WISE DETAILS
 ----------------------------------------------------------------------
 
