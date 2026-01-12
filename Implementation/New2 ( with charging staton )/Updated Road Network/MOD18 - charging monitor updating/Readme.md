@@ -220,6 +220,7 @@ Every second, it collects this information for each vehicle:
 - **totalEnergyConsumed**: Total energy consumed (in Wh)
 - **totalEnergyRegenerated**: Energy recovered from regenerative braking
 
+
 #### **Vehicle Position Information:**
 - Current speed of the vehicle (in m/s)
 - Vehicle's X, Y position (where it is on the map)
