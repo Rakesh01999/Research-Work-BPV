@@ -28,111 +28,19 @@ class SmartChargingStationMonitor:
     MAX_CHARGE_TIME = 300
     
     # Charging stations (matching your XML with separate charging/waiting slots)
-    # Charging stations with separate charging and waiting parking areas
     CHARGING_STATIONS = {
-        'pa_2': {
-            'charging_area': 'pa_2_charging',
-            'waiting_area': 'pa_2_waiting',
-            'lane': 'E0_0', 
-            'edge': 'E0', 
-            'power_kW': 20.0, 
-            'efficiency': 0.95, 
-            'charging_slots': 4, 
-            'waiting_slots': 3
-        },
-        'pa_2_rev': {
-            'charging_area': 'pa_2_rev_charging',
-            'waiting_area': 'pa_2_rev_waiting',
-            'lane': '-E0_0', 
-            'edge': '-E0', 
-            'power_kW': 20.0, 
-            'efficiency': 0.95, 
-            'charging_slots': 4, 
-            'waiting_slots': 3
-        },
-        'pa_3': {
-            'charging_area': 'pa_3_charging',
-            'waiting_area': 'pa_3_waiting',
-            'lane': 'E1_0', 
-            'edge': 'E1', 
-            'power_kW': 20.0, 
-            'efficiency': 0.95, 
-            'charging_slots': 4, 
-            'waiting_slots': 3
-        },
-        'pa_3_rev': {
-            'charging_area': 'pa_3_rev_charging',
-            'waiting_area': 'pa_3_rev_waiting',
-            'lane': '-E1_0', 
-            'edge': '-E1', 
-            'power_kW': 20.0, 
-            'efficiency': 0.95, 
-            'charging_slots': 4, 
-            'waiting_slots': 3
-        },
-        'pa_6': {
-            'charging_area': 'pa_6_charging',
-            'waiting_area': 'pa_6_waiting',
-            'lane': 'E5_0', 
-            'edge': 'E5', 
-            'power_kW': 25.0, 
-            'efficiency': 0.95, 
-            'charging_slots': 5, 
-            'waiting_slots': 3
-        },
-        'pa_6_rev': {
-            'charging_area': 'pa_6_rev_charging',
-            'waiting_area': 'pa_6_rev_waiting',
-            'lane': '-E5_0', 
-            'edge': '-E5', 
-            'power_kW': 25.0, 
-            'efficiency': 0.95, 
-            'charging_slots': 5, 
-            'waiting_slots': 3
-        },
-        'pa_7': {
-            'charging_area': 'pa_7_charging',
-            'waiting_area': 'pa_7_waiting',
-            'lane': 'E6_0', 
-            'edge': 'E6', 
-            'power_kW': 20.0, 
-            'efficiency': 0.95, 
-            'charging_slots': 4, 
-            'waiting_slots': 2
-        },
-        'pa_7_rev': {
-            'charging_area': 'pa_7_rev_charging',
-            'waiting_area': 'pa_7_rev_waiting',
-            'lane': '-E6_0', 
-            'edge': '-E6', 
-            'power_kW': 20.0, 
-            'efficiency': 0.95, 
-            'charging_slots': 4, 
-            'waiting_slots': 2
-        },
-        'pa_8': {
-            'charging_area': 'pa_8_charging',
-            'waiting_area': 'pa_8_waiting',
-            'lane': 'E7_0', 
-            'edge': 'E7', 
-            'power_kW': 25.0, 
-            'efficiency': 0.95, 
-            'charging_slots': 5, 
-            'waiting_slots': 3
-        },
-        'pa_8_rev': {
-            'charging_area': 'pa_8_rev_charging',
-            'waiting_area': 'pa_8_rev_waiting',
-            'lane': '-E7_0', 
-            'edge': '-E7', 
-            'power_kW': 25.0, 
-            'efficiency': 0.95, 
-            'charging_slots': 5, 
-            'waiting_slots': 3
-        }
+        'pa_2': {'lane': 'E0_0', 'edge': 'E0', 'startPos': 745.11, 'power_kW': 20.0, 'efficiency': 0.95, 'charging_slots': 4, 'waiting_slots': 3},
+        'pa_3': {'lane': 'E1_0', 'edge': 'E1', 'startPos': 727.99, 'power_kW': 20.0, 'efficiency': 0.95, 'charging_slots': 4, 'waiting_slots': 3},
+        'pa_6': {'lane': 'E5_0', 'edge': 'E5', 'startPos': 250.48, 'power_kW': 25.0, 'efficiency': 0.95, 'charging_slots': 5, 'waiting_slots': 3},
+        'pa_7': {'lane': 'E6_0', 'edge': 'E6', 'startPos': 420.48, 'power_kW': 20.0, 'efficiency': 0.95, 'charging_slots': 4, 'waiting_slots': 2},
+        'pa_8': {'lane': 'E7_0', 'edge': 'E7', 'startPos': 830.91, 'power_kW': 25.0, 'efficiency': 0.95, 'charging_slots': 5, 'waiting_slots': 3},
+        'pa_2_rev': {'lane': '-E0_0', 'edge': '-E0', 'startPos': 0.54, 'power_kW': 20.0, 'efficiency': 0.95, 'charging_slots': 4, 'waiting_slots': 3},
+        'pa_3_rev': {'lane': '-E1_0', 'edge': '-E1', 'startPos': 0.38, 'power_kW': 20.0, 'efficiency': 0.95, 'charging_slots': 4, 'waiting_slots': 3},
+        'pa_6_rev': {'lane': '-E5_0', 'edge': '-E5', 'startPos': 0.08, 'power_kW': 25.0, 'efficiency': 0.95, 'charging_slots': 5, 'waiting_slots': 3},
+        'pa_7_rev': {'lane': '-E6_0', 'edge': '-E6', 'startPos': 1.10, 'power_kW': 20.0, 'efficiency': 0.95, 'charging_slots': 4, 'waiting_slots': 2},
+        'pa_8_rev': {'lane': '-E7_0', 'edge': '-E7', 'startPos': 0.05, 'power_kW': 25.0, 'efficiency': 0.95, 'charging_slots': 5, 'waiting_slots': 3}
     }
-
-
+    
     def __init__(self, sumocfg='Test1.sumocfg', output_folder='simulation_outputs'):
         self.sumocfg = sumocfg
         self.output_folder = output_folder
@@ -194,27 +102,40 @@ class SmartChargingStationMonitor:
             return None
     
     def get_charging_station_id(self, vid):
-        """Detect if vehicle is at a charging station (charging or waiting area)"""
+        """Detect if vehicle is at a charging station (charging or waiting)"""
         # Check if already tracked
         if vid in self.currently_charging:
             return self.currently_charging[vid]
         if vid in self.currently_waiting:
             return self.currently_waiting[vid]
         
-        # Check stops to see which parking area vehicle is at
+        # Method 1: Direct parameter check
+        try:
+            cs = traci.vehicle.getParameter(vid, "device.battery.chargingStationId")
+            if cs and cs not in ("NULL", "", "None", "none"):
+                return cs
+        except:
+            pass
+        
+        # Method 2: Alternative parameter name
+        try:
+            cs = traci.vehicle.getParameter(vid, "chargingStationId")
+            if cs and cs not in ("NULL", "", "None", "none"):
+                return cs
+        except:
+            pass
+        
+        # Method 3: Check stops
         try:
             stops = traci.vehicle.getStops(vid)
             if stops:
                 for stop in stops:
                     if hasattr(stop, 'stoppingPlaceID'):
                         place_id = stop.stoppingPlaceID
-                        
-                        # Check if it's a charging or waiting area
-                        for station_id, info in self.CHARGING_STATIONS.items():
-                            if place_id == info.get('charging_area') or place_id == info.get('waiting_area'):
-                                speed = traci.vehicle.getSpeed(vid)
-                                if speed < 0.5:
-                                    return station_id
+                        if place_id in self.CHARGING_STATIONS:
+                            speed = traci.vehicle.getSpeed(vid)
+                            if speed < 0.5:
+                                return place_id
         except:
             pass
         
@@ -240,59 +161,75 @@ class SmartChargingStationMonitor:
         return None
     
     def find_nearest_reachable_station(self, vid):
+        """Find nearest station with availability (charging or waiting slot)"""
         try:
             cur_edge = traci.vehicle.getRoadID(vid)
             if not cur_edge or cur_edge.startswith(':'):
                 return None
         except:
             return None
-
-        candidates = []
-
-        # 1️⃣ collect all reachable stations
+        
+        best = None
+        best_len = float('inf')
+        
         for sid, info in self.CHARGING_STATIONS.items():
-            edge = info['edge']
+            edge = info.get('edge')
+            if not edge:
+                continue
+            
+            # Skip if already routed to this station
+            vs = self.vehicle_states.get(vid, {})
+            if vs.get('routed_to') == sid:
+                continue
+            
+            # Check availability (charging or waiting)
+            availability = self.is_station_available(sid)
+            if availability is None:
+                continue  # Station completely full
+            
+            # Find route to station
             try:
-                route = traci.simulation.findRoute(cur_edge, edge)
-                if route and route.length > 0:
-                    candidates.append((route.length, sid, info, route))
+                route_to = traci.simulation.findRoute(cur_edge, edge)
             except:
                 continue
-
-        if not candidates:
-            return None
-
-        # 2️⃣ sort by distance
-        candidates.sort(key=lambda x: x[0])
-
-        # 3️⃣ nearest station → charging ONLY
-        dist1, sid1, info1, route1 = candidates[0]
-        if self.is_station_available(sid1, check_waiting=False) == 'charging':
-            return {
-                'id': sid1,
-                'info': info1,
-                'route_to': route1,
-                'availability': 'charging',
-                'total_length': dist1
-            }
-
-        # 4️⃣ second nearest station
-        if len(candidates) > 1:
-            dist2, sid2, info2, route2 = candidates[1]
-            avail2 = self.is_station_available(sid2, check_waiting=True)
-
-            if avail2 in ('charging', 'waiting'):
-                return {
-                    'id': sid2,
-                    'info': info2,
-                    'route_to': route2,
-                    'availability': avail2,
-                    'total_length': dist2
+            
+            if not route_to or not getattr(route_to, "edges", None) or edge not in route_to.edges:
+                continue
+            
+            # Calculate total route length (to station + back to destination)
+            try:
+                vroute = traci.vehicle.getRoute(vid)
+                dest = vroute[-1] if vroute else None
+            except:
+                dest = None
+            
+            back_len = 0.0
+            if dest:
+                try:
+                    rb = traci.simulation.findRoute(edge, dest)
+                    back_len = rb.length if rb and hasattr(rb, 'length') else 0.0
+                except:
+                    pass
+            
+            total = getattr(route_to, "length", float('inf')) + back_len
+            
+            # Prefer stations with charging slots over waiting slots
+            if availability == 'charging':
+                priority = total
+            else:  # waiting
+                priority = total + 1000  # Add penalty for waiting slots
+            
+            if priority < best_len:
+                best_len = priority
+                best = {
+                    'id': sid, 
+                    'info': info, 
+                    'route_to': route_to, 
+                    'total_length': total,
+                    'availability': availability
                 }
-
-        # 5️⃣ no valid station
-        return None
-
+        
+        return best
     
     def calculate_charge_time(self, batt, station):
         soc = batt.get('soc_percent', 0.0)
@@ -345,17 +282,8 @@ class SmartChargingStationMonitor:
                     cleaned.append(e)
             
             # Set route and stop
-            # Set route and stop - route to appropriate parking area
-            if availability == 'charging':
-                parking_area = info['charging_area']
-            elif availability == 'waiting':
-                parking_area = info['waiting_area']
-                charge_time = 999999  # Long wait for waiting area
-            else:
-                parking_area = info.get('charging_area', sid)
-
             traci.vehicle.setRoute(vid, cleaned)
-            traci.vehicle.setParkingAreaStop(vid, parking_area, duration=charge_time)
+            traci.vehicle.setParkingAreaStop(vid, sid, duration=charge_time)
             
             # Update vehicle state
             if vid not in self.vehicle_states:
@@ -375,14 +303,11 @@ class SmartChargingStationMonitor:
             return False
     
     def assign_vehicle_to_slot(self, vid, station_id, t):
-        """Assign vehicle to charging or waiting parking area based on availability"""
+        """Assign vehicle to charging or waiting slot based on availability"""
         availability = self.is_station_available(station_id, check_waiting=True)
-        station_info = self.CHARGING_STATIONS[station_id]
         
         if availability == 'charging':
-            # Assign to CHARGING parking area
-            charging_area_id = station_info['charging_area']
-            
+            # Assign to charging slot
             self.station_charging_slots[station_id].add(vid)
             self.currently_charging[vid] = station_id
             
@@ -396,17 +321,14 @@ class SmartChargingStationMonitor:
                 'charging_start': t,
                 'soc_start': soc,
                 'charging_station_active': station_id,
-                'slot_type': 'charging',
-                'parking_area': charging_area_id
+                'slot_type': 'charging'
             })
             
-            print(f"🔋 {vid} @ {station_id} [CHARGING AREA] | {soc:.1f}%")
+            print(f"🔋 {vid} @ {station_id} [CHARGING] | {soc:.1f}%")
             return True
             
         elif availability == 'waiting':
-            # Assign to WAITING parking area
-            waiting_area_id = station_info['waiting_area']
-            
+            # Assign to waiting queue
             self.station_waiting_queue[station_id].append(vid)
             self.currently_waiting[vid] = station_id
             
@@ -416,12 +338,11 @@ class SmartChargingStationMonitor:
             self.vehicle_states[vid].update({
                 'waiting_start': t,
                 'waiting_station': station_id,
-                'slot_type': 'waiting',
-                'parking_area': waiting_area_id
+                'slot_type': 'waiting'
             })
             
             queue_pos = len(self.station_waiting_queue[station_id])
-            print(f"⏳ {vid} @ {station_id} [WAITING AREA] | Queue pos: {queue_pos}")
+            print(f"⏳ {vid} @ {station_id} [WAITING] | Queue pos: {queue_pos}")
             
             # Log queue event
             self.queue_events.append({
@@ -437,11 +358,9 @@ class SmartChargingStationMonitor:
             print(f"❌ {vid} @ {station_id} - STATION FULL!")
             return False
     
-    
     def promote_waiting_vehicles(self, station_id, t):
-        """Move vehicles from waiting area to charging area when slots available"""
+        """Move vehicles from waiting queue to charging slots when available"""
         promoted_count = 0
-        station_info = self.CHARGING_STATIONS[station_id]
         
         while self.station_waiting_queue[station_id]:
             # Check if charging slot available
@@ -463,24 +382,6 @@ class SmartChargingStationMonitor:
             # Remove from waiting tracking
             self.currently_waiting.pop(vid, None)
             
-            # Calculate charge time
-            batt = self.get_battery_info(vid)
-            if not batt:
-                continue
-            charge_time = self.calculate_charge_time(batt, station_info)
-            
-            # MOVE from WAITING area to CHARGING area
-            try:
-                charging_area_id = station_info['charging_area']
-                
-                # Resume vehicle and reroute to charging area
-                traci.vehicle.resume(vid)
-                traci.vehicle.setParkingAreaStop(vid, charging_area_id, duration=charge_time)
-                
-            except Exception as e:
-                print(f"⚠ Could not promote {vid} to charging area: {e}")
-                continue
-            
             # Add to charging slot
             self.station_charging_slots[station_id].add(vid)
             self.currently_charging[vid] = station_id
@@ -490,15 +391,15 @@ class SmartChargingStationMonitor:
             wait_start = vs.pop('waiting_start', t)
             wait_time = t - wait_start
             
-            soc = batt['soc_percent']
+            batt = self.get_battery_info(vid)
+            soc = batt['soc_percent'] if batt else 0.0
             
             vs.update({
                 'charging_start': t,
                 'soc_start': soc,
                 'charging_station_active': station_id,
                 'slot_type': 'charging',
-                'wait_time_sec': wait_time,
-                'parking_area': charging_area_id
+                'wait_time_sec': wait_time
             })
             
             print(f"⬆️ {vid} @ {station_id} [WAITING→CHARGING] | Waited {wait_time:.0f}s | {soc:.1f}%")
@@ -515,7 +416,6 @@ class SmartChargingStationMonitor:
             promoted_count += 1
         
         return promoted_count
-    
     
     def monitor_charging(self, t):
         """Monitor charging and waiting vehicles, manage queue promotions"""

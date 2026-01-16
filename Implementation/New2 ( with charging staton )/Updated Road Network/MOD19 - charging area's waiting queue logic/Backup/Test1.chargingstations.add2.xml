@@ -6,7 +6,7 @@
     <!-- Parking Area with Charging Capability -->
     
     <!-- Station 1: 4 charging slots + 3 waiting slots = 7 total -->
-    <parkingArea id="pa_2" lane="E0_0" startPos="745.11" length="35.00" roadsideCapacity="7">
+    <parkingArea id="pa_2" lane="E0_0" startPos="745" length="35.00" roadsideCapacity="7">
         <param key="chargingPower" value="20"/>
         <param key="chargingEfficiency" value="0.95"/>
         <param key="chargeInTransit" value="false"/>
@@ -14,7 +14,8 @@
         <param key="waitingSlots" value="3"/>       <!-- NEW: Number of waiting slots -->
     </parkingArea>
 
-    <parkingArea id="pa_2_rev" lane="-E0_0" startPos="0.54" endPos="-745.11" length="35.00" roadsideCapacity="7">
+    <!-- <parkingArea id="pa_2_rev" lane="-E0_0" startPos="0.54" endPos="-745.11" length="35.00" roadsideCapacity="7"> -->
+    <parkingArea id="pa_2_rev" lane="-E0_0" startPos="0.9" endPos="-600" length="35.00" roadsideCapacity="7">
         <param key="chargingPower" value="20"/>
         <param key="chargingEfficiency" value="0.95"/>
         <param key="chargeInTransit" value="false"/>
@@ -31,7 +32,8 @@
         <param key="waitingSlots" value="3"/>
     </parkingArea>
 
-    <parkingArea id="pa_3_rev" lane="-E1_0" startPos="0.38" endPos="-727.99" length="35.00" roadsideCapacity="7">
+    <!-- <parkingArea id="pa_3_rev" lane="-E1_0" startPos="0.38" endPos="-727.99" length="35.00" roadsideCapacity="7"> -->
+    <parkingArea id="pa_3_rev" lane="-E1_0" startPos="1" endPos="-600" length="35.00" roadsideCapacity="7">
         <param key="chargingPower" value="20"/>
         <param key="chargingEfficiency" value="0.95"/>
         <param key="chargeInTransit" value="false"/>
@@ -48,7 +50,8 @@
         <param key="waitingSlots" value="3"/>
     </parkingArea>
 
-    <parkingArea id="pa_6_rev" lane="-E5_0" startPos="0.08" endPos="-250.48" length="40.00" roadsideCapacity="8">
+    <!-- <parkingArea id="pa_6_rev" lane="-E5_0" startPos="0.08" endPos="-250.48" length="40.00" roadsideCapacity="8"> -->
+    <parkingArea id="pa_6_rev" lane="-E5_0" startPos="1" endPos="-250" length="70.00" roadsideCapacity="8">
         <param key="chargingPower" value="25"/>
         <param key="chargingEfficiency" value="0.95"/>
         <param key="chargeInTransit" value="false"/>

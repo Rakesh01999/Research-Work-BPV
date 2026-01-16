@@ -240,59 +240,75 @@ class SmartChargingStationMonitor:
         return None
     
     def find_nearest_reachable_station(self, vid):
+        """Find nearest station with availability (charging or waiting slot)"""
         try:
             cur_edge = traci.vehicle.getRoadID(vid)
             if not cur_edge or cur_edge.startswith(':'):
                 return None
         except:
             return None
-
-        candidates = []
-
-        # 1️⃣ collect all reachable stations
+        
+        best = None
+        best_len = float('inf')
+        
         for sid, info in self.CHARGING_STATIONS.items():
-            edge = info['edge']
+            edge = info.get('edge')
+            if not edge:
+                continue
+            
+            # Skip if already routed to this station
+            vs = self.vehicle_states.get(vid, {})
+            if vs.get('routed_to') == sid:
+                continue
+            
+            # Check availability (charging or waiting)
+            availability = self.is_station_available(sid)
+            if availability is None:
+                continue  # Station completely full
+            
+            # Find route to station
             try:
-                route = traci.simulation.findRoute(cur_edge, edge)
-                if route and route.length > 0:
-                    candidates.append((route.length, sid, info, route))
+                route_to = traci.simulation.findRoute(cur_edge, edge)
             except:
                 continue
-
-        if not candidates:
-            return None
-
-        # 2️⃣ sort by distance
-        candidates.sort(key=lambda x: x[0])
-
-        # 3️⃣ nearest station → charging ONLY
-        dist1, sid1, info1, route1 = candidates[0]
-        if self.is_station_available(sid1, check_waiting=False) == 'charging':
-            return {
-                'id': sid1,
-                'info': info1,
-                'route_to': route1,
-                'availability': 'charging',
-                'total_length': dist1
-            }
-
-        # 4️⃣ second nearest station
-        if len(candidates) > 1:
-            dist2, sid2, info2, route2 = candidates[1]
-            avail2 = self.is_station_available(sid2, check_waiting=True)
-
-            if avail2 in ('charging', 'waiting'):
-                return {
-                    'id': sid2,
-                    'info': info2,
-                    'route_to': route2,
-                    'availability': avail2,
-                    'total_length': dist2
+            
+            if not route_to or not getattr(route_to, "edges", None) or edge not in route_to.edges:
+                continue
+            
+            # Calculate total route length (to station + back to destination)
+            try:
+                vroute = traci.vehicle.getRoute(vid)
+                dest = vroute[-1] if vroute else None
+            except:
+                dest = None
+            
+            back_len = 0.0
+            if dest:
+                try:
+                    rb = traci.simulation.findRoute(edge, dest)
+                    back_len = rb.length if rb and hasattr(rb, 'length') else 0.0
+                except:
+                    pass
+            
+            total = getattr(route_to, "length", float('inf')) + back_len
+            
+            # Prefer stations with charging slots over waiting slots
+            if availability == 'charging':
+                priority = total
+            else:  # waiting
+                priority = total + 1000  # Add penalty for waiting slots
+            
+            if priority < best_len:
+                best_len = priority
+                best = {
+                    'id': sid, 
+                    'info': info, 
+                    'route_to': route_to, 
+                    'total_length': total,
+                    'availability': availability
                 }
-
-        # 5️⃣ no valid station
-        return None
-
+        
+        return best
     
     def calculate_charge_time(self, batt, station):
         soc = batt.get('soc_percent', 0.0)

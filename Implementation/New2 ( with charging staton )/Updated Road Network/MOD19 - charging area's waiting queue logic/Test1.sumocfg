@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<!-- Bangladesh EV traffic simulation with charging stations and battery tracking -->
+<!-- generated on 2026-01-16T22:30:25.064324+06:00 by Eclipse SUMO sumo 1.25.0
+-->
 
 <sumoConfiguration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://sumo.dlr.de/xsd/sumoConfiguration.xsd">
 
@@ -11,20 +12,11 @@
     </input>
 
     <output>
-        <!-- Summary statistics -->
-        <summary-output value="summary.xml"/>
-        
-        <!-- Individual vehicle trip data -->
-        <tripinfo-output value="tripinfo.xml"/>
-        
-        <!-- Battery consumption output -->
         <battery-output value="battery.xml"/>
         <battery-output.precision value="4"/>
-        
-        <!-- Charging station output -->
         <chargingstations-output value="chargingstations.xml"/>
-        
-        <!-- Edge-based statistics -->
+        <summary-output value="summary.xml"/>
+        <tripinfo-output value="tripinfo.xml"/>
         <statistic-output value="statistics.xml"/>
     </output>
 
@@ -35,9 +27,9 @@
     </time>
 
     <processing>
-        <time-to-teleport value="-1"/>
-        <collision.action value="warn"/>
         <lateral-resolution value="0.8"/>
+        <collision.action value="warn"/>
+        <time-to-teleport value="-1"/>
     </processing>
 
     <routing>
@@ -47,8 +39,8 @@
 
     <report>
         <verbose value="true"/>
-        <no-step-log value="false"/>
         <duration-log.statistics value="true"/>
+        <no-step-log value="false"/>
     </report>
 
 </sumoConfiguration>

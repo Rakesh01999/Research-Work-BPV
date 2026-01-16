@@ -1,12 +1,13 @@
 """
-Enhanced Smart Charging Simulation WITH Load Demand Analysis
-FULLY FIXED: Downstream errors eliminated with proper route validation
+Enhanced Smart Charging Simulation with Detailed Station Monitoring
+Tracks: Station occupancy, vehicle IDs, charging duration, and power load per station
 """
 
 import os
 import sys
 import traceback
 from datetime import datetime
+from collections import defaultdict
 
 try:
     import traci
@@ -18,13 +19,15 @@ except ImportError:
 import pandas as pd
 
 
-class SmartChargingWithLoadDemand:
+class SmartChargingStationMonitor:
     
     # ========== Configuration ==========
     SOC_THRESHOLD = 30.0
     SOC_TARGET = 70.0
     MIN_CHARGE_TIME = 30
     MAX_CHARGE_TIME = 300
+    # MIN_CHARGE_TIME = 10
+    # MAX_CHARGE_TIME = 50
     
     # Charging stations (matching your XML)
     CHARGING_STATIONS = {
@@ -45,6 +48,7 @@ class SmartChargingWithLoadDemand:
         self.output_folder = output_folder
         os.makedirs(output_folder, exist_ok=True)
         
+        # Existing data structures
         self.vehicle_data = []
         self.charging_events = []
         self.low_soc_alerts = []
@@ -52,16 +56,15 @@ class SmartChargingWithLoadDemand:
         self.vehicle_states = {}
         self.initial_soc = {}
         self.station_occupancy = {}
+        self.currently_charging = {}
         
-        # Track vehicles currently charging for load calculation
-        self.currently_charging = {}  # {vid: station_id}
+        # NEW: Detailed station monitoring
+        self.station_snapshots = []  # Time-series snapshots of each station
+        self.station_vehicle_history = defaultdict(list)  # Per-station vehicle tracking
         
-        # Track failed routing attempts to avoid repeated errors
-        self.routing_failures = {}  # {vid: {station_id: attempt_count}}
-        
-        print("✓ Enhanced Smart Charging + Load Demand System")
+        print("✓ Enhanced Charging Station Monitor Initialized")
         print(f"  SOC: {self.SOC_THRESHOLD}% → {self.SOC_TARGET}%")
-        print(f"  Stations: {len(self.CHARGING_STATIONS)} ({sum(s['capacity'] for s in self.CHARGING_STATIONS.values())} slots)")
+        print(f"  Stations: {len(self.CHARGING_STATIONS)} ({sum(s['capacity'] for s in self.CHARGING_STATIONS.values())} total slots)")
     
     def get_battery_info(self, vid):
         try:
@@ -89,9 +92,7 @@ class SmartChargingWithLoadDemand:
             return None
     
     def get_charging_station_id(self, vid):
-        """
-        FIXED: Try multiple methods to detect if vehicle is charging
-        """
+        """Detect if vehicle is charging"""
         # Method 1: Direct parameter check
         try:
             cs = traci.vehicle.getParameter(vid, "device.battery.chargingStationId")
@@ -108,7 +109,7 @@ class SmartChargingWithLoadDemand:
         except:
             pass
         
-        # Method 3: Check if vehicle is stopped at a parking area
+        # Method 3: Check stops
         try:
             stops = traci.vehicle.getStops(vid)
             if stops:
@@ -117,89 +118,21 @@ class SmartChargingWithLoadDemand:
                         place_id = stop.stoppingPlaceID
                         if place_id in self.CHARGING_STATIONS:
                             speed = traci.vehicle.getSpeed(vid)
-                            if speed < 0.5:  # Nearly stopped
+                            if speed < 0.5:
                                 return place_id
         except:
             pass
         
-        # Method 4: Check our internal tracking
+        # Method 4: Check internal tracking
         if vid in self.currently_charging:
             return self.currently_charging[vid]
         
         return None
     
-    def has_failed_routing_too_many_times(self, vid, station_id, max_attempts=3):
-        """Check if we've failed to route this vehicle to this station too many times"""
-        if vid not in self.routing_failures:
-            return False
-        if station_id not in self.routing_failures[vid]:
-            return False
-        return self.routing_failures[vid][station_id] >= max_attempts
-    
-    def record_routing_failure(self, vid, station_id):
-        """Record a failed routing attempt"""
-        if vid not in self.routing_failures:
-            self.routing_failures[vid] = {}
-        if station_id not in self.routing_failures[vid]:
-            self.routing_failures[vid][station_id] = 0
-        self.routing_failures[vid][station_id] += 1
-    
-    def is_edge_valid(self, edge_id):
-        """Check if an edge exists in the network"""
-        if not edge_id or edge_id.startswith(':'):
-            return False
-        try:
-            # Try to get edge information to verify it exists
-            traci.edge.getLaneNumber(edge_id)
-            return True
-        except:
-            return False
-    
-    def get_edge_position_in_route(self, edge_id, route_edges):
-        """Find the position of an edge in a route"""
-        try:
-            return route_edges.index(edge_id)
-        except ValueError:
-            return -1
-    
-    def is_station_downstream(self, vid, station_edge, new_route_edges):
-        """
-        CRITICAL FIX: Verify that the station edge is actually on the vehicle's route
-        and comes AFTER the vehicle's current position
-        """
-        try:
-            # Get current edge
-            current_edge = traci.vehicle.getRoadID(vid)
-            if not current_edge or current_edge.startswith(':'):
-                return False
-            
-            # Find positions in route
-            current_pos = self.get_edge_position_in_route(current_edge, new_route_edges)
-            station_pos = self.get_edge_position_in_route(station_edge, new_route_edges)
-            
-            # Station must be in route and after current position
-            if station_pos < 0:
-                return False
-            
-            if current_pos >= 0:
-                # If we found current edge, station must be after it
-                return station_pos > current_pos
-            else:
-                # If current edge not in route, we might be between edges
-                # In this case, station should be in the route
-                return station_pos >= 0
-                
-        except:
-            return False
-    
     def find_nearest_reachable_station(self, vid):
         try:
             cur_edge = traci.vehicle.getRoadID(vid)
             if not cur_edge or cur_edge.startswith(':'):
-                return None
-            
-            # Verify current edge is valid
-            if not self.is_edge_valid(cur_edge):
                 return None
         except:
             return None
@@ -212,66 +145,40 @@ class SmartChargingWithLoadDemand:
             if not edge:
                 continue
             
-            # Skip if we've failed too many times with this station
-            if self.has_failed_routing_too_many_times(vid, sid):
-                continue
-            
-            # Verify station edge is valid
-            if not self.is_edge_valid(edge):
-                continue
-            
             vs = self.vehicle_states.get(vid, {})
             if vs.get('routed_to') == sid:
                 continue
             
-            # Check capacity properly
             occupied = len(self.station_occupancy.get(sid, set()))
             if occupied >= info.get('capacity', 4):
                 continue
             
-            # Find route to station
             try:
                 route_to = traci.simulation.findRoute(cur_edge, edge)
             except:
                 continue
             
-            if not route_to or not hasattr(route_to, "edges") or not route_to.edges:
+            if not route_to or not getattr(route_to, "edges", None) or edge not in route_to.edges:
                 continue
             
-            # CRITICAL: Verify station edge is actually IN the route
-            if edge not in route_to.edges:
-                continue
-            
-            # Get vehicle's destination
             try:
                 vroute = traci.vehicle.getRoute(vid)
                 dest = vroute[-1] if vroute else None
             except:
                 dest = None
             
-            # Plan return route
-            back_route = None
             back_len = 0.0
-            if dest and self.is_edge_valid(dest):
+            if dest:
                 try:
                     rb = traci.simulation.findRoute(edge, dest)
-                    if rb and hasattr(rb, 'length'):
-                        back_route = rb
-                        back_len = rb.length
+                    back_len = rb.length if rb and hasattr(rb, 'length') else 0.0
                 except:
                     pass
             
             total = getattr(route_to, "length", float('inf')) + back_len
-            
             if total < best_len:
                 best_len = total
-                best = {
-                    'id': sid,
-                    'info': info,
-                    'route_to': route_to,
-                    'route_back': back_route,
-                    'total_length': total
-                }
+                best = {'id': sid, 'info': info, 'route_to': route_to, 'route_back': None, 'total_length': total}
         
         return best
     
@@ -290,79 +197,43 @@ class SmartChargingWithLoadDemand:
         return max(self.MIN_CHARGE_TIME, min(self.MAX_CHARGE_TIME, time))
     
     def reroute_and_schedule_charge(self, vid, choice, batt):
-        """
-        FULLY FIXED: Only schedule charging if station is properly on the route
-        """
         try:
             sid = choice['id']
             info = choice['info']
             route_to = choice.get('route_to')
-            route_back = choice.get('route_back')
             
             charge_time = self.calculate_charge_time(batt, info)
             
-            # Build route edges
             edges = list(route_to.edges) if route_to and hasattr(route_to, 'edges') else []
             if not edges:
-                self.record_routing_failure(vid, sid)
                 return False
             
-            # CRITICAL: Verify station edge is in the route to station
-            station_edge = info['edge']
-            if station_edge not in edges:
-                self.record_routing_failure(vid, sid)
-                print(f"⚠ Station {sid} edge not in route for {vid}, skipping")
-                return False
+            try:
+                vroute = traci.vehicle.getRoute(vid)
+                dest = vroute[-1] if vroute else None
+                if dest:
+                    rb = traci.simulation.findRoute(info['edge'], dest)
+                    if rb and hasattr(rb, 'edges'):
+                        back = rb.edges
+                        if back and edges and back[0] == edges[-1]:
+                            edges.extend(back[1:])
+                        else:
+                            edges.extend(back)
+            except:
+                pass
             
-            # Add return route to destination
-            if route_back and hasattr(route_back, 'edges'):
-                back = route_back.edges
-                if back:
-                    # Avoid duplicate station edge
-                    if edges and back and back[0] == edges[-1]:
-                        edges.extend(back[1:])
-                    else:
-                        edges.extend(back)
-            
-            # Remove consecutive duplicates
             cleaned = []
             for e in edges:
                 if not cleaned or cleaned[-1] != e:
                     cleaned.append(e)
             
-            # CRITICAL: Final check - is station downstream on this route?
-            if not self.is_station_downstream(vid, station_edge, cleaned):
-                self.record_routing_failure(vid, sid)
-                print(f"⚠ Station {sid} not downstream for {vid}, skipping")
-                return False
+            traci.vehicle.setRoute(vid, cleaned)
+            traci.vehicle.setParkingAreaStop(vid, sid, duration=charge_time)
             
-            # Apply route FIRST
-            try:
-                traci.vehicle.setRoute(vid, cleaned)
-            except Exception as e:
-                self.record_routing_failure(vid, sid)
-                print(f"⚠ setRoute failed for {vid}: {e}")
-                return False
-            
-            # Small delay to ensure route is set
-            # (sometimes SUMO needs a step to process route change)
-            
-            # Now schedule charging stop - only if route was successfully set
-            try:
-                traci.vehicle.setParkingAreaStop(vid, sid, duration=charge_time)
-            except Exception as e:
-                self.record_routing_failure(vid, sid)
-                print(f"⚠ setParkingAreaStop failed for {vid} at {sid}: {e}")
-                # Try to recover by not marking as scheduled
-                return False
-            
-            # Only mark as success if BOTH setRoute and setParkingAreaStop succeeded
-            # Update occupancy tracking
             if sid not in self.station_occupancy:
                 self.station_occupancy[sid] = set()
             self.station_occupancy[sid].add(vid)
             
-            # Update vehicle state
             if vid not in self.vehicle_states:
                 self.vehicle_states[vid] = {}
             self.vehicle_states[vid].update({
@@ -374,10 +245,8 @@ class SmartChargingWithLoadDemand:
             
             print(f"🔌 {vid} → {sid} | {charge_time:.0f}s | {choice.get('total_length',0):.1f}m")
             return True
-            
         except Exception as e:
-            self.record_routing_failure(vid, sid)
-            print(f"⚠ Routing failed for {vid}: {e}")
+            print(f"⚠ Route failed: {e}")
             return False
     
     def monitor_charging(self, t):
@@ -396,8 +265,6 @@ class SmartChargingWithLoadDemand:
                     if not self.station_occupancy[s]:
                         del self.station_occupancy[s]
                 self.currently_charging.pop(vid, None)
-                # Clean up routing failures for departed vehicle
-                self.routing_failures.pop(vid, None)
                 del self.vehicle_states[vid]
         
         for vid in vids:
@@ -409,7 +276,6 @@ class SmartChargingWithLoadDemand:
                 if not b:
                     continue
                 
-                # Add to charging tracker
                 self.currently_charging[vid] = cs
                 
                 if vid not in self.vehicle_states:
@@ -461,12 +327,63 @@ class SmartChargingWithLoadDemand:
                     
                     print(f"✅ {vid} @ {station} | {dur:.0f}s | {soc0:.1f}%→{b['soc_percent']:.1f}% (+{b['soc_percent']-soc0:.1f}%)")
     
+    def capture_station_snapshot(self, t):
+        """
+        NEW: Capture detailed snapshot of all stations at current timestep
+        Records: station ID, vehicle count, vehicle IDs, charging duration per vehicle, power load
+        """
+        for station_id, station_info in self.CHARGING_STATIONS.items():
+            # Get vehicles currently at this station
+            vehicles_at_station = []
+            charging_times = []  # NEW: List to store charging times
+            total_power_kW = 0.0
+            
+            for vid, charging_station in self.currently_charging.items():
+                if charging_station == station_id:
+                    vehicles_at_station.append(vid)
+                    total_power_kW += station_info['power_kW']
+                    
+                    # Track individual vehicle charging duration
+                    vs = self.vehicle_states.get(vid, {})
+                    charge_start = vs.get('charging_start', t)
+                    duration = t - charge_start
+                    charging_times.append(round(duration, 1))  # NEW: Append charging time
+                    
+                    # Get battery info
+                    batt = self.get_battery_info(vid)
+                    soc = batt['soc_percent'] if batt else 0.0
+                    
+                    # Record detailed vehicle-station association
+                    self.station_vehicle_history[station_id].append({
+                        'timestep_sec': t,
+                        'vehicle_id': vid,
+                        'vehicle_type': traci.vehicle.getTypeID(vid),
+                        'charging_duration_sec': round(duration, 1),
+                        'current_soc_percent': round(soc, 2),
+                        'power_consumption_kW': station_info['power_kW']
+                    })
+            
+            # Create station snapshot
+            snapshot = {
+                'timestep_sec': t,
+                'station_id': station_id,
+                'station_edge': station_info['edge'].replace('-', 'NEG_') if station_info['edge'].startswith('-') else station_info['edge'],
+                'station_capacity': station_info['capacity'],
+                'vehicles_charging': len(vehicles_at_station),
+                'vehicle_ids': ','.join(vehicles_at_station) if vehicles_at_station else 'NONE',
+                'charging_times_sec': ','.join(map(str, charging_times)) if charging_times else 'NONE',  # NEW COLUMN
+                'total_power_load_kW': round(total_power_kW, 3),
+                'utilization_percent': round((len(vehicles_at_station) / station_info['capacity']) * 100, 1),
+                'available_slots': station_info['capacity'] - len(vehicles_at_station)
+            }
+            
+            self.station_snapshots.append(snapshot)
+    
     def calculate_load(self, t):
-        """Calculate load demand from charging vehicles"""
+        """Calculate system-wide load"""
         loads = {s: {'vehicles': 0, 'power_kW': 0.0} for s in self.CHARGING_STATIONS}
         total = 0.0
         
-        # Use internal tracking
         for vid, station_id in self.currently_charging.items():
             if station_id in self.CHARGING_STATIONS:
                 power = self.CHARGING_STATIONS[station_id]['power_kW']
@@ -486,17 +403,13 @@ class SmartChargingWithLoadDemand:
             rec[f'{s}_power_kW'] = round(d['power_kW'], 3)
         
         self.load_demand_data.append(rec)
-        
-        # Debug output (first non-zero load)
-        if total > 0 and not hasattr(self, '_load_debug_shown'):
-            self._load_debug_shown = True
-            print(f"\n💡 LOAD DETECTED: {total:.1f} kW from {len(self.currently_charging)} vehicles")
-            for v, s in list(self.currently_charging.items())[:3]:
-                print(f"   {v} @ {s}")
     
     def collect_data(self, t):
         # Monitor charging FIRST
         self.monitor_charging(t)
+        
+        # Capture detailed station snapshot
+        self.capture_station_snapshot(t)
         
         # Calculate load
         self.calculate_load(t)
@@ -527,13 +440,7 @@ class SmartChargingWithLoadDemand:
                             'nearest_station': choice['id'],
                             'route_length_m': round(choice.get('total_length', 0), 2)
                         })
-                        
-                        # Try to reroute - if it fails, don't mark as scheduled
-                        success = self.reroute_and_schedule_charge(v, choice, b)
-                        if not success:
-                            # If routing failed, the vehicle will try again next time
-                            # SOC drops below threshold (unless max attempts reached)
-                            pass
+                        self.reroute_and_schedule_charge(v, choice, b)
                 
                 try:
                     pos = traci.vehicle.getPosition(v)
@@ -563,7 +470,7 @@ class SmartChargingWithLoadDemand:
                 continue
     
     def run_simulation(self, gui=True, max_time=600):
-        print(f"\n{'='*70}\nSMART CHARGING + LOAD DEMAND\n{'='*70}")
+        print(f"\n{'='*70}\nSTATION MONITORING SIMULATION\n{'='*70}")
         
         cmd = ["sumo-gui" if gui else "sumo", "-c", self.sumocfg, "--start", "--quit-on-end"]
         
@@ -588,7 +495,7 @@ class SmartChargingWithLoadDemand:
                     chrg = len(self.currently_charging)
                     occ = sum(len(v) for v in self.station_occupancy.values())
                     load = self.load_demand_data[-1]['total_power_demand_kW'] if self.load_demand_data else 0
-                    print(f"⏱️  {int(t)}s | Active:{active} Chrg:{chrg} Occ:{occ} Load:{load:.1f}kW Alerts:{len(self.low_soc_alerts)}")
+                    print(f"⏱️ {int(t)}s | Active:{active} Charging:{chrg} Occupied:{occ} Load:{load:.1f}kW")
             
             traci.close()
             print(f"\n✓ Done at {t}s")
@@ -603,54 +510,78 @@ class SmartChargingWithLoadDemand:
             return False
     
     def export_results(self):
-        print(f"\n{'='*70}\nEXPORTING\n{'='*70}")
+        print(f"\n{'='*70}\nEXPORTING RESULTS\n{'='*70}")
         ts = datetime.now().strftime("%Y%m%d_%H%M%S")
         
+        # Export station snapshots (NEW)
+        if self.station_snapshots:
+            df = pd.DataFrame(self.station_snapshots)
+            f = os.path.join(self.output_folder, f'station_snapshots_{ts}.csv')
+            df.to_csv(f, index=False)
+            print(f"✓ Station Snapshots: {f} ({len(df):,} records)")
+            
+            # Print station summary
+            print("\n📊 STATION UTILIZATION SUMMARY:")
+            for station_id in self.CHARGING_STATIONS.keys():
+                station_data = df[df['station_id'] == station_id]
+                if len(station_data) > 0:
+                    avg_util = station_data['utilization_percent'].mean()
+                    max_vehicles = station_data['vehicles_charging'].max()
+                    total_vehicle_time = station_data['vehicles_charging'].sum()
+                    print(f"  {station_id}: Avg {avg_util:.1f}% | Peak {int(max_vehicles)} vehicles | Total {int(total_vehicle_time)} vehicle-seconds")
+        
+        # Export vehicle-station history (NEW)
+        if self.station_vehicle_history:
+            all_records = []
+            for station_id, records in self.station_vehicle_history.items():
+                all_records.extend(records)
+            
+            if all_records:
+                df = pd.DataFrame(all_records)
+                f = os.path.join(self.output_folder, f'vehicle_station_history_{ts}.csv')
+                df.to_csv(f, index=False)
+                print(f"✓ Vehicle-Station History: {f} ({len(df):,} records)")
+        
+        # Export existing data
         if self.vehicle_data:
             df = pd.DataFrame(self.vehicle_data)
             f = os.path.join(self.output_folder, f'vehicle_tracking_{ts}.csv')
             df.to_csv(f, index=False)
-            print(f"✓ Tracking: {f} ({len(df):,} records)")
+            print(f"✓ Vehicle Tracking: {f} ({len(df):,} records)")
         
         if self.low_soc_alerts:
             df = pd.DataFrame(self.low_soc_alerts)
             f = os.path.join(self.output_folder, f'low_soc_alerts_{ts}.csv')
             df.to_csv(f, index=False)
-            print(f"✓ Alerts: {f} ({len(df):,})")
+            print(f"✓ Low SOC Alerts: {f} ({len(df):,})")
         
         if self.charging_events:
             df = pd.DataFrame(self.charging_events)
             f = os.path.join(self.output_folder, f'charging_events_{ts}.csv')
             df.to_csv(f, index=False)
-            print(f"✓ Charging: {f} ({len(df):,})")
+            print(f"✓ Charging Events: {f} ({len(df):,})")
             if len(df) > 0:
-                print(f"  Avg: {df['duration_sec'].mean():.1f}s, {df['soc_gained_percent'].mean():.1f}% gain")
+                print(f"  Avg Duration: {df['duration_sec'].mean():.1f}s")
+                print(f"  Avg SOC Gain: {df['soc_gained_percent'].mean():.1f}%")
         
         if self.load_demand_data:
             df = pd.DataFrame(self.load_demand_data)
             f = os.path.join(self.output_folder, f'load_demand_{ts}.csv')
             df.to_csv(f, index=False)
-            print(f"✓ Load: {f} ({len(df):,})")
+            print(f"✓ Load Demand: {f} ({len(df):,})")
             
             total_charging = df['total_vehicles_charging'].sum()
-            if total_charging == 0:
-                print(f"\n⚠️  WARNING: No charging detected in entire simulation!")
-                print(f"   This could mean:")
-                print(f"   1. No vehicles needed charging (SOC stayed above {self.SOC_THRESHOLD}%)")
-                print(f"   2. Charging stations were not reachable")
-                print(f"   3. Initial SOC was too high")
-            else:
+            if total_charging > 0:
                 peak = df['total_power_demand_kW'].max()
-                avg = df[df['total_power_demand_kW'] > 0]['total_power_demand_kW'].mean() if total_charging > 0 else 0
+                avg = df[df['total_power_demand_kW'] > 0]['total_power_demand_kW'].mean()
                 energy = df['total_power_demand_kW'].sum() / 3600
                 maxv = df['total_vehicles_charging'].max()
                 
-                print(f"\n📊 LOAD SUMMARY:")
-                print(f"  Peak: {peak:.2f} kW")
-                print(f"  Avg (when charging): {avg:.2f} kW")
+                print(f"\n💡 SYSTEM LOAD SUMMARY:")
+                print(f"  Peak Power: {peak:.2f} kW")
+                print(f"  Avg Power: {avg:.2f} kW")
                 print(f"  Total Energy: {energy:.3f} kWh")
-                print(f"  Max simultaneous: {int(maxv)} vehicles")
-                print(f"  Total charging instances: {int(total_charging)}")
+                print(f"  Max Simultaneous: {int(maxv)} vehicles")
         
         print(f"{'='*70}\n")
 
@@ -665,7 +596,7 @@ def main():
         print(f"✗ ERROR: {SUMOCFG} not found!")
         return
     
-    sim = SmartChargingWithLoadDemand(sumocfg=SUMOCFG, output_folder=OUTPUT)
+    sim = SmartChargingStationMonitor(sumocfg=SUMOCFG, output_folder=OUTPUT)
     
     if sim.run_simulation(gui=GUI, max_time=MAX_TIME):
         sim.export_results()
