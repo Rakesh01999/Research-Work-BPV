@@ -249,11 +249,10 @@ class SmartChargingStationMonitor:
 
         candidates = []
 
-        # 1️⃣ collect all reachable stations
+        # Collect all reachable stations
         for sid, info in self.CHARGING_STATIONS.items():
-            edge = info['edge']
             try:
-                route = traci.simulation.findRoute(cur_edge, edge)
+                route = traci.simulation.findRoute(cur_edge, info['edge'])
                 if route and route.length > 0:
                     candidates.append((route.length, sid, info, route))
             except:
@@ -262,10 +261,10 @@ class SmartChargingStationMonitor:
         if not candidates:
             return None
 
-        # 2️⃣ sort by distance
+        # Sort by distance
         candidates.sort(key=lambda x: x[0])
 
-        # 3️⃣ nearest station → charging ONLY
+        # ---------- RULE 1: Nearest → CHARGING ONLY ----------
         dist1, sid1, info1, route1 = candidates[0]
         if self.is_station_available(sid1, check_waiting=False) == 'charging':
             return {
@@ -276,21 +275,34 @@ class SmartChargingStationMonitor:
                 'total_length': dist1
             }
 
-        # 4️⃣ second nearest station
-        if len(candidates) > 1:
-            dist2, sid2, info2, route2 = candidates[1]
-            avail2 = self.is_station_available(sid2, check_waiting=True)
+        # ---------- RULE 2–5: Second nearest ----------
+        if len(candidates) < 2:
+            return None
 
-            if avail2 in ('charging', 'waiting'):
-                return {
-                    'id': sid2,
-                    'info': info2,
-                    'route_to': route2,
-                    'availability': avail2,
-                    'total_length': dist2
-                }
+        dist2, sid2, info2, route2 = candidates[1]
+        availability2 = self.is_station_available(sid2, check_waiting=True)
 
-        # 5️⃣ no valid station
+        # Rule 3
+        if availability2 == 'charging':
+            return {
+                'id': sid2,
+                'info': info2,
+                'route_to': route2,
+                'availability': 'charging',
+                'total_length': dist2
+            }
+
+        # Rule 4
+        if availability2 == 'waiting':
+            return {
+                'id': sid2,
+                'info': info2,
+                'route_to': route2,
+                'availability': 'waiting',
+                'total_length': dist2
+            }
+
+        # Rule 5: Do NOT route anywhere
         return None
 
     
@@ -350,7 +362,7 @@ class SmartChargingStationMonitor:
                 parking_area = info['charging_area']
             elif availability == 'waiting':
                 parking_area = info['waiting_area']
-                charge_time = 999999  # Long wait for waiting area
+                # charge_time = 999999  # Long wait for waiting area
             else:
                 parking_area = info.get('charging_area', sid)
 
