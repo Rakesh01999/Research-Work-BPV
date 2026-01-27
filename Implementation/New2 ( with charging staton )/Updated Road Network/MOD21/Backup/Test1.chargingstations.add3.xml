@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<additional xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+            xsi:noNamespaceSchemaLocation="http://sumo.dlr.de/xsd/additional_file.xsd">
+
+    <!-- Station 1: E0_0 (length 850m) -->
+    <!-- Charging Area: 4 slots -->
+    <parkingArea id="pa_2_charging" lane="E0_0" startPos="700" endPos="720" roadsideCapacity="4">
+        <param key="chargingPower" value="20000"/>
+        <param key="chargingEfficiency" value="0.95"/>
+        <param key="chargeInTransit" value="false"/>
+    </parkingArea>
+    <!-- Waiting Area: 3 slots (NO CHARGING) -->
+    <parkingArea id="pa_2_waiting" lane="E0_0" startPos="725" endPos="740" roadsideCapacity="3"/>
+
+    <!-- Station 1 Reverse: -E0_0 (length 850m) -->
+    <parkingArea id="pa_2_rev_charging" lane="-E0_0" startPos="700" endPos="720" roadsideCapacity="4">
+        <param key="chargingPower" value="20000"/>
+        <param key="chargingEfficiency" value="0.95"/>
+        <param key="chargeInTransit" value="false"/>
+    </parkingArea>
+    <parkingArea id="pa_2_rev_waiting" lane="-E0_0" startPos="725" endPos="740" roadsideCapacity="3"/>
+
+    <!-- Station 2: E1_0 (length 800m) -->
+    <parkingArea id="pa_3_charging" lane="E1_0" startPos="680" endPos="700" roadsideCapacity="4">
+        <param key="chargingPower" value="20000"/>
+        <param key="chargingEfficiency" value="0.95"/>
+        <param key="chargeInTransit" value="false"/>
+    </parkingArea>
+    <parkingArea id="pa_3_waiting" lane="E1_0" startPos="705" endPos="720" roadsideCapacity="3"/>
+
+    <!-- Station 2 Reverse: -E1_0 (length 800m) -->
+    <parkingArea id="pa_3_rev_charging" lane="-E1_0" startPos="680" endPos="700" roadsideCapacity="4">
+        <param key="chargingPower" value="20000"/>
+        <param key="chargingEfficiency" value="0.95"/>
+        <param key="chargeInTransit" value="false"/>
+    </parkingArea>
+    <parkingArea id="pa_3_rev_waiting" lane="-E1_0" startPos="705" endPos="720" roadsideCapacity="3"/>
+
+    <!-- Station 3: E5_0 (length 260m) -->
+    <parkingArea id="pa_6_charging" lane="E5_0" startPos="200" endPos="220" roadsideCapacity="5">
+        <param key="chargingPower" value="25000"/>
+        <param key="chargingEfficiency" value="0.95"/>
+        <param key="chargeInTransit" value="false"/>
+    </parkingArea>
+    <parkingArea id="pa_6_waiting" lane="E5_0" startPos="225" endPos="240" roadsideCapacity="3"/>
+
+    <!-- Station 3 Reverse: -E5_0 (length 260m) -->
+    <parkingArea id="pa_6_rev_charging" lane="-E5_0" startPos="200" endPos="220" roadsideCapacity="5">
+        <param key="chargingPower" value="25000"/>
+        <param key="chargingEfficiency" value="0.95"/>
+        <param key="chargeInTransit" value="false"/>
+    </parkingArea>
+    <parkingArea id="pa_6_rev_waiting" lane="-E5_0" startPos="225" endPos="240" roadsideCapacity="3"/>
+
+    <!-- Station 4: E6_0 (length 500m) -->
+    <parkingArea id="pa_7_charging" lane="E6_0" startPos="380" endPos="395" roadsideCapacity="4">
+        <param key="chargingPower" value="20000"/>
+        <param key="chargingEfficiency" value="0.95"/>
+        <param key="chargeInTransit" value="false"/>
+    </parkingArea>
+    <parkingArea id="pa_7_waiting" lane="E6_0" startPos="400" endPos="410" roadsideCapacity="2"/>
+
+    <!-- Station 4 Reverse: -E6_0 (length 500m) -->
+    <parkingArea id="pa_7_rev_charging" lane="-E6_0" startPos="380" endPos="395" roadsideCapacity="4">
+        <param key="chargingPower" value="20000"/>
+        <param key="chargingEfficiency" value="0.95"/>
+        <param key="chargeInTransit" value="false"/>
+    </parkingArea>
+    <parkingArea id="pa_7_rev_waiting" lane="-E6_0" startPos="400" endPos="410" roadsideCapacity="2"/>
+
+    <!-- Station 5: E7_0 (length 900m) -->
+    <parkingArea id="pa_8_charging" lane="E7_0" startPos="780" endPos="800" roadsideCapacity="5">
+        <param key="chargingPower" value="25000"/>
+        <param key="chargingEfficiency" value="0.95"/>
+        <param key="chargeInTransit" value="false"/>
+    </parkingArea>
+    <parkingArea id="pa_8_waiting" lane="E7_0" startPos="805" endPos="825" roadsideCapacity="3"/>
+
+    <!-- Station 5 Reverse: -E7_0 (length 900m) -->
+    <parkingArea id="pa_8_rev_charging" lane="-E7_0" startPos="780" endPos="800" roadsideCapacity="5">
+        <param key="chargingPower" value="25000"/>
+        <param key="chargingEfficiency" value="0.95"/>
+        <param key="chargeInTransit" value="false"/>
+    </parkingArea>
+    <parkingArea id="pa_8_rev_waiting" lane="-E7_0" startPos="805" endPos="825" roadsideCapacity="3"/>
+
+</additional>
