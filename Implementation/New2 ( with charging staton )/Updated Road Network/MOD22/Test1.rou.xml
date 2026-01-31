@@ -16,9 +16,11 @@
        emissionClass="Energy/unknown">
 
     <param key="has.battery.device" value="true"/>
-    <param key="maximumBatteryCapacity" value="2700"/>
-    <param key="actualBatteryCapacity" value="864"/>
-    <param key="maximumPower" value="900"/>
+    <!-- maximumBatteryCapacity = 12,000 Wh to 13,500 Wh  -->
+    <param key="maximumBatteryCapacity" value="12000"/>
+    <param key="actualBatteryCapacity" value="3150"/>
+    <!-- ranging from 800 to 1200 watts.  -->
+    <param key="maximumPower" value="1000"/>
     
     <param key="vehicleMass" value="350"/>
     <param key="frontSurfaceArea" value="1.0"/>
@@ -41,10 +43,15 @@
            minGap="0.8" tau="2.0" speedFactor="0.8" 
            emissionClass="Energy/unknown">
         <param key="has.battery.device" value="true"/>
+        <!-- <param key="maximumPower" value="1200"/> -->
+        <!-- maximumBatteryCapacity(Wh) = 4 * 12 * 150 -->
+        <!-- Standard Setup (48V/60V): 4-5pcs of 12V 120Ah batteries = 5,760 Wh to 7,200 Wh.
+        High-Capacity Setup (48V/60V): 4-5pcs of 12V 150Ah batteries = 7,200 Wh to 9,000 Wh.
+        hence, avg = 7200 Wh -->
         <param key="maximumBatteryCapacity" value="7200"/>
         <param key="actualBatteryCapacity" value="2232"/>
-        <!-- <param key="maximumPower" value="1200"/> -->
-        <param key="maximumPower" value="2300"/>
+        <!-- typically feature motors with power outputs ranging from 800 W to 1,500 W (1.5 kW) -->
+        <param key="maximumPower" value="900"/>
         
         <param key="vehicleMass" value="200"/>
         <param key="frontSurfaceArea" value="1.5"/>
@@ -69,8 +76,8 @@
         <param key="has.battery.device" value="true"/>
         <param key="maximumBatteryCapacity" value="7200"/>
         <param key="actualBatteryCapacity" value="2376"/>
-        <!-- <param key="maximumPower" value="2500"/> -->
-        <param key="maximumPower" value="2400"/>
+        <!-- <param key="maximumPower" value="800 W to 1,500 W"/> -->
+        <param key="maximumPower" value="900"/>
 
         <param key="vehicleMass" value="200"/>
         <param key="frontSurfaceArea" value="2.4"/>
