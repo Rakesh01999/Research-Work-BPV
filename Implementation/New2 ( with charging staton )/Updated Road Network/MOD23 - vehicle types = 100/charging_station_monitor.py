@@ -793,7 +793,7 @@ class SmartChargingStationMonitor:
             'vehicles_waiting': vehicles_waiting,
             'charging_utilization_percent': round(charging_utilization, 2),
             'waiting_utilization_percent': round(waiting_utilization, 2),
-            'power_demand_kW': round(power_demand, 2),
+            # 'power_demand_kW': round(power_demand, 2),
             'queue_length': queue_length,
             'charging_slots_available': charging_slots_available,
             'waiting_slots_available': waiting_slots_available,
@@ -925,85 +925,115 @@ class SmartChargingStationMonitor:
         }
     
     def collect_ml_features(self, timestep_sec):
-        """Collect comprehensive ML-ready data at each timestep"""
-        # Get time features
-        time_features = self.get_time_features(timestep_sec)
+        """Collect comprehensive ML-ready data: ONE ROW PER VEHICLE PER TIMESTEP"""
         
-        # Get system-wide features
+        # 1. Get Global Context (Time & System)
+        time_features = self.get_time_features(timestep_sec)
         system_features = self.calculate_system_features(timestep_sec)
         
-        # Collect station-level data
+        # 2. Pre-calculate all station features
+        # We need this efficient lookup to attach station context to vehicles near/at stations
+        all_station_features = {}
         for station_id in self.CHARGING_STATIONS.keys():
-            station_features = self.calculate_station_features(station_id, timestep_sec)
+            all_station_features[station_id] = self.calculate_station_features(station_id, timestep_sec)
             
-            # Combine all features for this station at this timestep
-            record = {
-                # Temporal features
-                'timestep_sec': timestep_sec,
-                # 'hour_of_day': time_features['hour_of_day'],
-                'minute_of_hour': time_features['minute_of_hour'],
-                # 'is_peak_hour': time_features['is_peak_hour'],
-                # 'is_business_hour': time_features['is_business_hour'],
-                # 'time_period': time_features['time_period'],
-                
-                # Station identification
-                'station_id': station_id,
-                # 'station_edge': self.CHARGING_STATIONS[station_id]['edge'],
-                'station_edge': (
-                    self.CHARGING_STATIONS[station_id]['edge']
-                    .replace('-', 'NEG_')
-                    if self.CHARGING_STATIONS[station_id]['edge'].startswith('-')
-                    else self.CHARGING_STATIONS[station_id]['edge']
-                ),
-
-                'station_power_capacity_kW': station_features['station_power_capacity_kW'],
-                'station_charging_capacity': station_features['station_charging_capacity'],
-                
-                # Station load features (TARGET VARIABLES)
-                'station_power_demand_kW': station_features['power_demand_kW'],
-                'station_vehicles_charging': station_features['vehicles_charging'],
-                
-                # Station utilization features
-                'station_charging_utilization_percent': station_features['charging_utilization_percent'],
-                'station_waiting_utilization_percent': station_features['waiting_utilization_percent'],
-                'station_vehicles_waiting': station_features['vehicles_waiting'],
-                'station_queue_length': station_features['queue_length'],
-                'station_charging_slots_available': station_features['charging_slots_available'],
-                'station_waiting_slots_available': station_features['waiting_slots_available'],
-                
-                # =========================================================
-                # NEW SYSTEM-WIDE FEATURES (Requested by User)
-                # =========================================================
-                # Restored Legacy Keys for Compatibility
-                'system_total_vehicles_charging': system_features['total_vehicles_charging'],
-                'system_total_vehicles_waiting': system_features['total_vehicles_waiting'],
-                'system_total_active_vehicles': system_features['total_active_vehicles'],
-                
-                # New Detailed Features
-                'system_total_vehicles': system_features['total_active_vehicles'], # Alias
-                'system_moving_vehicles': system_features['total_moving_vehicles'],
-                'system_charging_vehicles': system_features['total_vehicles_charging'], # Alias
-                'system_waiting_vehicles': system_features['total_vehicles_waiting'], # Alias
-                'system_idle_vehicles': system_features['total_idle_vehicles'],
-                
-                'system_avg_speed_ms': system_features['system_avg_speed_ms'],
-                'system_avg_accel_ms2': system_features['system_avg_accel_ms2'],
-                'system_avg_soc_percent': system_features['system_avg_soc_percent'],
-                'system_avg_moving_speed_ms': system_features['system_avg_moving_speed_ms'],
-                'system_avg_moving_soc_percent': system_features['system_avg_moving_soc_percent'],
-                'system_avg_charging_soc_percent': system_features['system_avg_charging_soc_percent'],
-                'system_avg_charging_duration_sec': system_features['system_avg_current_charging_duration_sec'],
-                
-                'system_total_power_demand_kW': system_features['total_power_demand_kW'],
-                'system_charging_utilization_percent': system_features['system_charging_utilization_percent'],
-                
-                # Derived features for ML
-                'load_per_vehicle_kW': round(station_features['power_demand_kW'] / station_features['vehicles_charging'], 2) if station_features['vehicles_charging'] > 0 else 0,
-                'congestion_ratio': round((station_features['vehicles_charging'] + station_features['vehicles_waiting']) / station_features['total_slots'], 2) if station_features['total_slots'] > 0 else 0,
-                'demand_to_capacity_ratio': round(station_features['power_demand_kW'] / (station_features['station_power_capacity_kW'] * station_features['station_charging_capacity']), 2) if (station_features['station_power_capacity_kW'] * station_features['station_charging_capacity']) > 0 else 0
-            }
+        # 3. Iterate ALL Vehicles to create dataset
+        try:
+            vids = traci.vehicle.getIDList()
+        except:
+            vids = []
             
-            self.ml_data.append(record)
+        for vid in vids:
+            try:
+                # --- Vehicle Specific Data ---
+                # Physics
+                try:
+                    speed = traci.vehicle.getSpeed(vid)
+                    accel = traci.vehicle.getAcceleration(vid)
+                    pos = traci.vehicle.getPosition(vid)
+                    lane = traci.vehicle.getLaneID(vid)
+                except:
+                    speed = 0.0
+                    accel = 0.0
+                    pos = (0.0, 0.0)
+                    lane = "unknown"
+                
+                # Battery
+                batt = self.get_battery_info(vid)
+                soc = batt['soc_percent'] if batt else 0.0
+                energy_consumed = batt['energy_consumed_Wh'] if batt else 0.0
+                
+                # Status & Station Context
+                status = 'driving'
+                current_station_id = 'none'
+                station_context = None
+                
+                if vid in self.currently_charging:
+                    status = 'charging'
+                    current_station_id = self.currently_charging[vid]
+                    station_context = all_station_features.get(current_station_id)
+                elif vid in self.currently_waiting:
+                    status = 'waiting'
+                    current_station_id = self.currently_waiting[vid]
+                    station_context = all_station_features.get(current_station_id)
+                elif speed < 0.1:
+                    status = 'idle'
+                
+                # If driving, find nearest station context (optional, but good for ML)
+                # For performance, we might skip full routing here and just use Euclidean distance if needed
+                # For now, if not at a station, station context is empty/zeroed
+                
+                if not station_context:
+                    # Provide default "zero" context if not at a station
+                    station_context = {
+                        'power_demand_kW': 0,
+                        'vehicles_charging': 0, 
+                        'vehicles_waiting': 0,
+                        'charging_utilization_percent': 0,
+                        'queue_length': 0
+                    }
+                
+                # --- Construct Record ---
+                record = {
+                    # 1. Identity & Time
+                    'timestep_sec': timestep_sec,
+                    'minute_of_hour': time_features['minute_of_hour'],
+                    'vehicle_id': traci.vehicle.getTypeID(vid),
+                    # 'vehicle_type': removed as per user request, using type as ID
+                    
+                    # 2. Vehicle Metrics (The "Specific" Data)
+                    'speed_ms': round(speed, 2),
+                    'acceleration_ms2': round(accel, 2),
+                    'soc_percent': round(soc, 2),
+                    'energy_consumed_Wh': round(energy_consumed, 2),
+                    'lane_id': str(lane).replace('-', 'NEG_') if str(lane).startswith('-') else str(lane),
+                    'status': status,
+                    
+                    # 3. Station Context (Where the vehicle is)
+                    'current_station_id': current_station_id,
+                    'station_load_kW': station_context.get('power_demand_kW', 0),
+                    'station_vehicles_charging': station_context.get('vehicles_charging', 0),
+                    'station_queue_length': station_context.get('queue_length', 0),
+                    'station_utilization_percent': station_context.get('charging_utilization_percent', 0),
+                    
+                    # 4. System Context (Global State)
+                    'system_total_vehicles': system_features['total_active_vehicles'],
+                    'system_moving_vehicles': system_features['total_moving_vehicles'],
+                    'system_charging_vehicles': system_features['total_vehicles_charging'],
+                    'system_waiting_vehicles': system_features['total_vehicles_waiting'],
+                    'system_total_load_kW': system_features['total_power_demand_kW'], # Keep alias
+                    'system_avg_speed_ms': system_features['system_avg_speed_ms'],
+                    'system_avg_soc_percent': system_features['system_avg_soc_percent'],
+                    'system_avg_moving_speed_ms': system_features['system_avg_moving_speed_ms'],
+                    'system_avg_moving_soc_percent': system_features['system_avg_moving_soc_percent'],
+                    'system_avg_charging_soc_percent': system_features['system_avg_charging_soc_percent'],
+                    'system_avg_charging_duration_sec': system_features['system_avg_current_charging_duration_sec']
+                }
+                
+                self.ml_data.append(record)
+                
+            except Exception:
+                continue
     
     def collect_data(self, t):
         # Monitor charging and queue management FIRST
@@ -1073,8 +1103,8 @@ class SmartChargingStationMonitor:
                     'energy_consumed_Wh': round(b['energy_consumed_Wh'], 2),
                     'lane': str(lane),
                     'road_id': str(road),
-                    'x_position': round(pos[0], 2),
-                    'y_position': round(pos[1], 2),
+                    # 'x_position': round(pos[0], 2),
+                    # 'y_position': round(pos[1], 2),
                     'speed_ms': round(spd, 2),
                     'distance_m': round(dist, 2)
                 })
@@ -1111,7 +1141,7 @@ class SmartChargingStationMonitor:
                     load = 0
                     if self.ml_data:
                         # power_demand is per station in ml_data, system load is redundant col
-                        load = self.ml_data[-1]['system_total_power_demand_kW']
+                        load = self.ml_data[-1]['system_total_load_kW']
                     
                     print(f"⏱️ {int(t)}s | Active:{active} Charging:{chrg} Waiting:{wait} Load:{load:.1f}kW")
             
@@ -1139,25 +1169,26 @@ class SmartChargingStationMonitor:
             df = pd.DataFrame(self.ml_data)
             
             # Sort for clarity
-            df = df.sort_values(['timestep_sec', 'station_id'])
+            df = df.sort_values(['timestep_sec', 'vehicle_id'])
             
             filename = f'EV_Charging_Load_Demand_Dataset_{ts}.csv'
             f = os.path.join(self.output_folder, filename)
             df.to_csv(f, index=False)
             print(f"✓ DATASET EXPORTED: {f}")
             print(f"  Records: {len(df):,}")
-            print(f"  Format: Long-format (1 row per station per timestep)")
+            print(f"  Format: Vehicle-Centric (1 row per vehicle per timestep)")
             
             if len(df) > 0:
-                peak = df['system_total_power_demand_kW'].max()
-                avg = df['system_total_power_demand_kW'].mean()
+                peak = df['system_total_load_kW'].max()
+                avg = df['system_total_load_kW'].mean()
                 
-                # Calculate energy (SUM of power * 1 second / 3600 to get kWh)
-                # Since we have duplicate system loads (one per station), we need to deduplicate by timestep
-                system_df = df[['timestep_sec', 'system_total_power_demand_kW']].drop_duplicates()
-                energy = system_df['system_total_power_demand_kW'].sum() / 3600
+                # Calculate energy (Average power * duration / 3600)
+                # Note: Data is per vehicle, so we must be careful not to sum system load multiple times
+                # We need to take unique system loads per timestep
+                system_df = df[['timestep_sec', 'system_total_load_kW']].drop_duplicates()
+                energy = system_df['system_total_load_kW'].sum() / 3600
                 
-                maxv = df['system_total_vehicles_charging'].max()
+                maxv = df['system_charging_vehicles'].max()
                 
                 print(f"\n💡 SYSTEM LOAD SUMMARY:")
                 print(f"  Peak Power: {peak:.2f} kW")
