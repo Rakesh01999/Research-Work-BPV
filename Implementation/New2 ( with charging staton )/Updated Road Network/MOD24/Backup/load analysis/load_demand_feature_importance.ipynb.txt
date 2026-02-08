@@ -1,0 +1,88 @@
+
+Random Forest :
+
+Feature	Importance
+12	system_charging_vehicles	0.531421
+0	timestep_sec	0.459880
+10	system_total_vehicles	0.004620
+15	system_avg_soc_percent	0.002402
+18	system_avg_charging_soc_percent	0.001253
+1	minute_of_hour	0.000309
+17	system_avg_moving_soc_percent	0.000060
+11	system_moving_vehicles	0.000036
+14	system_avg_speed_ms	0.000015
+19	system_avg_charging_duration_sec	0.000004
+3	acceleration_ms2	0.000000
+2	speed_ms	0.000000
+8	station_queue_length	0.000000
+9	station_utilization_percent	0.000000
+6	station_load_kW	0.000000
+
+
+
+
+XGBoost :
+
+Feature	Importance
+12	system_charging_vehicles	8.280535e-01
+0	timestep_sec	9.724303e-02
+10	system_total_vehicles	6.501152e-02
+15	system_avg_soc_percent	4.971482e-03
+1	minute_of_hour	3.126501e-03
+11	system_moving_vehicles	9.904885e-04
+18	system_avg_charging_soc_percent	3.752680e-04
+17	system_avg_moving_soc_percent	1.282286e-04
+13	system_waiting_vehicles	6.069062e-05
+14	system_avg_speed_ms	3.911275e-05
+19	system_avg_charging_duration_sec	9.547289e-08
+16	system_avg_moving_speed_ms	8.372275e-08
+3	acceleration_ms2	1.763928e-09
+5	energy_consumed_Wh	2.628175e-11
+4	soc_percent	1.189287e-11
+
+
+
+
+Gradient Boosting Regressor :
+
+
+Feature	Importance
+12	system_charging_vehicles	5.164511e-01
+0	timestep_sec	4.726634e-01
+10	system_total_vehicles	4.600552e-03
+15	system_avg_soc_percent	2.960626e-03
+18	system_avg_charging_soc_percent	2.950788e-03
+1	minute_of_hour	2.910555e-04
+14	system_avg_speed_ms	7.641343e-05
+19	system_avg_charging_duration_sec	4.395507e-06
+17	system_avg_moving_soc_percent	1.744552e-06
+11	system_moving_vehicles	3.317190e-13
+16	system_avg_moving_speed_ms	2.289448e-14
+2	speed_ms	0.000000e+00
+3	acceleration_ms2	0.000000e+00
+9	station_utilization_percent	0.000000e+00
+8	station_queue_length	0.000000e+00
+
+
+
+Linear Regression (Coefficient-Based Importance) :
+
+Feature	Importance
+12	system_charging_vehicles	153.540270
+11	system_moving_vehicles	7.678751
+13	system_waiting_vehicles	6.133553
+14	system_avg_speed_ms	5.073723
+19	system_avg_charging_duration_sec	4.852642
+10	system_total_vehicles	3.882763
+16	system_avg_moving_speed_ms	2.863326
+17	system_avg_moving_soc_percent	2.718123
+15	system_avg_soc_percent	1.900065
+1	minute_of_hour	0.934249
+7	station_vehicles_charging	0.784075
+0	timestep_sec	0.720749
+18	system_avg_charging_soc_percent	0.617610
+9	station_utilization_percent	0.599992
+8	station_queue_length	0.089751
+
+
+

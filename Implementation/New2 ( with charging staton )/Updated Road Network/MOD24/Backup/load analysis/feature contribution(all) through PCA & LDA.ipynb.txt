@@ -1,0 +1,47 @@
+Global PCA importance score :
+
+
+0
+lane_id_:Node2_5_0	0.073361
+lane_id_:Node5_2_0	0.072552
+lane_id_NEG_E1_1	0.072453
+lane_id_E0_1	0.071600
+lane_id_:Node8_2_0	0.066995
+lane_id_E4_1	0.066505
+lane_id_NEG_E2_1	0.066247
+lane_id_NEG_E7_1	0.065487
+lane_id_NEG_E2_0	0.065144
+lane_id_NEG_E9_0	0.064998
+lane_id_:Node8_0_1	0.064982
+lane_id_E10_0	0.064064
+lane_id_E10_1	0.063857
+lane_id_E6_1	0.062724
+lane_id_:Node3_5_1	0.062544
+
+dtype: float64
+
+
+
+
+Global LDA importance score :
+
+0
+system_total_vehicles	106.010001
+system_charging_vehicles	93.411713
+system_moving_vehicles	57.690338
+system_avg_soc_percent	39.273805
+system_avg_moving_soc_percent	23.049427
+timestep_sec	22.466377
+system_avg_speed_ms	12.264006
+system_waiting_vehicles	11.646072
+system_avg_moving_speed_ms	7.017188
+minute_of_hour	4.843331
+system_avg_charging_soc_percent	4.651873
+lane_id_NEG_E8_0	4.574591
+lane_id_E0_0	4.528058
+lane_id_NEG_E7_0	4.245605
+lane_id_NEG_E3_0	3.926935
+
+dtype: float64
+
+
