@@ -1,0 +1,757 @@
+"""
+Enhanced Smart Charging Simulation with Waiting Queue Management
+Features: 
+- Separate charging and waiting slots
+- Automatic queue management
+- Vehicles wait in queue when charging slots full
+- Auto-promotion from waiting to charging when slots free up
+"""
+
+import os
+import sys
+import traceback
+from datetime import datetime
+from collections import defaultdict
+
+try:
+    import traci
+    print("✓ TraCI imported successfully")
+except ImportError:
+    print("✗ ERROR: TraCI not found! Install: pip install traci")
+    sys.exit(1)
+
+import pandas as pd
+
+
+class SmartChargingWithQueue:
+    
+    # ========== Configuration ==========
+    SOC_THRESHOLD = 30.0
+    SOC_TARGET = 70.0
+    MIN_CHARGE_TIME = 30
+    MAX_CHARGE_TIME = 300
+    
+    # Charging stations with separate charging and waiting capacities
+    CHARGING_STATIONS = {
+        'pa_2': {
+            'lane': 'E0_0', 'edge': 'E0', 'startPos': 745.11, 
+            'power_kW': 20.0, 'efficiency': 0.95, 
+            'charging_slots': 4, 'waiting_slots': 3  # 4 charging + 3 waiting
+        },
+        'pa_3': {
+            'lane': 'E1_0', 'edge': 'E1', 'startPos': 727.99, 
+            'power_kW': 20.0, 'efficiency': 0.95, 
+            'charging_slots': 4, 'waiting_slots': 3
+        },
+        'pa_6': {
+            'lane': 'E5_0', 'edge': 'E5', 'startPos': 250.48, 
+            'power_kW': 25.0, 'efficiency': 0.95, 
+            'charging_slots': 5, 'waiting_slots': 3
+        },
+        'pa_7': {
+            'lane': 'E6_0', 'edge': 'E6', 'startPos': 420.48, 
+            'power_kW': 20.0, 'efficiency': 0.95, 
+            'charging_slots': 4, 'waiting_slots': 2
+        },
+        'pa_8': {
+            'lane': 'E7_0', 'edge': 'E7', 'startPos': 830.91, 
+            'power_kW': 25.0, 'efficiency': 0.95, 
+            'charging_slots': 5, 'waiting_slots': 3
+        },
+        'pa_2_rev': {
+            'lane': '-E0_0', 'edge': '-E0', 'startPos': 0.54, 
+            'power_kW': 20.0, 'efficiency': 0.95, 
+            'charging_slots': 4, 'waiting_slots': 3
+        },
+        'pa_3_rev': {
+            'lane': '-E1_0', 'edge': '-E1', 'startPos': 0.38, 
+            'power_kW': 20.0, 'efficiency': 0.95, 
+            'charging_slots': 4, 'waiting_slots': 3
+        },
+        'pa_6_rev': {
+            'lane': '-E5_0', 'edge': '-E5', 'startPos': 0.08, 
+            'power_kW': 25.0, 'efficiency': 0.95, 
+            'charging_slots': 5, 'waiting_slots': 3
+        },
+        'pa_7_rev': {
+            'lane': '-E6_0', 'edge': '-E6', 'startPos': 1.10, 
+            'power_kW': 20.0, 'efficiency': 0.95, 
+            'charging_slots': 4, 'waiting_slots': 2
+        },
+        'pa_8_rev': {
+            'lane': '-E7_0', 'edge': '-E7', 'startPos': 0.05, 
+            'power_kW': 25.0, 'efficiency': 0.95, 
+            'charging_slots': 5, 'waiting_slots': 3
+        }
+    }
+    
+    def __init__(self, sumocfg='Test1.sumocfg', output_folder='simulation_outputs'):
+        self.sumocfg = sumocfg
+        self.output_folder = output_folder
+        os.makedirs(output_folder, exist_ok=True)
+        
+        # Existing data structures
+        self.vehicle_data = []
+        self.charging_events = []
+        self.low_soc_alerts = []
+        self.load_demand_data = []
+        self.station_snapshots = []
+        self.queue_events = []  # NEW: Track queue events
+        
+        self.vehicle_states = {}
+        self.initial_soc = {}
+        
+        # NEW: Separate tracking for charging and waiting
+        self.charging_vehicles = {}  # {station_id: set(vehicle_ids)} - actively charging
+        self.waiting_vehicles = {}   # {station_id: list(vehicle_ids)} - waiting in queue (FIFO)
+        self.currently_charging = {}  # {vid: station_id} - for load calculation
+        
+        print("✓ Smart Charging with Queue Management")
+        print(f"  SOC: {self.SOC_THRESHOLD}% → {self.SOC_TARGET}%")
+        total_charging = sum(s['charging_slots'] for s in self.CHARGING_STATIONS.values())
+        total_waiting = sum(s['waiting_slots'] for s in self.CHARGING_STATIONS.values())
+        print(f"  Stations: {len(self.CHARGING_STATIONS)} ({total_charging} charging + {total_waiting} waiting slots)")
+    
+    def get_battery_info(self, vid):
+        try:
+            try:
+                charge = traci.vehicle.getParameter(vid, "device.battery.chargeLevel")
+                capacity = traci.vehicle.getParameter(vid, "device.battery.capacity")
+                energy = traci.vehicle.getParameter(vid, "device.battery.totalEnergyConsumed")
+            except:
+                charge = traci.vehicle.getParameter(vid, "actualBatteryCapacity") or \
+                        traci.vehicle.getParameter(vid, "device.battery.actualBatteryCapacity")
+                capacity = traci.vehicle.getParameter(vid, "maximumBatteryCapacity") or \
+                          traci.vehicle.getParameter(vid, "device.battery.maximumBatteryCapacity")
+                try:
+                    energy = traci.vehicle.getParameter(vid, "device.battery.totalEnergyConsumed")
+                except:
+                    energy = 0.0
+            
+            c = float(charge) if charge else 0.0
+            cap = float(capacity) if capacity else 0.0
+            e = float(energy) if energy else 0.0
+            soc = (c / cap * 100.0) if cap > 0 else 0.0
+            
+            return {'charge_Wh': c, 'capacity_Wh': cap, 'soc_percent': soc, 'energy_consumed_Wh': e}
+        except:
+            return None
+    
+    def get_charging_station_id(self, vid):
+        """Detect if vehicle is at a charging station"""
+        try:
+            cs = traci.vehicle.getParameter(vid, "device.battery.chargingStationId")
+            if cs and cs not in ("NULL", "", "None", "none"):
+                return cs
+        except:
+            pass
+        
+        try:
+            cs = traci.vehicle.getParameter(vid, "chargingStationId")
+            if cs and cs not in ("NULL", "", "None", "none"):
+                return cs
+        except:
+            pass
+        
+        try:
+            stops = traci.vehicle.getStops(vid)
+            if stops:
+                for stop in stops:
+                    if hasattr(stop, 'stoppingPlaceID'):
+                        place_id = stop.stoppingPlaceID
+                        if place_id in self.CHARGING_STATIONS:
+                            speed = traci.vehicle.getSpeed(vid)
+                            if speed < 0.5:
+                                return place_id
+        except:
+            pass
+        
+        if vid in self.currently_charging:
+            return self.currently_charging[vid]
+        
+        return None
+    
+    def find_nearest_available_station(self, vid):
+        """Find nearest station with available charging OR waiting slots"""
+        try:
+            cur_edge = traci.vehicle.getRoadID(vid)
+            if not cur_edge or cur_edge.startswith(':'):
+                return None
+        except:
+            return None
+        
+        best = None
+        best_len = float('inf')
+        
+        for sid, info in self.CHARGING_STATIONS.items():
+            edge = info.get('edge')
+            if not edge:
+                continue
+            
+            vs = self.vehicle_states.get(vid, {})
+            if vs.get('routed_to') == sid:
+                continue
+            
+            # Check if station has ANY available capacity (charging or waiting)
+            charging_count = len(self.charging_vehicles.get(sid, set()))
+            waiting_count = len(self.waiting_vehicles.get(sid, []))
+            total_capacity = info['charging_slots'] + info['waiting_slots']
+            
+            if (charging_count + waiting_count) >= total_capacity:
+                continue  # Station completely full
+            
+            try:
+                route_to = traci.simulation.findRoute(cur_edge, edge)
+            except:
+                continue
+            
+            if not route_to or not getattr(route_to, "edges", None) or edge not in route_to.edges:
+                continue
+            
+            try:
+                vroute = traci.vehicle.getRoute(vid)
+                dest = vroute[-1] if vroute else None
+            except:
+                dest = None
+            
+            back_len = 0.0
+            if dest:
+                try:
+                    rb = traci.simulation.findRoute(edge, dest)
+                    back_len = rb.length if rb and hasattr(rb, 'length') else 0.0
+                except:
+                    pass
+            
+            total = getattr(route_to, "length", float('inf')) + back_len
+            if total < best_len:
+                best_len = total
+                best = {'id': sid, 'info': info, 'route_to': route_to, 'total_length': total}
+        
+        return best
+    
+    def calculate_charge_time(self, batt, station):
+        soc = batt.get('soc_percent', 0.0)
+        cap = batt.get('capacity_Wh', 0.0)
+        needed = max(0.0, (self.SOC_TARGET - soc) / 100.0 * cap)
+        power = station.get('power_kW', 20.0) * 1000.0
+        eff = station.get('efficiency', 0.95)
+        
+        if power * eff > 0 and needed > 0:
+            time = (needed / (power * eff)) * 3600.0
+        else:
+            time = self.MIN_CHARGE_TIME
+        
+        return max(self.MIN_CHARGE_TIME, min(self.MAX_CHARGE_TIME, time))
+    
+    def reroute_and_schedule_stop(self, vid, choice, batt, t):
+        """Route vehicle to station (will be placed in charging or waiting based on availability)"""
+        try:
+            sid = choice['id']
+            info = choice['info']
+            route_to = choice.get('route_to')
+            
+            charge_time = self.calculate_charge_time(batt, info)
+            
+            edges = list(route_to.edges) if route_to and hasattr(route_to, 'edges') else []
+            if not edges:
+                return False
+            
+            try:
+                vroute = traci.vehicle.getRoute(vid)
+                dest = vroute[-1] if vroute else None
+                if dest:
+                    rb = traci.simulation.findRoute(info['edge'], dest)
+                    if rb and hasattr(rb, 'edges'):
+                        back = rb.edges
+                        if back and edges and back[0] == edges[-1]:
+                            edges.extend(back[1:])
+                        else:
+                            edges.extend(back)
+            except:
+                pass
+            
+            cleaned = []
+            for e in edges:
+                if not cleaned or cleaned[-1] != e:
+                    cleaned.append(e)
+            
+            traci.vehicle.setRoute(vid, cleaned)
+            traci.vehicle.setParkingAreaStop(vid, sid, duration=charge_time)
+            
+            if vid not in self.vehicle_states:
+                self.vehicle_states[vid] = {}
+            self.vehicle_states[vid].update({
+                'routed_to': sid,
+                'routed_time': t,
+                'scheduled_charge_time': charge_time,
+                'charge_scheduled': True
+            })
+            
+            print(f"🔌 {vid} → {sid} | {charge_time:.0f}s | {choice.get('total_length',0):.1f}m")
+            return True
+        except Exception as e:
+            print(f"⚠️ Route failed: {e}")
+            return False
+    
+    def manage_station_queue(self, sid, t):
+        """Move vehicles from waiting queue to charging when slots become available"""
+        if sid not in self.CHARGING_STATIONS:
+            return
+        
+        info = self.CHARGING_STATIONS[sid]
+        charging_count = len(self.charging_vehicles.get(sid, set()))
+        
+        # If charging slots available and there are waiting vehicles
+        if charging_count < info['charging_slots'] and sid in self.waiting_vehicles and self.waiting_vehicles[sid]:
+            # Promote first vehicle in queue (FIFO)
+            vid = self.waiting_vehicles[sid].pop(0)
+            
+            # Move to charging
+            if sid not in self.charging_vehicles:
+                self.charging_vehicles[sid] = set()
+            self.charging_vehicles[sid].add(vid)
+            self.currently_charging[vid] = sid
+            
+            # Update vehicle state
+            b = self.get_battery_info(vid)
+            if b and vid in self.vehicle_states:
+                self.vehicle_states[vid].update({
+                    'charging_start': t,
+                    'soc_start': b['soc_percent'],
+                    'charging_station_active': sid,
+                    'promoted_from_queue': True
+                })
+            
+            # Log queue event
+            self.queue_events.append({
+                'timestep_sec': t,
+                'vehicle_id': vid,
+                'station_id': sid,
+                'event_type': 'PROMOTED_TO_CHARGING',
+                'queue_length': len(self.waiting_vehicles.get(sid, []))
+            })
+            
+            print(f"⬆️ {vid} promoted from queue @ {sid}")
+            
+            # Clean up empty waiting list
+            if not self.waiting_vehicles[sid]:
+                del self.waiting_vehicles[sid]
+    
+    def monitor_charging(self, t):
+        try:
+            vids = set(traci.vehicle.getIDList())
+        except:
+            return
+        
+        # Clean up departed vehicles
+        for vid in list(self.vehicle_states.keys()):
+            if vid not in vids:
+                vs = self.vehicle_states[vid]
+                s = vs.get('routed_to')
+                
+                # Remove from charging
+                if s and s in self.charging_vehicles:
+                    self.charging_vehicles[s].discard(vid)
+                    if not self.charging_vehicles[s]:
+                        del self.charging_vehicles[s]
+                
+                # Remove from waiting
+                if s and s in self.waiting_vehicles and vid in self.waiting_vehicles[s]:
+                    self.waiting_vehicles[s].remove(vid)
+                    if not self.waiting_vehicles[s]:
+                        del self.waiting_vehicles[s]
+                
+                self.currently_charging.pop(vid, None)
+                del self.vehicle_states[vid]
+        
+        for vid in vids:
+            cs = self.get_charging_station_id(vid)
+            
+            if cs:
+                # Vehicle is at a charging station
+                b = self.get_battery_info(vid)
+                if not b:
+                    continue
+                
+                if vid not in self.vehicle_states:
+                    self.vehicle_states[vid] = {}
+                
+                vs = self.vehicle_states[vid]
+                
+                # Check if vehicle just arrived
+                if 'charging_start' not in vs and 'waiting_start' not in vs:
+                    info = self.CHARGING_STATIONS[cs]
+                    charging_count = len(self.charging_vehicles.get(cs, set()))
+                    
+                    if charging_count < info['charging_slots']:
+                        # Space available - start charging immediately
+                        if cs not in self.charging_vehicles:
+                            self.charging_vehicles[cs] = set()
+                        self.charging_vehicles[cs].add(vid)
+                        self.currently_charging[vid] = cs
+                        
+                        vs.update({
+                            'charging_start': t,
+                            'soc_start': b['soc_percent'],
+                            'charging_station_active': cs
+                        })
+                        
+                        self.queue_events.append({
+                            'timestep_sec': t,
+                            'vehicle_id': vid,
+                            'station_id': cs,
+                            'event_type': 'STARTED_CHARGING_IMMEDIATELY',
+                            'queue_length': len(self.waiting_vehicles.get(cs, []))
+                        })
+                        
+                        print(f"🔋 {vid} @ {cs} | {b['soc_percent']:.1f}% (CHARGING)")
+                    else:
+                        # No charging space - add to waiting queue
+                        if cs not in self.waiting_vehicles:
+                            self.waiting_vehicles[cs] = []
+                        if vid not in self.waiting_vehicles[cs]:
+                            self.waiting_vehicles[cs].append(vid)
+                        
+                        vs.update({
+                            'waiting_start': t,
+                            'soc_at_queue': b['soc_percent']
+                        })
+                        
+                        queue_pos = len(self.waiting_vehicles[cs])
+                        
+                        self.queue_events.append({
+                            'timestep_sec': t,
+                            'vehicle_id': vid,
+                            'station_id': cs,
+                            'event_type': 'ENTERED_WAITING_QUEUE',
+                            'queue_position': queue_pos,
+                            'queue_length': queue_pos
+                        })
+                        
+                        print(f"⏳ {vid} @ {cs} | {b['soc_percent']:.1f}% (WAITING - Position {queue_pos})")
+            else:
+                # Vehicle NOT at station
+                if vid in self.currently_charging:
+                    del self.currently_charging[vid]
+                
+                # Check if vehicle was charging and now leaving
+                if vid in self.vehicle_states and 'charging_start' in self.vehicle_states[vid]:
+                    b = self.get_battery_info(vid)
+                    if not b:
+                        self.vehicle_states[vid].pop('charging_start', None)
+                        continue
+                    
+                    vs = self.vehicle_states[vid]
+                    start = vs.pop('charging_start')
+                    soc0 = vs.pop('soc_start', 0)
+                    station = vs.pop('charging_station_active', 'UNK')
+                    dur = t - start
+                    
+                    self.charging_events.append({
+                        'vehicle_id': vid,
+                        'vehicle_type': traci.vehicle.getTypeID(vid),
+                        'charging_station': station,
+                        'start_time_sec': start,
+                        'end_time_sec': t,
+                        'duration_sec': round(dur, 1),
+                        'soc_at_start_percent': round(soc0, 2),
+                        'soc_at_end_percent': round(b['soc_percent'], 2),
+                        'soc_gained_percent': round(b['soc_percent'] - soc0, 2),
+                        'was_queued': vs.pop('promoted_from_queue', False)
+                    })
+                    
+                    # Remove from charging set
+                    if station in self.charging_vehicles:
+                        self.charging_vehicles[station].discard(vid)
+                        if not self.charging_vehicles[station]:
+                            del self.charging_vehicles[station]
+                    
+                    vs.pop('routed_to', None)
+                    vs.pop('charge_scheduled', None)
+                    
+                    print(f"✅ {vid} @ {station} | {dur:.0f}s | {soc0:.1f}%→{b['soc_percent']:.1f}% (+{b['soc_percent']-soc0:.1f}%)")
+                    
+                    # Try to promote waiting vehicle
+                    self.manage_station_queue(station, t)
+        
+        # Periodically check all stations for queue management
+        for sid in list(self.charging_vehicles.keys()):
+            self.manage_station_queue(sid, t)
+    
+    def capture_station_snapshot(self, t):
+        """Capture detailed snapshot including queue status"""
+        for station_id, station_info in self.CHARGING_STATIONS.items():
+            charging_vids = list(self.charging_vehicles.get(station_id, set()))
+            waiting_vids = self.waiting_vehicles.get(station_id, [])
+            
+            charging_times = []
+            total_power_kW = 0.0
+            
+            for vid in charging_vids:
+                total_power_kW += station_info['power_kW']
+                vs = self.vehicle_states.get(vid, {})
+                charge_start = vs.get('charging_start', t)
+                duration = t - charge_start
+                charging_times.append(round(duration, 1))
+            
+            snapshot = {
+                'timestep_sec': t,
+                'station_id': station_id,
+                'station_edge': station_info['edge'].replace('-', 'NEG_') if station_info['edge'].startswith('-') else station_info['edge'],
+                'charging_slots': station_info['charging_slots'],
+                'waiting_slots': station_info['waiting_slots'],
+                'vehicles_charging': len(charging_vids),
+                'vehicles_waiting': len(waiting_vids),
+                'charging_vehicle_ids': ','.join(charging_vids) if charging_vids else 'NONE',
+                'waiting_vehicle_ids': ','.join(waiting_vids) if waiting_vids else 'NONE',
+                'charging_times_sec': ','.join(map(str, charging_times)) if charging_times else 'NONE',
+                'total_power_load_kW': round(total_power_kW, 3),
+                'charging_utilization_%': round((len(charging_vids) / station_info['charging_slots']) * 100, 1),
+                'waiting_utilization_%': round((len(waiting_vids) / station_info['waiting_slots']) * 100, 1) if station_info['waiting_slots'] > 0 else 0,
+                'available_charging_slots': station_info['charging_slots'] - len(charging_vids),
+                'available_waiting_slots': station_info['waiting_slots'] - len(waiting_vids)
+            }
+            
+            self.station_snapshots.append(snapshot)
+    
+    def calculate_load(self, t):
+        """Calculate system-wide load"""
+        loads = {s: {'vehicles': 0, 'power_kW': 0.0} for s in self.CHARGING_STATIONS}
+        total = 0.0
+        
+        for vid, station_id in self.currently_charging.items():
+            if station_id in self.CHARGING_STATIONS:
+                power = self.CHARGING_STATIONS[station_id]['power_kW']
+                loads[station_id]['vehicles'] += 1
+                loads[station_id]['power_kW'] += power
+                total += power
+        
+        rec = {
+            'timestep_sec': t,
+            'total_vehicles_charging': sum(l['vehicles'] for l in loads.values()),
+            'total_vehicles_waiting': sum(len(v) for v in self.waiting_vehicles.values()),
+            'total_power_demand_kW': round(total, 3),
+            'total_power_demand_MW': round(total / 1000, 6)
+        }
+        
+        for s, d in loads.items():
+            rec[f'{s}_vehicles'] = d['vehicles']
+            rec[f'{s}_power_kW'] = round(d['power_kW'], 3)
+        
+        self.load_demand_data.append(rec)
+    
+    def collect_data(self, t):
+        self.monitor_charging(t)
+        self.capture_station_snapshot(t)
+        self.calculate_load(t)
+        
+        try:
+            vids = traci.vehicle.getIDList()
+        except:
+            return
+        
+        for v in vids:
+            try:
+                b = self.get_battery_info(v)
+                if not b:
+                    continue
+                
+                if v not in self.initial_soc:
+                    self.initial_soc[v] = b['soc_percent']
+                
+                vs = self.vehicle_states.get(v, {})
+                if b['soc_percent'] < self.SOC_THRESHOLD and not vs.get('charge_scheduled'):
+                    choice = self.find_nearest_available_station(v)
+                    if choice:
+                        self.low_soc_alerts.append({
+                            'timestep_sec': t,
+                            'vehicle_id': v,
+                            'vehicle_type': traci.vehicle.getTypeID(v),
+                            'current_soc_percent': round(b['soc_percent'], 2),
+                            'nearest_station': choice['id'],
+                            'route_length_m': round(choice.get('total_length', 0), 2)
+                        })
+                        self.reroute_and_schedule_stop(v, choice, b, t)
+                
+                try:
+                    pos = traci.vehicle.getPosition(v)
+                    spd = traci.vehicle.getSpeed(v)
+                    dist = traci.vehicle.getDistance(v)
+                    lane = traci.vehicle.getLaneID(v)
+                    road = traci.vehicle.getRoadID(v)
+                except:
+                    pos, spd, dist, lane, road = (0,0), 0, 0, "UNK", "UNK"
+                
+                self.vehicle_data.append({
+                    'timestep_sec': t,
+                    'vehicle_id': v,
+                    'vehicle_type': traci.vehicle.getTypeID(v),
+                    'soc_percent': round(b['soc_percent'], 2),
+                    'initial_soc_percent': round(self.initial_soc.get(v, b['soc_percent']), 2),
+                    'soc_drop_percent': round(self.initial_soc.get(v, b['soc_percent']) - b['soc_percent'], 2),
+                    'energy_consumed_Wh': round(b['energy_consumed_Wh'], 2),
+                    'lane': str(lane),
+                    'road_id': str(road),
+                    'x_position': round(pos[0], 2),
+                    'y_position': round(pos[1], 2),
+                    'speed_ms': round(spd, 2),
+                    'distance_m': round(dist, 2)
+                })
+            except:
+                continue
+    
+    def run_simulation(self, gui=True, max_time=600):
+        print(f"\n{'='*70}\nSMART CHARGING WITH QUEUE MANAGEMENT\n{'='*70}")
+        
+        cmd = ["sumo-gui" if gui else "sumo", "-c", self.sumocfg, "--start", "--quit-on-end"]
+        
+        try:
+            traci.start(cmd)
+            print("✓ Started\n")
+        except Exception as e:
+            print(f"✗ Failed: {e}")
+            return False
+        
+        try:
+            t = 0
+            while traci.simulation.getMinExpectedNumber() > 0 and t < max_time:
+                traci.simulationStep()
+                t = traci.simulation.getTime()
+                
+                if int(t) == t:
+                    self.collect_data(t)
+                
+                if int(t) % 30 == 0 and t > 0:
+                    active = len(traci.vehicle.getIDList())
+                    chrg = len(self.currently_charging)
+                    wait = sum(len(v) for v in self.waiting_vehicles.values())
+                    load = self.load_demand_data[-1]['total_power_demand_kW'] if self.load_demand_data else 0
+                    print(f"⏱️ {int(t)}s | Active:{active} Charging:{chrg} Waiting:{wait} Load:{load:.1f}kW")
+            
+            traci.close()
+            print(f"\n✓ Done at {t}s")
+            return True
+        except Exception as e:
+            print(f"✗ Error: {e}")
+            traceback.print_exc()
+            try:
+                traci.close()
+            except:
+                pass
+            return False
+    
+    def export_results(self):
+        print(f"\n{'='*70}\nEXPORTING RESULTS\n{'='*70}")
+        ts = datetime.now().strftime("%Y%m%d_%H%M%S")
+        
+        # Export queue events (NEW)
+        if self.queue_events:
+            df = pd.DataFrame(self.queue_events)
+            f = os.path.join(self.output_folder, f'queue_events_{ts}.csv')
+            df.to_csv(f, index=False)
+            print(f"✓ Queue Events: {f} ({len(df):,} events)")
+            
+            # Queue statistics
+            promoted = len(df[df['event_type'] == 'PROMOTED_TO_CHARGING'])
+            immediate = len(df[df['event_type'] == 'STARTED_CHARGING_IMMEDIATELY'])
+            queued = len(df[df['event_type'] == 'ENTERED_WAITING_QUEUE'])
+            print(f"  Immediate: {immediate} | Queued: {queued} | Promoted: {promoted}")
+        
+        # Export station snapshots
+        if self.station_snapshots:
+            df = pd.DataFrame(self.station_snapshots)
+            f = os.path.join(self.output_folder, f'station_snapshots_{ts}.csv')
+            df.to_csv(f, index=False)
+            print(f"✓ Station Snapshots: {f} ({len(df):,} records)")
+            
+            print("\n📊 STATION UTILIZATION SUMMARY:")
+            for station_id in self.CHARGING_STATIONS.keys():
+                station_data = df[df['station_id'] == station_id]
+                if len(station_data) > 0:
+                    avg_charge_util = station_data['charging_utilization_%'].mean()
+                    avg_wait_util = station_data['waiting_utilization_%'].mean()
+                    max_charge = station_data['vehicles_charging'].max()
+                    max_wait = station_data['vehicles_waiting'].max()
+
+                    print(
+                        f"  {station_id}: "
+                        f"Avg Charging {avg_charge_util:.1f}% | "
+                        f"Avg Waiting {avg_wait_util:.1f}% | "
+                        f"Peak Charging {int(max_charge)} | "
+                        f"Peak Waiting {int(max_wait)}"
+                    )
+
+        # Export vehicle tracking
+        if self.vehicle_data:
+            df = pd.DataFrame(self.vehicle_data)
+            f = os.path.join(self.output_folder, f'vehicle_tracking_{ts}.csv')
+            df.to_csv(f, index=False)
+            print(f"✓ Vehicle Tracking: {f} ({len(df):,} records)")
+
+        # Export low SOC alerts
+        if self.low_soc_alerts:
+            df = pd.DataFrame(self.low_soc_alerts)
+            f = os.path.join(self.output_folder, f'low_soc_alerts_{ts}.csv')
+            df.to_csv(f, index=False)
+            print(f"✓ Low SOC Alerts: {f} ({len(df):,} alerts)")
+
+        # Export charging events
+        if self.charging_events:
+            df = pd.DataFrame(self.charging_events)
+            f = os.path.join(self.output_folder, f'charging_events_{ts}.csv')
+            df.to_csv(f, index=False)
+            print(f"✓ Charging Events: {f} ({len(df):,} events)")
+
+            if len(df) > 0:
+                avg_dur = df['duration_sec'].mean()
+                avg_soc = df['soc_gained_percent'].mean()
+                queued_pct = (df['was_queued'].sum() / len(df)) * 100
+
+                print(f"\n⚡ CHARGING SUMMARY:")
+                print(f"  Avg Duration: {avg_dur:.1f}s")
+                print(f"  Avg SOC Gain: {avg_soc:.1f}%")
+                print(f"  From Queue: {queued_pct:.1f}%")
+
+        # Export load demand
+        if self.load_demand_data:
+            df = pd.DataFrame(self.load_demand_data)
+            f = os.path.join(self.output_folder, f'load_demand_{ts}.csv')
+            df.to_csv(f, index=False)
+            print(f"✓ Load Demand: {f} ({len(df):,} records)")
+
+            peak = df['total_power_demand_kW'].max()
+            avg = df[df['total_power_demand_kW'] > 0]['total_power_demand_kW'].mean()
+            energy = df['total_power_demand_kW'].sum() / 3600
+
+            print(f"\n💡 SYSTEM LOAD SUMMARY:")
+            print(f"  Peak Power: {peak:.2f} kW")
+            print(f"  Avg Power: {avg:.2f} kW")
+            print(f"  Total Energy: {energy:.3f} kWh")
+
+        print(f"\n{'='*70}\n")
+
+
+def main():
+    SUMOCFG = 'Test1.sumocfg'
+    OUTPUT = 'simulation_outputs'
+    GUI = True
+    MAX_TIME = 600
+
+    if not os.path.exists(SUMOCFG):
+        print(f"✗ ERROR: {SUMOCFG} not found!")
+        return
+
+    sim = SmartChargingWithQueue(
+        sumocfg=SUMOCFG,
+        output_folder=OUTPUT
+    )
+
+    if sim.run_simulation(gui=GUI, max_time=MAX_TIME):
+        sim.export_results()
+        print("✓ SIMULATION COMPLETE!")
+    else:
+        print("✗ SIMULATION FAILED!")
+
+
+if __name__ == "__main__":
+    main()
