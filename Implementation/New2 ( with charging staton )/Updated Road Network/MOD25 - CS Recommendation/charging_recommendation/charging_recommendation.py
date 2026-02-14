@@ -1028,13 +1028,17 @@ class SmartChargingStationMonitor:
                     'system_moving_vehicles': system_features['total_moving_vehicles'],
                     'system_charging_vehicles': system_features['total_vehicles_charging'],
                     'system_waiting_vehicles': system_features['total_vehicles_waiting'],
-                    'system_total_load_kW': system_features['total_power_demand_kW'], # Keep alias
+                    # 'system_total_load_kW': system_features['total_power_demand_kW'], # Keep alias
                     'system_avg_speed_ms': system_features['system_avg_speed_ms'],
                     'system_avg_soc_percent': system_features['system_avg_soc_percent'],
                     'system_avg_moving_speed_ms': system_features['system_avg_moving_speed_ms'],
                     'system_avg_moving_soc_percent': system_features['system_avg_moving_soc_percent'],
                     'system_avg_charging_soc_percent': system_features['system_avg_charging_soc_percent'],
-                    'system_avg_charging_duration_sec': system_features['system_avg_current_charging_duration_sec']
+                    'system_avg_charging_duration_sec': system_features['system_avg_current_charging_duration_sec'],
+
+                    # TARGET VARIABLE - Last Column
+                    'system_total_load_kW': system_features['total_power_demand_kW'] # Keep alias
+                    
                 }
                 
                 self.ml_data.append(record)
