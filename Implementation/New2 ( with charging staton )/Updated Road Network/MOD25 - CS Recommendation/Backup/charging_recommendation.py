@@ -1150,15 +1150,9 @@ class SmartChargingStationMonitor:
             
             vehicle_type = traci.vehicle.getTypeID(vehicle_id)
             vehicle_edge = traci.vehicle.getRoadID(vehicle_id)
-            # vehicle_lane = traci.vehicle.getLaneID(vehicle_id)
-            try:
-                vehicle_lane = traci.vehicle.getLaneID(vehicle_id)
-                if not vehicle_lane:
-                    vehicle_lane = 'parked'
-            except:
-                vehicle_lane = 'parked'
+            vehicle_lane = traci.vehicle.getLaneID(vehicle_id)
+            vehicle_speed = traci.vehicle.getSpeed(vehicle_id)
             
-            vehicle_speed = traci.vehicle.getSpeed(vehicle_id)        
             charge_time_nearest = self.calculate_charge_time(battery_info, nearest)
             charge_time_second = self.calculate_charge_time(battery_info, second_nearest) if second_nearest else None
             
@@ -1327,8 +1321,7 @@ class SmartChargingStationMonitor:
         
         try:
             t = 0
-            # while traci.simulation.getMinExpectedNumber() > 0 and t < max_time:
-            while traci.simulation.getMinExpectedNumber() > 0 and t <= max_time:
+            while traci.simulation.getMinExpectedNumber() > 0 and t < max_time:
                 traci.simulationStep()
                 t = traci.simulation.getTime()
                 

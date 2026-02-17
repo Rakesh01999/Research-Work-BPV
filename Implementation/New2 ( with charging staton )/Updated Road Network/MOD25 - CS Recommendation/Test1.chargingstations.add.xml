@@ -19,7 +19,7 @@
     <parkingArea id="pa_2_waiting" lane="E0_0" startPos="660.00" endPos="695.00" friendlyPos="1" roadsideCapacity="6"/>
     <parkingArea id="pa_3_charging" lane="E1_0" startPos="670.00" endPos="700.00" roadsideCapacity="5">
         <param key="chargingEfficiency" value="0.95"/>
-        <param key="chargingPower" value="20000"/>
+        <param key="chargingPower" value="25000"/>
     </parkingArea>
     <!-- <parkingArea id="pa_3_rev_charging" lane="-E1_0" startPos="705.00" endPos="760.00" roadsideCapacity="10"> -->
     <parkingArea id="pa_3_rev_charging" lane="-E1_0" startPos="710.00" endPos="760.00" roadsideCapacity="6">
@@ -54,12 +54,12 @@
     <parkingArea id="pa_7_waiting" lane="E6_0" startPos="330.00" endPos="365.00" friendlyPos="1" roadsideCapacity="6"/>
     <parkingArea id="pa_8_charging" lane="E7_0" startPos="780.00" endPos="830.00" roadsideCapacity="5">
         <param key="chargingEfficiency" value="0.95"/>
-        <param key="chargingPower" value="30000"/>
+        <param key="chargingPower" value="25000"/>
     </parkingArea>
     <!-- <parkingArea id="pa_8_rev_charging" lane="-E7_0" startPos="820.00" endPos="850.00" roadsideCapacity="6"> -->
     <parkingArea id="pa_8_rev_charging" lane="-E7_0" startPos="830.00" endPos="890.00" roadsideCapacity="10">
         <param key="chargingEfficiency" value="0.95"/>
-        <param key="chargingPower" value="30000"/>
+        <param key="chargingPower" value="50000"/>
     </parkingArea>
     <!-- <parkingArea id="pa_8_rev_waiting" lane="-E7_0" startPos="790.00" endPos="815.00" friendlyPos="1" roadsideCapacity="6"/> -->
     <parkingArea id="pa_8_rev_waiting" lane="-E7_0" startPos="760.00" endPos="805.00" friendlyPos="1" roadsideCapacity="6"/>
