@@ -28,108 +28,109 @@ class SmartChargingStationMonitor:
     MIN_CHARGE_TIME = 30
     MAX_CHARGE_TIME = 300
     
-    # Charging stations (matching your XML with separate charging/waiting slots)
-    # Charging stations with separate charging and waiting parking areas
+     # Charging stations (matching our XML with separate charging/waiting slots)
+    # ⚠️ UPDATED FROM XML FILE: Test1_chargingstations_add.xml
+    # All values extracted from actual XML configuration
     CHARGING_STATIONS = {
         'pa_2': {
             'charging_area': 'pa_2_charging',
             'waiting_area': 'pa_2_waiting',
             'lane': 'E0_0', 
             'edge': 'E0', 
-            'power_kW': 20.0, 
-            'efficiency': 0.95, 
-            'charging_slots': 4, 
-            'waiting_slots': 3
+            'power_kW': 30.0,              # XML: 30000W = 30kW
+            'efficiency': 0.95,             # XML: 0.95
+            'charging_slots': 6,            # XML: roadsideCapacity="6"
+            'waiting_slots': 6              # XML: roadsideCapacity="6"
         },
         'pa_2_rev': {
             'charging_area': 'pa_2_rev_charging',
             'waiting_area': 'pa_2_rev_waiting',
             'lane': '-E0_0', 
             'edge': '-E0', 
-            'power_kW': 20.0, 
-            'efficiency': 0.95, 
-            'charging_slots': 4, 
-            'waiting_slots': 3
+            'power_kW': 30.0,              # XML: 30000W = 30kW
+            'efficiency': 0.95,             # XML: 0.95
+            'charging_slots': 6,            # XML: roadsideCapacity="6"
+            'waiting_slots': 3              # XML: roadsideCapacity="3"
         },
         'pa_3': {
             'charging_area': 'pa_3_charging',
             'waiting_area': 'pa_3_waiting',
             'lane': 'E1_0', 
             'edge': 'E1', 
-            'power_kW': 20.0, 
-            'efficiency': 0.95, 
-            'charging_slots': 4, 
-            'waiting_slots': 3
+            'power_kW': 25.0,              # XML: 25000W = 25kW
+            'efficiency': 0.95,             # XML: 0.95
+            'charging_slots': 5,            # XML: roadsideCapacity="5"
+            'waiting_slots': 4              # XML: roadsideCapacity="4"
         },
         'pa_3_rev': {
             'charging_area': 'pa_3_rev_charging',
             'waiting_area': 'pa_3_rev_waiting',
             'lane': '-E1_0', 
             'edge': '-E1', 
-            'power_kW': 20.0, 
-            'efficiency': 0.95, 
-            'charging_slots': 4, 
-            'waiting_slots': 3
+            'power_kW': 30.0,              # XML: 30000W = 30kW
+            'efficiency': 0.95,             # XML: 0.95
+            'charging_slots': 6,            # XML: roadsideCapacity="6"
+            'waiting_slots': 6              # XML: roadsideCapacity="6"
         },
         'pa_6': {
             'charging_area': 'pa_6_charging',
             'waiting_area': 'pa_6_waiting',
             'lane': 'E5_0', 
             'edge': 'E5', 
-            'power_kW': 25.0, 
-            'efficiency': 0.95, 
-            'charging_slots': 5, 
-            'waiting_slots': 3
+            'power_kW': 30.0,              # XML: 30000W = 30kW
+            'efficiency': 0.95,             # XML: 0.95
+            'charging_slots': 6,            # XML: roadsideCapacity="6"
+            'waiting_slots': 6              # XML: roadsideCapacity="6"
         },
         'pa_6_rev': {
             'charging_area': 'pa_6_rev_charging',
             'waiting_area': 'pa_6_rev_waiting',
             'lane': '-E5_0', 
             'edge': '-E5', 
-            'power_kW': 25.0, 
-            'efficiency': 0.95, 
-            'charging_slots': 5, 
-            'waiting_slots': 3
+            'power_kW': 30.0,              # XML: 30000W = 30kW
+            'efficiency': 0.95,             # XML: 0.95
+            'charging_slots': 6,            # XML: roadsideCapacity="6"
+            'waiting_slots': 3              # XML: roadsideCapacity="3"
         },
         'pa_7': {
             'charging_area': 'pa_7_charging',
             'waiting_area': 'pa_7_waiting',
             'lane': 'E6_0', 
             'edge': 'E6', 
-            'power_kW': 20.0, 
-            'efficiency': 0.95, 
-            'charging_slots': 4, 
-            'waiting_slots': 2
+            'power_kW': 30.0,              # XML: 30000W = 30kW
+            'efficiency': 0.95,             # XML: 0.95
+            'charging_slots': 6,            # XML: roadsideCapacity="6"
+            'waiting_slots': 6              # XML: roadsideCapacity="6"
         },
         'pa_7_rev': {
             'charging_area': 'pa_7_rev_charging',
             'waiting_area': 'pa_7_rev_waiting',
             'lane': '-E6_0', 
             'edge': '-E6', 
-            'power_kW': 20.0, 
-            'efficiency': 0.95, 
-            'charging_slots': 4, 
-            'waiting_slots': 2
+            'power_kW': 30.0,              # XML: 30000W = 30kW
+            'efficiency': 0.95,             # XML: 0.95
+            'charging_slots': 6,            # XML: roadsideCapacity="6"
+            'waiting_slots': 6              # XML: roadsideCapacity="6"
         },
         'pa_8': {
             'charging_area': 'pa_8_charging',
             'waiting_area': 'pa_8_waiting',
             'lane': 'E7_0', 
             'edge': 'E7', 
-            'power_kW': 25.0, 
-            'efficiency': 0.95, 
-            'charging_slots': 5, 
-            'waiting_slots': 3
+            'power_kW': 25.0,              # XML: 25000W = 25kW
+            'efficiency': 0.95,             # XML: 0.95
+            'charging_slots': 5,            # XML: roadsideCapacity="5"
+            'waiting_slots': 3              # XML: roadsideCapacity="3"
         },
         'pa_8_rev': {
             'charging_area': 'pa_8_rev_charging',
             'waiting_area': 'pa_8_rev_waiting',
             'lane': '-E7_0', 
             'edge': '-E7', 
-            'power_kW': 25.0, 
-            'efficiency': 0.95, 
-            'charging_slots': 5, 
-            'waiting_slots': 3
+            'power_kW': 50.0,              # XML: 50000W = 50kW ⚡ (Highest capacity!)
+            'efficiency': 0.95,             # XML: 0.95
+            'charging_slots': 10,           # XML: roadsideCapacity="10"
+            'waiting_slots': 6              # XML: roadsideCapacity="6"
         }
     }
 
