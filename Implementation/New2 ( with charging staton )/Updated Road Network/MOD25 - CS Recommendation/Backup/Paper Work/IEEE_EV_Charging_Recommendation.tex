@@ -1,0 +1,446 @@
+\documentclass[conference]{IEEEtran}
+\IEEEoverridecommandlockouts
+% The preceding line is only needed to identify funding in the first footnote. If that is unneeded, please comment it out.
+\usepackage{cite}
+\usepackage{amsmath,amssymb,amsfonts}
+\usepackage{algorithmic}
+\usepackage{graphicx}
+\usepackage{textcomp}
+\usepackage{xcolor}
+\def\BibTeX{{\rm B\kern-.05em{\sc i\kern-.025em b}\kern-.08em
+    T\kern-.1667em\lower.7ex\hbox{E}\kern-.125emX}}
+
+\begin{document}
+
+\title{A Simulation-Based Charging Station Recommendation Framework for Electric Vehicles in Khulna City Using SUMO and TraCI}
+
+\author{
+\IEEEauthorblockN{Rakesh Biswas}
+\IEEEauthorblockA{\textit{Department of Computer Science \& Engineering} \\
+\textit{Jashore University of Science and Technology (JUST)}\\
+Jashore, Bangladesh \\
+200112.cse@student.just.edu.bd}
+\and
+\IEEEauthorblockN{Monishanker Halder}
+\IEEEauthorblockA{\textit{Department of Computer Science \& Engineering} \\
+\textit{Jashore University of Science and Technology (JUST)}\\
+Jashore, Bangladesh \\
+m.halder@just.edu.bd}
+}
+
+\maketitle
+
+\begin{abstract}
+The rapid growth of three-wheeler electric vehicles---Easy Bikes, Electric Rickshaws, and Electric Vans---across Khulna city of Bangladesh has created an unsupported charging demand on the urban power infrastructure that is not prepared for peak classification. This paper presents a simulation-based charging station recommendation framework built on the Eclipse SUMO microscopic traffic simulator and its Python control interface, TraCI. A unique simulation with realistic battery parameters comprising 100 vehicle flows (34 Easy Bike, 33 E-Rickshaw, and 33 E-Van types across 8 routes) is created. It has an 11-edge directed network with a duration of 600 seconds. The simulation contains 10 bidirectional charging stations (62 charging slots + 49 waiting slots). E-Rickshaws and E-Vans carry 5,760--7,200 Wh batteries. The proposed recommendation engine continuously observes vehicle charge condition (SoC) and applies a multi-criteria decision model evaluating charging station distance, slot occupancy, and instantaneous power load. Recommendations are served every 30 seconds per vehicle. Experimental analysis of 1,169 recommendation events shows that the proposed framework significantly outperforms the nearest-only baseline strategy. The system achieves a recommendation feasibility rate of 90.1\% compared to 66.0\% for the baseline approach, representing a 24.0 percentage-point improvement. Additionally, the framework achieves a congestion avoidance rate of 37.1\%, where the baseline achieves 0\%, and a high-priority smart decision rate of 27.9\%, compared to 0\% under the baseline. During simulation, the system recorded a peak charging power demand of 1,370 kW with 40 vehicles charging simultaneously, yielding a total energy consumption of 127.5 kWh in a 600-second session. The dataset consists of 33,721 vehicle-centric observation records and 1,169 charging recommendation events, laying a broad foundation for further machine-learning-based load forecasting and smart grid planning studies in the context of the emerging EV ecosystem in Bangladesh.
+\end{abstract}
+
+\begin{IEEEkeywords}
+Electric Vehicles, Easy Bike, E-Rickshaw, Charging Recommendation, SUMO, TraCI, Smart Grid, Load Balancing, Bangladesh
+\end{IEEEkeywords}
+
+%=======================================================
+\section{Introduction}
+%=======================================================
+
+The global adoption of electric vehicles (EVs) has accelerated as a strategy to reduce greenhouse gas (GHG) emissions from the transportation sector, which is responsible for approximately 38\% of total global GHG production \cite{b1}. In Bangladesh, this transition has taken an individual form: instead of personal passenger cars, battery-powered three-wheeled vehicles---locally known as Easy Bikes and E-Rickshaws---have become the dominant intercity transportation medium.
+
+Khulna, the third largest city in Bangladesh and an important industrial hub, is a case in point. Thousands of electric three-wheelers ply the streets of Khulna every day, providing affordable, low-emission urban mobility and supporting the livelihoods of a significant driver population \cite{b2}. According to Khulna's traffic department, there are over 30,000 battery-driven easy bikes in the city, with Khulna City Corporation (KCC) having licensed 8,000 and processing approvals for another 2,000 \cite{b2}. More recent sources indicate that over 45,000 unauthorized easy bikes also operate in the city, consuming approximately 450 MW of electricity daily \cite{b3}.
+
+Despite these facilities, EV charging in Khulna remains almost completely uncoordinated. Drivers select charging stations based only on proximity and familiarity, which results in intense demand at popular stations during morning and evening rush hours. Transformers serving those overloaded nodes experience thermal stress, voltage drops, and failures, resulting in repair costs and disruption to driver service. Peripheral stations, meanwhile, remain continuously underutilized---highlighting the inefficiency of the existing infrastructure investment. EV load on the electricity grid is projected to reach 780 TWh by 2030 globally \cite{b4}, making intelligent charging coordination an urgent operational priority.
+
+Previous work on EV charging management has mainly addressed advanced-economy contexts where vehicles are freely routable \cite{b5, b6}. Two limitations specific to the Khulna context are absent in the literature: (i) Easy Bikes and Electric Rickshaws and Electric Vans follow specific corridor routes, as SUMO---the simulator used---enforces one-way lane assignment; and (ii) charging infrastructure is scattered and heterogeneous in terms of capacity, power rating, and geographical distribution. This paper presents a purpose-built simulation framework that realistically models the Khulna fleet and designs around these routing limitations.
+
+The paper presents a SUMO+TraCI simulation framework that models a heterogeneous fleet of 100 continuous vehicles (Easy Bikes, Electric Rickshaws, Electric Vans) on 8 road routes. It monitors real-time battery SoC and issues per-vehicle charging station recommendations through a multi-criteria scoring model. This framework distinguishes between rerouting mode---when a directed network path exists---and advisory mode---when directional limitations prevent rerouting. In comparison with the nearest-only baseline, significant improvements are observed in feasible recommendation rates, congestion avoidance, and high-priority charging event handling. The contributions of this work are:
+\begin{itemize}
+\item A calibrated SUMO simulation of Khulna city's heterogeneous EV fleet with physics-based battery modeling across 3 vehicle classes;
+\item A multi-criteria recommendation algorithm that explicitly respects SUMO directed routing constraints;
+\item Comparative evaluation with a nearest-only baseline using four performance metrics;
+\item A 33,721-record vehicle-centric dataset for load forecasting and smart grid planning research.
+\end{itemize}
+
+%=======================================================
+\section{Related Work}
+%=======================================================
+
+EV charging management research spans infrastructure planning, real-time routing, and load forecasting. We review each thread to position our work.
+
+\subsection{Infrastructure Planning and Site Selection}
+
+Wang et al. \cite{b5} formulated charging station selection as a multi-objective optimization problem, reducing travel time, grid pressure, and cost through integer programming. Hussain et al. \cite{b6} applied the Analytic Hierarchy Process (AHP) combined with TOPSIS to rank candidate stations according to accessibility, demand density, and grid capacity. These methods inform long-term strategic decisions but do not address real-time dispatch across existing networks. Rahman et al. \cite{b1} surveyed adoption trends specific to Bangladesh, identifying coordination gaps directly relevant to this study. The socio-economic and environmental impact of battery-operated autorickshaws in Khulna city has also been studied \cite{b15}, with estimates indicating approximately 4,660 MWh of electricity consumed by autorickshaws in Bangladesh per day \cite{b13}.
+
+\subsection{Real-Time Routing and AI-Based Selection}
+
+Current research has explored reinforcement learning and AI-based frameworks for dynamic EV charging distribution \cite{b7, b17}. These methods target load balancing at stations, minimizing traffic, and decreasing peak demand through adaptive routing suggestions. Microscopic traffic simulation platforms like SUMO have been widely implemented for traffic optimization, signal control, and energy-aware mobility modeling \cite{b10, b19}. A multi-criteria GIS-based decision-making approach for locating EV charging stations has also been demonstrated \cite{b18}. Prior work, however, has not aggregated real-time suggestive recommendation of charging into the heterogeneous EV fleet of South Asian cities.
+
+\subsection{Load Forecasting and Dataset Generation}
+
+Siddiqui et al. \cite{b8} proposed DeepBoost---a stacked ensemble of LSTM, XGBoost, CatBoost, and Linear Regression for day-ahead EV charging station load forecasting---improving MAE by 9.4\% and 32.7\%, respectively, compared to individual CatBoost and XGBoost on the ACN dataset. Their work establishes that enriched feature engineering (station occupancy, queue depth, SoC distribution, time of day) drives forecast accuracy. The dataset produced by our simulation accurately captures these features, making it directly usable as input for load forecasting models applied to the Khulna context. Energy management systems for battery electric vehicles have been surveyed to contextualize battery parameter selection \cite{b20}.
+
+\subsection{Research Gap}
+
+No previous work addresses: (i) simulation-based recommendation for corridor-limited EV fleets like Easy Bikes; (ii) an explicit advisory mode that preserves simulation integrity; or (iii) empirical load-balancing evaluation on a heterogeneous three-vehicle-type fleet with different battery capacities in a South Asian urban environment. This paper fills all three gaps.
+
+%=======================================================
+\section{System Architecture}
+%=======================================================
+
+The proposed structure consists of four components: the SUMO Traffic Simulation Engine, the TraCI Communication Layer, the Python-based Charging Recommendation Engine, and the Data Logging Module.
+
+\subsection{Road Network and Traffic Simulation}
+
+The simulated network creates a representative model of a part of Khulna city. It consists of 11 directed edges (E0--E10) and 8 bidirectional designated routes (4 forward, 4 reverse). A Traffic Light System controls the intersection model with realistic phase timing \cite{b19}. The simulation runs from $t=0$ to $t=600$~s with a 0.1~s step resolution, with data collected every integer second. Time-to-teleport is disabled to prevent artificial vehicle movement or routing. Lateral resolution is set to 0.8 m to properly model the narrow lanes of Khulna city.
+
+\subsection{Heterogeneous EV Fleet}
+
+To model Khulna's real EV ecosystem, three vehicle classes are configured with different battery parameters: Easy Bikes (34 types), Electric Rickshaws (33 types), and Electric Vans (33 types), totaling 100 continuous flows across the network. Vehicle launch rates range from 2 to 81 vehicles per hour throughout the 600-second simulation. Each vehicle has a SUMO battery device with specific values: 345 kg vehicle mass, 0.760 air drag coefficient, 0.0155 rolling drag coefficient, 81\% propulsion efficiency, and 64\% recovery efficiency. Table~\ref{tab:fleet} summarizes the three vehicle classes. Easy Bikes carry 12,000 Wh batteries, whereas E-Rickshaws and E-Vans are equipped with smaller batteries of 5,760--7,200 Wh. This reflects the actual mixed-fleet composition deployed in Khulna \cite{b2, b3}. During simulation, vehicles enter with different initial SoC levels (12.9\%--43.2\%), reflecting realistic field conditions.
+
+\begin{table}[htbp]
+\caption{Heterogeneous EV Fleet Configuration}
+\label{tab:fleet}
+\begin{center}
+\begin{tabular}{|l|c|c|c|}
+\hline
+\textbf{Vehicle Type} & \textbf{Count} & \textbf{Battery (Wh)} & \textbf{\begin{tabular}[c]{@{}c@{}}Max Speed\\(m/s)\end{tabular}} \\
+\hline
+Easy Bike  & 34 & 12,000       & 8.33 \\
+\hline
+E-Rickshaw & 33 & 5,760--7,200 & 6.94 \\
+\hline
+E-Van      & 33 & 5,760--7,200 & 5.56 \\
+\hline
+\end{tabular}
+\end{center}
+\end{table}
+
+\subsection{Charging Station Infrastructure}
+
+Ten charging stations are implanted as simulation parking areas over 2-way, 5-road corridors. Each station has separate charging and waiting subareas. The charging subareas have SUMO charging device parameters including charging power and efficiency, enabling local SUMO battery recharging. Table~\ref{tab:stations} summarizes detailed configuration. The total system capacity is 62 charging slots and 49 waiting slots. Station power ratings range from 25 to 50 kW at 95\% efficiency.
+
+\begin{table}[htbp]
+\caption{Charging Station Configuration}
+\label{tab:stations}
+\begin{center}
+\begin{tabular}{|l|c|c|c|c|}
+\hline
+\textbf{Station} & \textbf{\begin{tabular}[c]{@{}c@{}}Charging\\Slots\end{tabular}} & \textbf{\begin{tabular}[c]{@{}c@{}}Waiting\\Slots\end{tabular}} & \textbf{\begin{tabular}[c]{@{}c@{}}Power\\(kW)\end{tabular}} & \textbf{Eff.} \\
+\hline
+pa\_1 (fwd) & 4  & 3 & 25    & 95\% \\
+\hline
+pa\_1\_rev  & 4  & 3 & 25    & 95\% \\
+\hline
+pa\_3 (fwd) & 5  & 4 & 30    & 95\% \\
+\hline
+pa\_3\_rev  & 8  & 6 & 40    & 95\% \\
+\hline
+pa\_5 (fwd) & 4  & 3 & 25    & 95\% \\
+\hline
+pa\_5\_rev  & 4  & 3 & 25    & 95\% \\
+\hline
+pa\_7 (fwd) & 6  & 5 & 35    & 95\% \\
+\hline
+pa\_7\_rev  & 6  & 5 & 35    & 95\% \\
+\hline
+pa\_8 (fwd) & 5  & 3 & 50    & 95\% \\
+\hline
+pa\_8\_rev  & 10 & 6 & 50    & 95\% \\
+\hline
+\textbf{Total} & \textbf{62} & \textbf{49} & 25--50 & 95\% \\
+\hline
+\end{tabular}
+\end{center}
+\end{table}
+
+\subsection{TraCI Communication Layer}
+
+TraCI provides a socket-based API that allows Python to interact with SUMO \cite{b10}. At every integer second, the controller gathers battery parameters (\texttt{device.battery.chargeLevel}, \texttt{device.battery.capacity}, \texttt{device.battery.totalEnergyConsumed}), vehicle location, speed, current road ID, lane ID, and stop status. It uses \texttt{traci.simulation.findRoute()} to evaluate topological reachability---critical for handling directional constraints---and \texttt{traci.lane.getShape()} to calculate Euclidean station distances. Where a route change is feasible and the vehicle's SoC drops below a threshold of 30\%, the controller reroutes the vehicle to its assigned parking area by calling \texttt{traci.vehicle.setRoute()} and \texttt{traci.vehicle.setParkingAreaStop()}.
+
+\subsection{Data Logging Module}
+
+Each recommendation event is logged as a 28-attribute CSV record: timestep, vehicle type, current edge, lane, speed, SoC, battery capacity, priority level, and full metadata (ID, distance, power rating, charging/waiting availability, occupancy rate) for both the nearest and second-nearest stations, plus a textual reasoning string. A total of 1,169 recommendation events are generated. A vehicle-centric dataset of 33,721 timestep records also includes system-level features: total active vehicles, charging vehicles, average SoC, system power demand, and per-vehicle status metrics.
+
+%=======================================================
+\section{Charging Recommendation Model}
+%=======================================================
+
+\subsection{Multi-Criteria Scoring Formulation}
+
+At simulation time $t$, for a vehicle $v$ requiring charging, the proposed framework selects the optimal station $S^*$ from the set of $N=10$ available stations by minimizing a composite score:
+
+\begin{equation}
+S^* = \arg\min_{i} \; \bigl(w_1 D_i + w_2 Q_i + w_3 L_i\bigr)
+\label{eq:score}
+\end{equation}
+
+where $D_i$ is the Euclidean distance from vehicle $v$ to station $s_i$ (m), $Q_i$ is the number of vehicles currently in the waiting queue at $s_i$, and $L_i$ is the instantaneous charging power load at $s_i$ (kW). Weighting factors $w_1 = 0.5$, $w_2 = 0.3$, $w_3 = 0.2$ were set to prioritize proximity while moderating congestion and load effects. Rankings are calculated at every 1-second polling interval. The top two candidates (closest and second-closest) then proceed through the decision logic described below.
+
+\subsection{SoC Priority Classification}
+
+Every recommendation event is tagged with one of three priority levels based on the vehicle's current SoC:
+\begin{itemize}
+\item \textbf{CRITICAL}: SoC $< 20\%$
+\item \textbf{HIGH}: $20\% \leq$ SoC $< 30\%$
+\item \textbf{MEDIUM}: $30\% \leq$ SoC $< 50\%$
+\end{itemize}
+
+Priority-level tagging controls the urgency of console alerts during simulation (CRITICAL and HIGH events trigger verbose output) and is used for computing the High-Priority Smart Decision Rate metric.
+
+\subsection{Directional Constraint and Advisory Mode}
+
+A notable design aspect of this framework is SUMO's explicit handling of directional routing constraints. In Khulna, easy bikes and e-rickshaws operate on specific corridor routes. SUMO enforces one-way lane assignments and cannot teleport vehicles. As a result, the framework operates in two modes:
+
+\textbf{Rerouting Mode}: When  {traci.simulation.findRoute()} returns a valid directed path from the vehicle's current edge to the target station edge with a positive route length, the framework calls \texttt{setRoute()} and \texttt{setParkingAreaStop()} to redirect the vehicle. A return route to the vehicle's original destination is added if possible.
+
+\textbf{Advisory Mode}: When no valid directed path exists because the target station is at an unreachable position from the vehicle's current running structure, the framework logs the best-scoring station as a suggested recommendation. This preserves simulation integrity and produces useful data for real-world notification systems.
+
+\subsection{Four-Rule Decision Logic}
+
+Given the nearest station $s_1$ and second-nearest station $s_2$, the recommendation algorithm applies the following rules sequentially:
+\begin{enumerate}
+\item If $s_1$ has a free charging slot $\rightarrow$ recommend $s_1$ (Rerouting Mode if path exists).
+\item If $s_1$ is full but $s_2$ has a free charging slot $\rightarrow$ recommend $s_2$.
+\item If $s_2$ also lacks charging slots but has waiting capacity $\rightarrow$ recommend $s_2$ (waiting queue).
+\item If both $s_1$ and $s_2$ are fully saturated $\rightarrow$ recommend $s_1$ (Advisory Mode, flagged for retry).
+\end{enumerate}
+
+A 30-second cooldown per vehicle prevents recommendation thrashing. Queue management uses FIFO propagation: when a charging vehicle departs, the next waiting vehicle is automatically promoted to a charging slot via \texttt{traci.vehicle.resume()} and a new \texttt{setParkingAreaStop()} call, maintaining orderly slot throughput without external interference.
+
+%=======================================================
+\section{Simulation Setup and Parameters}
+%=======================================================
+
+Table~\ref{tab:params} summarizes the complete simulation parameter set. The SUMO configuration file \texttt{Test1.sumocfg} specifies the road network (\texttt{Test1\_with\_TLS.net.xml}), vehicle flows (\texttt{Test1.rou.xml}), and charging infrastructure (\texttt{Test1.chargingstations.add.xml}). Battery output, charging station output, trip information, and summary statistics are collected via SUMO's native output facility. The Python controller connects through TraCI, iterates in 1-second integer steps, and exports recommendation datasets to timestamped CSV files after simulation completion at $t = 600$~s.
+
+\begin{table}[htbp]
+\caption{Key Simulation Parameters}
+\label{tab:params}
+\begin{center}
+\begin{tabular}{|l|l|}
+\hline
+\textbf{Parameter} & \textbf{Value} \\
+\hline
+Simulator                      & SUMO (Eclipse) \\
+\hline
+Interface                      & TraCI (Python 3.x) \\
+\hline
+Simulation duration            & 600 s \\
+\hline
+Time step resolution           & 0.1 s \\
+\hline
+Number of vehicle flows        & 100 \\
+\hline
+Vehicle classes                & Easy Bike, E-Rickshaw, E-Van \\
+\hline
+Number of routes               & 8 (4 fwd + 4 rev) \\
+\hline
+Network edges                  & 11 directed \\
+\hline
+Charging stations              & 10 bidirectional \\
+\hline
+Total charging slots           & 62 \\
+\hline
+Total waiting slots            & 49 \\
+\hline
+Charging power range           & 25--50 kW \\
+\hline
+Charging efficiency            & 95\% \\
+\hline
+SoC trigger threshold          & 50\% \\
+\hline
+CRITICAL priority threshold    & SoC $<$ 20\% \\
+\hline
+HIGH priority threshold        & 20\% $\leq$ SoC $<$ 30\% \\
+\hline
+Recommendation cooldown        & 30 s \\
+\hline
+Scoring weights ($w_1, w_2, w_3$) & 0.5, 0.3, 0.2 \\
+\hline
+\end{tabular}
+\end{center}
+\end{table}
+
+%=======================================================
+\section{Results and Discussion}
+%=======================================================
+
+\subsection{System Load and Charging Statistics}
+
+The simulation generates 33,721 vehicle-centric records (one per vehicle per second) and 1,169 charging recommendation events. The system recorded a peak instantaneous charging power of 1,370 kW with 40 vehicles charging concurrently, reflecting near-saturation of the 62 available charging slots during peak demand. Across the simulation, the average charging power was 963.7 kW, and the total energy consumption for charging was 127.5 kWh. These load metrics underscore the significant charging demand on the network and the essential role of intelligent station selection in preventing local transformer overload \cite{b14}.
+
+\subsection{Recommendation Volume and Priority Distribution}
+
+Table~\ref{tab:priority} presents the priority-level breakdown of the 1,169 recommendation events. HIGH-priority events (SoC 20\%--30\%) dominated at 42.7\%, followed by MEDIUM (34.6\%) and CRITICAL (22.7\%). The average SoC at recommendation time was 27.7\% ($\sigma = 8.5\%$), with a minimum of 12.0\% and a maximum of 46.5\%. The average Euclidean distance to the nearest station was 84.3 m ($\sigma = 62.0$ m, min = 0.5 m, max = 256.6 m), indicating adequate station density for the modelled fleet.
+
+\begin{table}[htbp]
+\caption{Recommendation Priority Distribution}
+\label{tab:priority}
+\begin{center}
+\begin{tabular}{|l|c|c|c|}
+\hline
+\textbf{Priority Level} & \textbf{SoC Range} & \textbf{Events} & \textbf{Percentage} \\
+\hline
+CRITICAL & $<$ 20\%         & 265 & 22.7\% \\
+\hline
+HIGH     & 20\%--30\%       & 499 & 42.7\% \\
+\hline
+MEDIUM   & 30\%--50\%       & 405 & 34.6\% \\
+\hline
+\textbf{Total} & ---        & \textbf{1,169} & \textbf{100\%} \\
+\hline
+\end{tabular}
+\end{center}
+\end{table}
+
+\subsection{Recommendation Outcome Analysis}
+
+Table~\ref{tab:outcomes} presents the distribution of recommendation outcomes. The primary outcome---routing to the nearest station when charging slots were available---accounted for 59.0\% (689 events). In 24.1\% of cases (282 events), the nearest station was fully occupied and vehicles were successfully redirected to the second-nearest station with available capacity, demonstrating genuine load diversion. Waiting slot overflow management handled 7.7\% (90 events), while 9.2\% (108 events) triggered Advisory Mode.
+
+\begin{table}[htbp]
+\caption{Recommendation Outcome Analysis}
+\label{tab:outcomes}
+\begin{center}
+\begin{tabular}{|l|c|c|}
+\hline
+\textbf{Outcome} & \textbf{Events} & \textbf{Percentage} \\
+\hline
+Nearest station (slot available)   & 689 & 59.0\% \\
+\hline
+2nd nearest (nearest full)         & 282 & 24.1\% \\
+\hline
+Waiting slot overflow              & 90  &  7.7\% \\
+\hline
+Advisory Mode (both saturated)     & 108 &  9.2\% \\
+\hline
+\textbf{Total}                     & \textbf{1,169} & \textbf{100\%} \\
+\hline
+\end{tabular}
+\end{center}
+\end{table}
+
+\subsection{Station Utilisation Distribution}
+
+Station \texttt{pa\_8} received the highest recommendation share (32.4\% of all events), reflecting its large slot capacity (5 charging + 3 waiting forward, 10 + 6 reverse), power rating up to 50 kW, and central network position. Stations \texttt{pa\_7} and \texttt{pa\_3\_rev} ranked second and third at 14.7\% and 14.0\%, respectively. All ten stations received at least 1.5\% of recommendations, confirming that the multi-criteria scoring model broadly distributes demand across the network.
+
+\subsection{Comparative Evaluation: Proposed vs. Nearest-Only Baseline}
+
+To measure the benefit of the framework, we define a nearest-only baseline that always recommends the Euclidean nearest station without considering occupancy, queue, or load. Table~\ref{tab:comparison} reports four performance metrics computed from the 1,169-event dataset.
+
+\begin{table}[htbp]
+\caption{Performance Comparison: Proposed vs. Nearest-Only Baseline}
+\label{tab:comparison}
+\begin{center}
+\begin{tabular}{|l|c|c|}
+\hline
+\textbf{Metric} & \textbf{Proposed} & \textbf{Baseline} \\
+\hline
+Feasible Recommendation Rate (FRR)       & 90.1\% & 66.0\% \\
+\hline
+Congestion Avoidance Rate (CAR)          & 37.1\% &  0.0\% \\
+\hline
+High-Priority Smart Decision Rate (HPSDR) & 27.9\% & 0.0\% \\
+\hline
+Avg. Distance to Recommended Station (m) & 100.1  & 84.3  \\
+\hline
+\end{tabular}
+\end{center}
+\end{table}
+
+The \textit{Feasible Recommendation Rate} (FRR) measures the fraction of events where the recommended station had at least one empty charging slot. The proposed framework achieves FRR = 90.1\% versus 66.0\% for the baseline---a 24.0 percentage-point improvement---because it evaluates occupancy and diverts vehicles to alternatives when needed.
+
+The \textit{Congestion Avoidance Rate} (CAR) measures diversion away from a congested nearest station. The baseline achieves CAR = 0\% by construction, while the proposed framework achieves CAR = 37.1\%, quantifying the load-balancing contribution.
+
+The \textit{High-Priority Smart Decision Rate} (HPSDR) measures the fraction of CRITICAL or HIGH priority events (SoC $<$ 30\%) where the framework diverts the vehicle to the second-closest station with better availability. The proposed framework achieves HPSDR = 27.9\% (vs. 0\%), demonstrating intelligent routing precisely when battery urgency is highest.
+
+The average distance to the recommended station increases from 84.3 m to 100.1 m (+15.8 m)---a recognized trade-off for directing vehicles to capable stations. This marginal distance increase is negligible given the average remaining range at SoC = 27.7\%.
+
+\subsection{Limitations and Future Work}
+
+The 600-second simulation window incorporates a simplified road network. Full-scale deployment requires GPS-trace-calibrated origin-destination matrices and charging profiles from field surveys. Advisory Mode (9.2\% of occurrences) can be reduced by increasing station density or adding a third nearest candidate. Future work will integrate dynamic electricity pricing and renewable energy sources at station nodes.
+
+%=======================================================
+\section{Implications for Bangladesh}
+%=======================================================
+
+The 37.1\% Congestion Avoidance Rate suggests that approximately one in three charging events that would otherwise overload a popular station can be redistributed. This can reduce peak transformer loading and increase equipment lifetime, directly addressing a documented challenge for the West Zone Power Distribution Company Limited (WZPDCL) service area \cite{b14}. The resulting datasets (33,721 vehicle-centric records + 1,169 recommendation events) accurately provide a feature-rich space for subsequent machine-learning tasks. The per-station recommendation distribution reveals that \texttt{pa\_8} and \texttt{pa\_7} corridors absorb disproportionate demand---directly actionable information for capacity expansion planning. The open SUMO+Python architecture enables city planners to test alternative station placements by modifying XML configuration files without requiring specialized optimization expertise \cite{b10}.
+
+%=======================================================
+\section{Conclusion}
+%=======================================================
+
+This paper presents a SUMO+TraCI simulation-based charging station recommendation framework for a heterogeneous EV fleet in Khulna city. A 100-flow simulation across 3 vehicle classes with varying battery capacities (12,000 Wh for Easy Bikes; 5,760--7,200 Wh for E-Rickshaws and E-Vans), eight routes, and ten bidirectional stations generated 1,169 recommendation events over 600 seconds, recording a peak charging power of 1,370 kW with 40 vehicles simultaneously charging and a total energy consumption of 127.5 kWh.
+
+The main contributions are: (1) a physics-calibrated SUMO fleet model with differentiated battery configurations across three vehicle classes; (2) a multi-criteria recommendation algorithm with rerouting/advisory duality that explicitly respects directed routing constraints; (3) comparative evaluation demonstrating +24.0 pp Feasible Recommendation Rate, +37.1 pp Congestion Avoidance Rate, and +27.9 pp High-Priority Smart Decision Rate versus a nearest-only baseline; and (4) two complementary datasets (33,721 vehicle-centric records + 1,169 recommendation events) forming a foundation for future ML-based studies.
+
+Future work will expand to GPS-trace calibration of the full Khulna road graph, incorporate dynamic pricing, model renewable energy integration at stations, and evaluate demand-response schedules consistent with Bangladesh's National Energy Policy.
+
+%=======================================================
+\begin{thebibliography}{00}
+
+\bibitem{b1}
+M.~A. Rahman, S.~Islam, and A.~H. Khan, ``Electric vehicle adoption trends in Bangladesh: Opportunities and challenges,'' \textit{IEEE Access}, vol.~9, pp.~145632--145645, 2021.
+
+\bibitem{b2}
+``Battery-run vehicles add to Khulna's power woes,'' \textit{The Daily Star}, Sep. 30, 2022. [Online]. Available: \url{https://www.thedailystar.net/news/bangladesh/news/battery-run-vehicles-add-khulnas-power-woes-3132111}
+
+\bibitem{b3}
+``Carrying full passengers in easy bikes can ease traffic, save power: Research,'' \textit{BSS News}, Sep. 14, 2025. [Online]. Available: \url{https://www.bssnews.net/others/311737}
+
+\bibitem{b4}
+International Energy Agency (IEA), \textit{Global EV Outlook 2025}. Paris, France: IEA, 2025. [Online]. Available: \url{https://www.iea.org/reports/global-ev-outlook-2025}
+
+\bibitem{b5}
+D.~Wang, J.~Guan, T.~Wu, G.~Zheng, and Y.~Hu, ``Intelligent charging station selection for electric vehicles using multi-objective optimization,'' \textit{IEEE Trans. Intell. Transport. Syst.}, vol.~23, no.~8, pp.~11234--11245, Aug. 2022.
+
+\bibitem{b6}
+A.~Hussain, V.~H. Bui, and H.~M. Kim, ``A multi-criteria decision-making approach for electric vehicle charging station location selection,'' \textit{Energies}, vol.~13, no.~23, p.~6322, 2020.
+
+\bibitem{b7}
+X.~Zhang, Q.~Wang, and L.~Li, ``Load balancing strategies for electric vehicle charging stations using reinforcement learning,'' \textit{IEEE Trans. Smart Grid}, vol.~13, no.~4, pp.~3124--3135, Jul. 2022.
+
+\bibitem{b8}
+J.~Siddiqui, U.~Ahmed, A.~Amin, T.~Alharbi, A.~Alharbi, I.~Aziz, A.~R. Khan, and A.~Mahmood, ``Electric vehicle charging station load forecasting with an integrated DeepBoost approach,'' \textit{Alexandria Eng. J.}, vol.~116, pp.~331--341, Jan. 2025.
+
+\bibitem{b9}
+M.~R. Islam, H.~Lu, J.~Hossain, and L.~Li, ``A review on energy management strategies for electric vehicles in developing countries: A case study of Bangladesh,'' \textit{Renew. Sustain. Energy Rev.}, vol.~141, p.~110803, 2021.
+
+\bibitem{b10}
+P.~A. Lopez \textit{et al.}, ``Microscopic traffic simulation using SUMO,'' in \textit{Proc. 21st Int. Conf. Intell. Transport. Syst. (ITSC)}, Maui, HI, USA, 2018, pp.~2575--2582.
+
+\bibitem{b11}
+S.~Chen, Y.~Tong, and W.~Hu, ``TraCI-based real-time traffic control in SUMO simulation,'' \textit{J. Traffic Transport. Eng.}, vol.~7, no.~3, pp.~315--328, 2020.
+
+\bibitem{b12}
+``Multi-objective optimization strategy for intelligent charging and discharging station of electric vehicles in the distribution network,'' \textit{IEEE Access}, 2021. [Online]. Available: \url{https://ieeexplore.ieee.org/document/9511077}
+
+\bibitem{b13}
+``High penetration of electric autorickshaw on national power system and barriers against the adoption of solar energy: A case study in Bangladesh,'' \textit{Energy Nexus}, 2023. [Online]. Available: \url{https://www.sciencedirect.com/science/article/pii/S2666790823000423}
+
+\bibitem{b14}
+``Relentless load shedding plagues Khulna, Barishal residents,'' \textit{TBS News}. [Online]. Available: \url{https://www.tbsnews.net/bangladesh/energy/relentless-load-shedding-plagues-khulna-barishal-residents-981976}
+
+\bibitem{b15}
+``Evaluating the socio-economic and environmental impact of battery operated auto rickshaw in Khulna city,'' in \textit{Proc. Int. Conf. Civil Eng. Sustainable Dev. (ICCESD)}, KUET, 2018. [Online]. Available: \url{https://iccesd.kuet.ac.bd/2018/Papers/r_p4650.pdf}
+
+\bibitem{b16}
+C.~Pascual, \textit{Global EV Outlook 2022}. Paris, France: IEA, 2022. [Online]. Available: \url{https://www.iea.org/reports/global-ev-outlook-2022}
+
+\bibitem{b17}
+``Dynamic load balancing for EV charging stations using reinforcement learning and demand prediction,'' \textit{ResearchGate}, 2024. [Online]. Available: \url{https://www.researchgate.net/publication/389714334}
+
+\bibitem{b18}
+``A multicriteria GIS-based decision-making approach for locating electric vehicle charging stations,'' \textit{ResearchGate}, 2022. [Online]. Available: \url{https://www.researchgate.net/publication/362470657}
+
+\bibitem{b19}
+``Adaptive traffic signaling control using SUMO simulator,'' \textit{IJISRT}, Jan. 2025. [Online]. Available: \url{https://www.ijisrt.com/assets/upload/files/IJISRT25JAN158.pdf}
+
+\bibitem{b20}
+``A review on energy management systems in battery electric vehicles,'' \textit{ResearchGate}, 2023. [Online]. Available: \url{https://www.researchgate.net/publication/400355371}
+
+\bibitem{b21}
+West Zone Power Distribution Company Limited (WZPDCL), Khulna Division Distribution Report, 2023. [Online]. Available: \url{https://file-khulna.portal.gov.bd/uploads/d07c3114-12a6-4ebe-8fa0-460e27018e82//671/5a0/75b/6715a075bfbf0518800500.pdf}
+
+\bibitem{b22}
+``Electric vehicle and sustainable transport in South Asia,'' UNESCAP, 2022. [Online]. Available: \url{https://www.unescap.org/sites/default/d8files/event-documents/Day1-8Ahsanullah\%20University\%20of\%20Science_Technology.pdf}
+
+\end{thebibliography}
+
+\end{document}
