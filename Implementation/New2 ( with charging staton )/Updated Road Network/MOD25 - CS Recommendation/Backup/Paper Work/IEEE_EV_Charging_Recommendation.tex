@@ -29,23 +29,11 @@
 Electric Vehicles in Khulna City Using SUMO and TraCI}
 
 \author{
-\IEEEauthorblockN{Rakesh Biswas}
+\IEEEauthorblockN{Rakesh Biswas, Monishanker Halder, Md. Mahmudul Amin Shakil}
 \IEEEauthorblockA{\textit{Department of Computer Science \& Engineering}\\
 \textit{Jashore University of Science and Technology (JUST)}\\
 Jashore, Bangladesh\\
-200112.cse@student.just.edu.bd}
-\and
-\IEEEauthorblockN{Monishanker Halder}
-\IEEEauthorblockA{\textit{Department of Computer Science \& Engineering}\\
-\textit{Jashore University of Science and Technology (JUST)}\\
-Jashore, Bangladesh\\
-m.halder@just.edu.bd}
-\and
-\IEEEauthorblockN{Md. Mahmudul Amin Shakil}
-\IEEEauthorblockA{\textit{Department of Computer Science \& Engineering}\\
-\textit{Jashore University of Science and Technology (JUST)}\\
-Jashore, Bangladesh\\
-200106.cse@student.just.edu.bd}
+200112.cse@student.just.edu.bd, m.halder@just.edu.bd, 200106.cse@student.just.edu.bd}
 }
 
 \maketitle
@@ -53,7 +41,7 @@ Jashore, Bangladesh\\
 %-------------------------------------------------------
 \begin{abstract}
 The rapid growth of three wheeler electric vehicles -- Easy Bikes,
-Electric-Rickshaws and Electric-Vans -all over the Khulna city of
+Electric-Rickshaws and Electric-Vans -all over the 
 Bangladesh has great impact of unsupported charging demand on the urban
 power infrastructure. It isn't prepared for a peak classification. Lack
 of intelligent charging management systems reduces charging station
@@ -102,7 +90,7 @@ Khulna, the third largest city in Bangladesh and an important industrial
 hub, is a case in point. Thousands of electric three-wheelers ply the
 streets of Khulna every day, providing affordable, low-emission urban
 mobility and supporting the livelihoods of a significant driver
-population \cite{b2}.
+population \cite{b2}. According to Khulna's traffic department, there are 30,000+ battery-driven easy bikes in the city, with Khulna City Corporation (KCC) having licensed 8,000 and processing approvals for another 2,000 \cite{b2}.
 
 In spite of these facilities, EV charging in Khulna remains almost
 completely imbalanced. Drivers select charging stations based only on
@@ -169,12 +157,12 @@ coordination gaps, which are directly correlated to this study. The study has al
 \subsection{Real-Time Routing and AI-Based Selection}
 
 Current research explored reinforcement learning \& AI based frameworks
-for dynamics Electric Vehicle charging distribution. These methods
+for dynamics Electric Vehicle charging distribution. These methods \cite{b7, b17}.
 target to balance the load at stations, to lessen traffic, decrease
-peak-demand through adaptive routing suggestion. Microscopic traffic
+peak-demand through adaptive routing suggestion \cite{b12}. Microscopic traffic
 simulation platforms like-SUMO has been widely implemented for traffic
 optimization. More implementation for signal control, energy aware
-mobility modeling. By the way fixed work aggregated real time suggestive
+mobility modeling \cite{b10, b19}. GIS-based multi-criteria decision-making approach for locating EV charging stations has also been demonstrated \cite{b18} By the way fixed work aggregated real time suggestive
 recommendation of charging in to the heterogeneous EV fleet of South
 Asian cities.
 
@@ -189,7 +177,7 @@ the ACN dataset. Their work establishes - enriched feature engineering
 The work drives forecast accuracy. The dataset produced by our
 simulation accurately captures these features, making it directly
 usable as input for our charging station style models applied to the
-Khulna context.
+Khulna context\cite{b9} .
 
 \subsection{Research Gap}
 
@@ -233,13 +221,13 @@ shown in Fig.~\ref{fig:maps}.
   \centering
   \begin{subfigure}[b]{0.48\columnwidth}
     \centering
-    \includegraphics[width=\linewidth]{Khulna_city_OSM.png}
+    \includegraphics[width=\linewidth]{Khulna_Highlighted_OSM.png}
     \caption{}
   \end{subfigure}
   \hfill
   \begin{subfigure}[b]{0.48\columnwidth}
     \centering
-    \includegraphics[width=\linewidth]{Road_Network.png}
+    \includegraphics[width=\linewidth]{SUMO_custom_road_network.png}
     \caption{}
   \end{subfigure}
   \caption{(a) A particular region's map of Khulna city from Open
@@ -259,7 +247,7 @@ continuous flows across the network. From 2 to 81 vehicles per
 hour-launce vehicle through the 600 seconds simulation. Each vehicle
 has a SUMO battery device with specific values: 345 kg vehicle mass,
 0.760 air drag coefficient, 0.0155 rolling drag, 81\% propulsion
-efficiency, and 64\% recovery efficiency. Table~\ref{tab:fleet}
+efficiency, and 64\% recovery efficiency \cite{b20}. Table~\ref{tab:fleet}
 summarizes the three vehicle fleet classes. Significantly, the easy
 bikes carry 12,000 Wh batteries, whereas the e-rickshaws and e-vans
 are equipped with smaller batteries with 5,760--7,200 Wh batteries.
@@ -496,7 +484,7 @@ Total waiting slots               & 49 \\
 \hline
 Charging power range              & 25--50 kW \\
 \hline
-Charging efficiency               & 95\% \\
+Charging efficiency               & 95\% \cite{b21}\\
 \hline
 SoC trigger threshold             & 50\% \\
 \hline
