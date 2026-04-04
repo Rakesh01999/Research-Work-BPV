@@ -1,0 +1,32 @@
+# Simulation Outputs (Large & Generated)
+emissions.xml
+fcd.xml
+tripinfo.xml
+battery.xml
+statistics.xml
+summary.xml
+*.out
+*.log
+
+# Redundant Datasets & Archive
+/Backup/
+/d-05-05-25/
+*.zip
+*.rar
+*.7z
+
+# Temporary and System Files
+.DS_Store
+Thumbs.db
+Desktop.ini
+.vscode/
+.idea/
+*.tmp
+*.bak
+
+# Machine Learning / Python Artifacts
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.ipynb_checkpoints/
