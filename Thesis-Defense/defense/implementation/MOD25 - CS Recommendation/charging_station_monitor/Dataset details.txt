@@ -1,0 +1,55 @@
+
+---
+
+## 🔗 Why the Same Vehicle Appears Again After Several Timesteps
+
+- **Each vehicle is tracked continuously across time.**  
+  The simulation doesn’t just log a vehicle once — it logs its state at *every timestep* until it leaves the network.  
+
+- **Timesteps are snapshots.**  
+  At timestep 1, you see `easyBike_001` with its speed, SOC, lane, etc.  
+  At timestep 2, the same vehicle appears again, but with updated values (speed increased, energy consumed grew, SOC changed).  
+
+- **That’s why rows repeat the same vehicle ID.**  
+  It’s not duplication — it’s a *time series record*. Each row is a new measurement of the same vehicle at a later timestep.
+
+---
+
+## 📊 Example From Your Data
+
+- **Timestep 1, `easyBike_001`**  
+  ```
+  speed_ms = 0.82, soc_percent = 43.17, energy_consumed_Wh = 0.05
+  ```
+
+- **Timestep 2, `easyBike_001`**  
+  ```
+  speed_ms = 1.40, soc_percent = 43.17, energy_consumed_Wh = 0.16
+  ```
+
+Notice:
+- The **vehicle ID is the same** (it’s the same EV).  
+- The **values changed** (speed and energy consumption updated).  
+- SOC stayed constant here because the vehicle hasn’t consumed enough energy yet to drop below 43.17%.  
+
+This shows the dataset is recording the **evolution of each vehicle’s state over time**.
+
+---
+
+## ⚡ Why It Matters
+
+- **For analysis:** You can track how each EV’s SOC decreases while driving, when it enters a charging station, how long it waits, and how much energy it consumes.  
+- **For ML forecasting:** This repeated logging creates a panel dataset (time × vehicle), which is perfect for predicting load demand, queue lengths, or SOC depletion.  
+- **For system monitoring:** It allows you to aggregate across vehicles at each timestep (system load, average SOC, utilization).
+
+---
+
+## 🎯 Key Takeaway
+- **Timesteps = time snapshots.**  
+- **Vehicle IDs = unique EVs.**  
+- **Rows repeat because the same vehicle is observed at every timestep until it leaves the simulation.**  
+
+So what looks like repetition is actually the **time series tracking of each vehicle’s behavior**.
+
+---
+
