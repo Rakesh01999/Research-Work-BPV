@@ -1000,7 +1000,14 @@ class SmartChargingStationMonitor:
                         'charging_utilization_percent': 0,
                         'queue_length': 0
                     }
-                
+
+                # Recovery logic for missing lane (happens when parked at charging station)
+                if not lane or lane == "" or lane == "unknown":
+                    if status in ['charging', 'waiting'] and current_station_id in self.CHARGING_STATIONS:
+                        lane = self.CHARGING_STATIONS[current_station_id]['lane']
+                    elif not lane or lane == "":
+                        lane = "unknown"
+
                 # --- Construct Record ---
                 record = {
                     # 1. Identity & Time
@@ -1014,7 +1021,7 @@ class SmartChargingStationMonitor:
                     'acceleration_ms2': round(accel, 2),
                     'soc_percent': round(soc, 2),
                     'energy_consumed_Wh': round(energy_consumed, 2),
-                    'lane_id': str(lane).replace('-', 'NEG_') if str(lane).startswith('-') else str(lane),
+                    'lane_id': self.format_edge_lane(lane),
                     'status': status,
                     
                     # 3. Station Context (Where the vehicle is)
@@ -1295,6 +1302,15 @@ class SmartChargingStationMonitor:
                 elif v in self.currently_waiting:
                     status = 'waiting'
                 
+                # Recovery logic for missing lane (for vehicle tracking data)
+                if not lane or lane == "" or lane == "UNK":
+                    if status in ['charging', 'waiting'] and vs.get('charging_station'):
+                        sid = vs.get('charging_station')
+                        if sid in self.CHARGING_STATIONS:
+                            lane = self.CHARGING_STATIONS[sid]['lane']
+                    elif not lane or lane == "":
+                        lane = "unknown"
+
                 self.vehicle_data.append({
                     'timestep_sec': t,
                     'vehicle_id': v,
@@ -1304,8 +1320,8 @@ class SmartChargingStationMonitor:
                     'initial_soc_percent': round(self.initial_soc.get(v, b['soc_percent']), 2),
                     'soc_drop_percent': round(self.initial_soc.get(v, b['soc_percent']) - b['soc_percent'], 2),
                     'energy_consumed_Wh': round(b['energy_consumed_Wh'], 2),
-                    'lane': str(lane),
-                    'road_id': str(road),
+                    'lane': self.format_edge_lane(lane),
+                    'road_id': self.format_edge_lane(road),
                     # 'x_position': round(pos[0], 2),
                     # 'y_position': round(pos[1], 2),
                     'speed_ms': round(spd, 2),
