@@ -27,7 +27,7 @@
 
 
 % Margins
-\setlength{\headheight}{28.61798pt}
+\setlength{\headheight}{33pt}
 \setlength{\textwidth}{16cm}
 \setlength{\textheight}{23cm}
 \setlength{\oddsidemargin}{0.5cm}
