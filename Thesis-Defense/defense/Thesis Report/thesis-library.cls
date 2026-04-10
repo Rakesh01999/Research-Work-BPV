@@ -114,10 +114,10 @@
     {\large \supervisorNameStyle}\\[0.0cm] %0.75
     {\large \supervisorDesigStyle}\\[0.0cm] %0.75 
     {\large \supervisorAffStyle}\\[0.5cm] %0.75    
-    {\large \textbf{\cosupervisor}}\\[0.0cm]
-    {\large \cosupervisorNameStyle}\\[0.0cm] %1.25
-    {\large \cosupervisorDesigStyle}\\[0.0cm] %0.75 
-    {\large \cosupervisorAffStyle}\\[0.5cm] %0.75 
+    % {\large \textbf{\cosupervisor}}\\[0.0cm]
+    % {\large \cosupervisorNameStyle}\\[0.0cm] %1.25
+    % {\large \cosupervisorDesigStyle}\\[0.0cm] %0.75 
+    % {\large \cosupervisorAffStyle}\\[0.5cm] %0.75 
     {\large \degreeLineA}\\[0.0cm]
     {\large \degreeLineB}\\[0.0cm]
     {\large \major}\\[0.0cm]
@@ -146,9 +146,9 @@
  {\par\noindent\rule{0.5\textwidth}{1pt}}\\[2cm]
  %{\supervisorNameStyle}\\[1cm]  %0.75
 
-  {\cosupervisorsign}\\[1cm]
- {\par\noindent\rule{0.5\textwidth}{1pt}}\\[0.0cm]
- %{\cosupervisorNameStyle}\\[0.1cm]  %0.75
+  % {\cosupervisorsign}\\[1cm]
+ % {\par\noindent\rule{0.5\textwidth}{1pt}}\\[0.0cm]
+ % %{\cosupervisorNameStyle}\\[0.1cm]  %0.75
 
 \end{center}
 \end{titlepage}

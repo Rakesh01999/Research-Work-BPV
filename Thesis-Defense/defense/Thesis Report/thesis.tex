@@ -52,18 +52,23 @@
 \newcommand{\supervisorDesig}{Assistant Professor, Department of CSE}
 \newcommand{\supervisorAff}{Jashore University of Science and Technology}
 
-\newcommand{\degreeLineALabel}{This thesis report was submitted in fulfillment of the}
+\newcommand{\degreeLineALabel}{This thesis report was submitted in partial fulfillment of the}
 \newcommand{\degreeLineBLabel}{Requirements for the Bachelor's Degree}
 \newcommand{\majorName}{In \textbf{Computer Science and Engineering}}
 \newcommand{\facultyName}{Faculty of Computer Science and Engineering}
 \newcommand{\universityName}{Jashore University of Science and Technology}
 \newcommand{\regionName}{Jashore-7408, Bangladesh}
 \newcommand{\degreeyearName}{2026}
-\newcommand{\degreemonthName}{February}
+\newcommand{\degreemonthName}{April}
+\newcommand{\subtitle}{}
+\newcommand{\coSupervisorLabel}{}
+\newcommand{\coSupervisorName}{}
+\newcommand{\cosupervisorDesig}{}
+\newcommand{\cosupervisorAff}{}
 \newcommand{\approvalText}{This thesis entitled \textbf{``EV Charging Load Demand Prediction Using Machine Learning in a SUMO-Based Simulation Environment''} submitted by \textbf{Rakesh Biswas}, Student ID: 200112, has been accepted as satisfactory in fulfillment of the requirements for the degree of Bachelor of Science in Computer Science and Engineering.}
 \newcommand{\studentSign}{\underline{Signature of the Student}}
 \newcommand{\supervisorSign}{\underline{Signature of the Supervisor}}
-\newcommand{\cosupervisorSign}{\underline{Signature of the Co-Supervisor}}
+\newcommand{\cosupervisorSign}{}
 
 % -------------------------------------------------------
 % Cover + Approval Pages
@@ -120,7 +125,7 @@ support. This work would not have been possible without them.
 \begin{flushright}
 Rakesh Biswas \\
 Department of CSE, JUST \\
-February 2026
+April 2026
 \end{flushright}
 
 % -------------------------------------------------------
@@ -656,7 +661,7 @@ transitions.
 
 \begin{figure}[htbp]
   \centering
-  \includegraphics[width=0.75\textwidth]{images/dummy-post-horisontal.jpg}
+  \includegraphics[width=0.85\textwidth]{images/System_total_charging_load.png}
   \caption{System total charging load over simulation time (1--600 seconds).}
   \label{fig:load_profile}
 \end{figure}
@@ -689,7 +694,9 @@ vehicles arriving at full stations.
 
 \section{Machine Learning Model Performance}
 
-Table~\ref{tab:ml_results} summarizes the performance of all four \Gls{ml} models on the
+\subsection{Overall Evaluation}
+
+Table~\ref{tab:ml_results} summarizes the performance of all four predictive models on the
 test dataset.
 
 \begin{table}[htbp]
@@ -702,64 +709,101 @@ test dataset.
 \hline
 Decision Tree      & 0.0000 & 0.0000 & 1.0000 \\
 Random Forest      & 0.0000 & 0.0000 & 1.0000 \\
-XGBoost            & 0.0005 & 0.0012 & 0.9999 \\
-Linear Regression  & 1.5339 & 2.0637 & 0.9999 \\
+XGBoost            & 0.0004 & 0.0004 & 1.0000 \\
+Linear Regression  & 8.5746 & 11.2403 & 0.9991 \\
 \hline
 \end{tabular}
 \end{center}
 \end{table}
 
+The actual vs. predicted plot for the ensemble models (Figure~\ref{fig:ml_comparison}) demonstrates a near-perfect alignment with the ground truth, particularly for tree-based models.
+
 \begin{figure}[htbp]
   \centering
-  \includegraphics[width=0.7\textwidth]{images/dummy-post-horisontal.jpg}
-  \caption{Comparison of ML model performance metrics (MAE, RMSE, R\textsuperscript{2}).}
+  \includegraphics[width=0.85\textwidth]{images/actual_vs_predicted.png}
+  \caption{Actual vs. Predicted system load for the ensemble models on the test set.}
   \label{fig:ml_comparison}
 \end{figure}
 
-\subsection{Decision Tree and Random Forest}
+\subsection{Detailed Model Comparison}
+
+\subsubsection{Decision Tree and Random Forest}
 
 Both \Gls{dt} and \Gls{rf} achieved perfect prediction scores ($\text{R}^2 = 1.00$,
-$\text{MAE} = 0$, $\text{RMSE} = 0$) on the test set. This near-perfect performance is
-attributable to the highly structured and deterministic nature of the simulation data:
-the system total load is a precise function of the number of vehicles charging and their
-assigned station power ratings. Decision trees are well-suited to capturing such piecewise-
-constant relationships, and the ensemble aggregation in \Gls{rf} further stabilizes
-predictions \cite{rf_load_forecast2020}.
+$\text{MAE} = 0.00$, $\text{RMSE} = 0.00$) on the test set. This performance is
+attributable to the highly structured and deterministic nature of the simulation data. Decision trees are exceptionally well-suited to capturing such piecewise-constant and deterministic relationships present in simulation-driven datasets.
 
-\subsection{XGBoost}
+\subsubsection{XGBoost}
 
-\Gls{xgb} achieved an \Gls{r2} of 0.9999 and an \Gls{mae} of 0.0005~kW, representing
-a near-negligible prediction error. The slight deviation from perfect accuracy is due to
-XGBoost's regularization terms, which introduce a small bias to prevent overfitting.
-This behavior is desirable in real-world deployment scenarios where generalization to
-unseen data is more important than zero training error \cite{xgboost_energy2022}.
+\Gls{xgb} achieved an \Gls{r2} of 1.0000 and a near-zero \Gls{mae} of 0.0004~kW. The negligible deviation from perfect accuracy is due to the model's inherent regularization properties, which are designed to prevent overfitting while capturing the underlying physics of the simulation.
 
-\subsection{Linear Regression}
+\subsubsection{Linear Regression}
 
-\Gls{lr} achieved the lowest performance of the four models, with an \Gls{mae} of
-1.53~kW and an \Gls{rmse} of 2.06~kW, although its \Gls{r2} of 0.9999 still indicates
-an excellent fit. The residual error reflects the inherently nonlinear relationship
-between features such as \Gls{soc} and system load, which \Gls{lr} cannot fully capture
-without explicit polynomial feature engineering \cite{regression_ev2020}.
+\Gls{lr} achieved a lower (though still excellent) performance with an \Gls{mae} of 8.57~kW and an \Gls{rmse} of 11.24~kW. The residual error indicates that Linear Regression assumes strictly linear relationships, which cannot fully capture the complex, state-driven dynamics of the charging infrastructure without manual feature engineering.
 
-\section{Discussion of Results}
+\section{Feature Analysis and Model Interpretation}
 
-The results demonstrate several important findings. First, the SUMO simulation framework
-successfully generates a rich, \Gls{ml}-ready dataset with sufficient diversity in
-vehicle states, station occupancy, and load conditions. The dataset's 25 features capture
-both individual vehicle dynamics and system-level emergent behaviors.
+\subsection{Introduction to Feature Analysis}
 
-Second, the dominance of tree-based models confirms prior findings in the load forecasting
-literature \cite{ml_ev_load2021, rf_load_forecast2020}. The deterministic structure of
-simulation data makes it particularly amenable to decision tree partitioning, where the
-load can be precisely reconstructed from a small number of key features
-(\texttt{system\_charging\_vehicles}, \texttt{station\_load\_kW}).
+In this study, feature analysis was conducted to understand the contribution and influence of different variables on the prediction of system-level load demand (\texttt{system\_total\_load\_kW}). Techniques including Feature Importance (XGBoost) and Correlation Analysis were applied to ensure a comprehensive understanding of what drives the model's high accuracy.
 
-Third, the high \Gls{r2} score of \Gls{lr} (0.9999) suggests that the primary
-relationship between features and load is nearly linear at the system level, even though
-individual station dynamics are nonlinear. This is consistent with the additive nature of
-total load (sum of per-station power contributions) when the number of charging vehicles
-is the dominant predictor.
+\subsection{Feature Importance (XGBoost)}
+
+Feature importance was extracted using the \text{XGBoost} model, which evaluates the contribution of each feature based on its role in reducing prediction error. 
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=0.85\textwidth]{images/feature_importance.png}
+  \caption{Top 15 features by importance according to the XGBoost model.}
+  \label{fig:feature_importance}
+\end{figure}
+
+As shown in Figure~\ref{fig:feature_importance}, only a few dominant features—primarily \texttt{system\_charging\_vehicles} and \texttt{timestep\_sec}—drive the majority of the prediction accuracy. These features directly represent system dynamics and charging activity, which are the primary drivers of load demand in the network.
+
+\subsection{Correlation Analysis}
+
+Correlation between input features and the target variable was analyzed using the Pearson correlation coefficient. The heatmap in Figure~\ref{fig:correlation_heatmap} illustrates the strong positive correlation between vehicle status and system-wide load metrics.
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=0.85\textwidth]{images/correlation_heatmap.png}
+  \caption{Heatmap of feature correlations in the EV charging dataset.}
+  \label{fig:correlation_heatmap}
+\end{figure}
+
+The bar chart in Figure~\ref{fig:top_correlations} further confirms that load demand is primarily influenced by aggregated system behavior, such as the total number of vehicles charging, rather than individual vehicle-level attributes like speed or acceleration.
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=0.85\textwidth]{images/top_correlations.png}
+  \caption{Top feature correlations with the system total load (kW).}
+  \label{fig:top_correlations}
+\end{figure}
+
+\subsection{Model Performance Justification}
+
+The exceptional performance of tree-based models (Random Forest and XGBoost) compared to Linear Regression highlights several key insights:
+
+\begin{itemize}
+    \item \textbf{Tabular Suitability:} Tree models naturally handle tabular data and capture non-linear feature interactions without requiring explicit basis functions.
+    \item \textbf{State-Driven Dynamics:} The prediction problem is inherently state-driven rather than sequence-driven. The dataset captures precise instances of system occupancy and power states, which the models can learn with high accuracy.
+    \item \textbf{Handling Discontinuities:} Unlike Linear Regression, tree models can efficiently capture the discontinuities in power demand caused by vehicles starting or stopping their charging sessions.
+\end{itemize}
+
+\subsection{Analysis of Feature Contributions and Redundancy}
+
+A key observation during analysis was that many features received near-zero importance scores. This is primarily explained by two factors:
+\begin{enumerate}
+    \item \textbf{Feature Redundancy:} Many variables (e.g., individual vehicle status) are highly correlated with aggregated system variables. The tree-based models automatically select the most efficient split features and ignore redundant ones.
+    \item \textbf{Aggregated Effects:} Effects such as vehicle speed and SOC are already implicitly represented in the "charging vs. driving" state, which is the stronger predictor.
+\end{enumerate}
+This indicates that the dataset is highly structured and contains highly informative system-level variables, making the prediction problem relatively deterministic.
+
+\section{Discussion of Results and Final Conclusion}
+
+The results demonstrate several important findings regarding EV charging load prediction. The simulation framework successfully generates a rich, \Gls{ml}-ready dataset that mirrors complex real-world dynamics. The near-perfect model performance ($\text{R}^2 \approx 1.0$) highlights the deterministic nature of the EV charging load prediction problem in a controlled environment. 
+
+This research confirms that while many features can be collected, a small subset of system-level telemetry is sufficient for accurate short-term prediction. Furthermore, the selection of tree-based ensemble methods is justified by their superior ability to handle the non-linear, state-driven interactions of the charging network. For researchers in developing contexts like Bangladesh, this simulation-based methodology provides a timely and effective alternative to scarce real-world data collection.
 
 \section{Implications}
 
