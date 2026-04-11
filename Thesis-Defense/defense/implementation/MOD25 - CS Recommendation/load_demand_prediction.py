@@ -1400,14 +1400,15 @@ class SmartChargingStationMonitor:
             
             if len(df) > 0:
                 peak = df['system_total_load_kW'].max()
-                avg = df['system_total_load_kW'].mean()
                 
-                # Calculate energy (Average power * duration / 3600)
-                # Note: Data is per vehicle, so we must be careful not to sum system load multiple times
-                # We need to take unique system loads per timestep
+                # We need to take unique system loads per timestep to avoid vehicle overlap bias
                 system_df = df[['timestep_sec', 'system_total_load_kW']].drop_duplicates()
-                energy = system_df['system_total_load_kW'].sum() / 3600
                 
+                # True Time-Based Average Power
+                avg = system_df['system_total_load_kW'].mean()
+                
+                # Calculate energy (Sum of power load over duration / 3600)
+                energy = system_df['system_total_load_kW'].sum() / 3600
                 maxv = df['system_charging_vehicles'].max()
                 
                 print(f"\n💡 SYSTEM LOAD SUMMARY:")

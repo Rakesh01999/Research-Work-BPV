@@ -163,8 +163,8 @@ simulator, coupled with the \Gls{traci} interface to enable real-time vehicle mo
 and intelligent charging station management. A network of 10 bidirectional charging
 stations was deployed with configurable power ratings ranging from 25~kW to 50~kW and
 separate charging and waiting queue slots per station. Forty-nine electric vehicles of
-type \\textit{easyBike} were simulated over a 600-second period, producing 33,708
-vehicle-level records encompassing features such as \\Gls{soc}, speed, acceleration,
+type \textit{easyBike} were simulated over a 600-second period, producing 34,020
+vehicle-level records encompassing features such as \Gls{soc}, speed, acceleration,
 station utilization, queue length, and system-wide load metrics.
 
 Four supervised \Gls{ml} models were trained and evaluated for system-level load demand
@@ -173,7 +173,7 @@ and Linear Regression (\Gls{lr}). Model performance was assessed using \Gls{mae}
 \Gls{rmse}, and \Gls{r2} score. Both \Gls{dt} and \Gls{rf} achieved perfect scores
 ($\text{R}^2 = 1.00$, $\text{MAE} = 0.00$), while \Gls{xgb} achieved a near-perfect
 result ($\text{R}^2 = 1.0000$, $\text{MAE} = 0.0004$). \Gls{lr} also performed
-strongly with $\text{R}^2 = 0.9992$ and $\text{MAE} = 8.30$~kW.
+strongly with $\text{R}^2 = 0.9993$ and $\text{MAE} = 7.92$~kW.
 
 Additionally, a rule-based smart charging recommendation system was implemented to route
 vehicles to optimal charging stations based on real-time \Gls{soc} levels, nearest-
@@ -550,7 +550,7 @@ Table~\ref{tab:class_comparison} provides a detailed cross-class parameter compa
 \toprule
 \textbf{Parameter} & \textbf{Easy Bike} & \textbf{E-Rickshaw} & \textbf{E-Van} \\
 \midrule
-Body Dimensions (L$\times$W$\times$H) & 2.5$\times$1.5$\times$1.4 m & 2.3$\times$1.0$\times$1.8 m & 2.4$\times$1.3$\times$2.2 m \\
+Body Dimensions (L$\times$W$\times$H) & 2.5$\times$1.5$\times$1.4 m & 2.3$\times$1.0$\times$1.8 m & 2.4$\times$1.3$\times$0.8 m \\
 Battery Capacity (Wh) & 12,000 & 5,760 -- 7,200 & 5,760 \\
 Max Power (W) & 1,000 -- 1,200 & 900 -- 1,000 & 800 -- 900 \\
 Avg. Propulsion Eff. & 0.890 -- 0.896 & 0.830 -- 0.834 & 0.820 -- 0.826 \\
@@ -643,18 +643,18 @@ summarizes key statistics.
 \hline
 \textbf{Property} & \textbf{Value} \\
 \hline
-Total records                & 33,708 \\
+Total records                & 34,020 \\
 Number of features           & 25 \\
 Unique vehicles              & 49 \\
 Simulation duration (s)      & 1 -- 600 \\
-Status: Driving              & 18,478 (54.8\%) \\
-Status: Charging             & 12,708 (37.7\%) \\
-Status: Waiting              & 1,875 (5.6\%) \\
-Status: Idle                 & 647 (1.9\%) \\
+Status: Driving              & 19,710 (57.9\%) \\
+Status: Charging             & 11,980 (35.2\%) \\
+Status: Waiting              & 1,720 (5.1\%) \\
+Status: Idle                 & 610 (1.8\%) \\
 System load: Minimum (kW)    & 0.00 \\
-System load: Mean (kW)       & 963.49 \\
+System load: Mean (kW)       & 723.82 \\
 System load: Maximum (kW)    & 1,340.00 \\
-System load: Std. Dev. (kW)  & 380.95 \\
+System load: Std. Dev. (kW)  & 380.87 \\
 \hline
 \end{tabular}
 \end{center}
@@ -751,7 +751,7 @@ the findings.
 
 Over the 600-second simulation period, the system-level charging load exhibited a
 characteristic ramp-up pattern as increasing numbers of \Gls{ev}s reached charging
-stations. The mean system load was 963.49~kW, with a peak of 1,340~kW achieved when up
+stations. The mean system load was 723.82~kW, with a peak of 1,340~kW achieved when up
 to 46 vehicles were simultaneously active in the network. The standard deviation of
 380.95~kW reflects the dynamic nature of vehicle arrivals, departures, and queue
 transitions.
@@ -766,8 +766,8 @@ transitions.
 \subsection{Vehicle Status Distribution}
 
 Throughout the simulation, the majority of timestep-vehicle records corresponded to the
-\textit{driving} status (54.8\%), followed by \textit{charging} (37.7\%), \textit{waiting}
-(5.6\%), and \textit{idle} (1.9\%). This distribution reflects the expected behavior: most
+\textit{driving} status (57.9\%), followed by \textit{charging} (35.2\%), \textit{waiting}
+(5.1\%), and \textit{idle} (1.8\%). This distribution reflects the expected behavior: most
 vehicles spend substantial time driving between stations, with a significant proportion
 simultaneously occupying charging slots.
 
@@ -806,8 +806,8 @@ test dataset.
 \hline
 Decision Tree      & 0.0000 & 0.0000 & 1.0000 \\
 Random Forest      & 0.0000 & 0.0000 & 1.0000 \\
-XGBoost            & 0.0003 & 0.0003 & 1.0000 \\
-Linear Regression  & 8.3024 & 10.8872 & 0.9992 \\
+XGBoost            & 0.0004 & 0.0004 & 1.0000 \\
+Linear Regression  & 7.9164 & 10.1908 & 0.9993 \\
 \hline
 \end{tabular}
 \end{center}
@@ -836,7 +836,7 @@ attributable to the highly structured and deterministic nature of the simulation
 
 \subsubsection{Linear Regression}
 
-\Gls{lr} achieved a lower (though still excellent) performance with an \Gls{mae} of 8.57~kW and an \Gls{rmse} of 11.24~kW. The residual error indicates that Linear Regression assumes strictly linear relationships, which cannot fully capture the complex, state-driven dynamics of the charging infrastructure without manual feature engineering.
+\Gls{lr} achieved a lower (though still excellent) performance with an \Gls{mae} of 7.92~kW and an \Gls{rmse} of 10.19~kW. The residual error indicates that Linear Regression assumes strictly linear relationships, which cannot fully capture the complex, state-driven dynamics of the charging infrastructure without manual feature engineering.
 
 \section{Feature Analysis and Model Interpretation}
 
