@@ -439,7 +439,14 @@ performance is evaluated using standard regression metrics.
 
 \subsection{Study Area and Road Network}
 
-The simulation environment is modeled after the road network of \textbf{Khulna City, Bangladesh}. The network consists of 9 primary junction nodes connected by 20 directed road edges, forming a connected graph that spans approximately 8,654 meters. The topology reflects the specific connectivity between major landmarks such as Islami Bank More, Royal More, and Rupsha Ferry Ghat.
+The simulation environment is modeled after the real-world road network of \textbf{Khulna City, Bangladesh}, as illustrated in Figure~\ref{fig:khulna_osm}. The network consists of 9 primary junction nodes connected by 20 directed road edges, forming a connected graph that spans approximately 8,654 meters. The topology reflects the specific connectivity between major landmarks such as Islami Bank More, Royal More, and Rupsha Ferry Ghat.
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=0.85\textwidth]{images/Khulna_Highlighted_OSM.png}
+  \caption{OpenStreetMap (OSM) highlighted view of the selected Khulna City road network.}
+  \label{fig:khulna_osm}
+\end{figure}
 
 \begin{table}[htbp]
 \caption{Road Network Segments (Khulna City Model)}
@@ -466,7 +473,14 @@ PTI More & Galaxco More & 900m & Bidirectional \\
 \end{center}
 \end{table}
 
-The network was developed using \Gls{sumo} \texttt{netedit} and is configured as a left-hand traffic system to comply with Bangladeshi road conventions. The detailed road edge configurations are summarized in Table~\ref{tab:edge_config}.
+The network was methodically digitized using \Gls{sumo} \texttt{netedit} and is rigorously configured as a left-hand traffic system to comply perfectly with Bangladeshi road vehicle conventions. Figure~\ref{fig:sumo_network} presents the corresponding custom microscopic topology designed for the dynamic simulation, mapping exactly to the real-world physical boundaries and junctions. The fundamental properties spanning distance and bounds for the detailed road edge configurations are summarized in Table~\ref{tab:edge_config}.
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=0.85\textwidth]{images/SUMO_custom_road_network.png}
+  \caption{Custom microscopic road network topology generated natively in SUMO \texttt{netedit}.}
+  \label{fig:sumo_network}
+\end{figure}
 
 \begin{table}[htbp]
 \caption{Complete Road Edge Configuration}
