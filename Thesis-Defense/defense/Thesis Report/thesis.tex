@@ -78,7 +78,7 @@
 \makeapprovalpage
 
 \pagenumbering{roman}
-
+\pagestyle{fancy}
 % -------------------------------------------------------
 % Dedication
 % -------------------------------------------------------
@@ -188,7 +188,7 @@ SUMO Simulation, Random Forest, XGBoost, Smart Charging, SOC, Queue Management.
 
 \newpage
 \pagenumbering{arabic}
-
+\enablemainfooter
 % ================================================================
 % CHAPTER 1: INTRODUCTION
 % ================================================================
@@ -545,12 +545,12 @@ is the highest-capacity station in the network, equipped with a 50~kW fast charg
 
 \subsection{Vehicle Configuration}
 
-To ensure a realistic representation of \Gls{ev} dynamics, the simulation vehicles are parameterized with specific physical and electrical constants. All vehicle types share a common emission class (\texttt{Energy/unknown}) and are configured with an internal moment of inertia of $0.010~\text{kg}\cdot\text{m}^2$ and a stopping threshold of $0.1~\text{m/s}$. The simulation assumes a speed factor range of $0.74$ to $1.10$. The fleet is categorized into three primary classes reflecting the Bangladeshi urban transport context:
+To ensure a realistic representation of \Gls{ev} dynamics, the simulation vehicles are parameterized with specific physical and electrical constants. All vehicle types share a common emission class (\texttt{Energy/unknown}) and are configured with an internal moment of inertia of $0.010~\text{kg}\cdot\text{m}^2$ and a stopping threshold of $0.1~\text{m/s}$. The simulation assumes a speed factor range of $0.74$ to $1.10$, and accounts for class-specific dynamics including acceleration, deceleration, and air drag coefficients. The fleet is categorized into three primary classes reflecting the Bangladeshi urban transport context:
 
 \begin{itemize}
-  \item \textbf{Easy Bike:} 34 variants with 12~kWh battery capacity and dimensions of $2.5 \times 1.5 \times 1.4$~m.
-  \item \textbf{E-Rickshaw:} 33 variants with battery capacities ranging from 5.76 to 7.20~kWh.
-  \item \textbf{E-Van:} 33 variants with 5.76~kWh battery capacity and the largest frontal surface area ($2.41~\text{m}^2$).
+  \item \textbf{Easy Bike:} 34 variants with 12~kWh battery capacity and the largest frontal surface area ($2.41~\text{m}^2$).
+  \item \textbf{E-Rickshaw:} 33 variants with battery capacities ranging from 5.76 to 7.20~kWh and a height of 1.8~m.
+  \item \textbf{E-Van:} 33 variants with 5.76~kWh battery capacity and a low-profile height of $0.8$~m.
 \end{itemize}
 
 Table~\ref{tab:class_comparison} provides a detailed cross-class parameter comparison for the Easy Bike, E-Rickshaw, and E-Van models used to evaluate system-level load variations.
@@ -565,8 +565,12 @@ Table~\ref{tab:class_comparison} provides a detailed cross-class parameter compa
 \textbf{Parameter} & \textbf{Easy Bike} & \textbf{E-Rickshaw} & \textbf{E-Van} \\
 \midrule
 Body Dimensions (L$\times$W$\times$H) & 2.5$\times$1.5$\times$1.4 m & 2.3$\times$1.0$\times$1.8 m & 2.4$\times$1.3$\times$0.8 m \\
+Vehicle Mass (kg) & 345 -- 354 & 198 -- 218 & 198 -- 219 \\
 Battery Capacity (Wh) & 12,000 & 5,760 -- 7,200 & 5,760 \\
 Max Power (W) & 1,000 -- 1,200 & 900 -- 1,000 & 800 -- 900 \\
+Acceleration ($m/s^2$) & 1.15 -- 1.31 & 0.58 -- 0.71 & 0.68 -- 0.81 \\
+Deceleration ($m/s^2$) & 2.45 -- 2.58 & 2.48 -- 2.67 & 2.58 -- 2.77 \\
+Air Drag Coeff. ($C_d$) & 0.727 -- 0.760 & 0.804 -- 0.910 & 0.754 -- 0.860 \\
 Avg. Propulsion Eff. & 0.890 -- 0.896 & 0.830 -- 0.834 & 0.820 -- 0.826 \\
 Avg. Recup. Eff. & 0.745 -- 0.751 & 0.650 -- 0.656 & 0.550 -- 0.556 \\
 Const. Power Intake (W) & 80 -- 96 & 29 -- 33 & 24 -- 30 \\

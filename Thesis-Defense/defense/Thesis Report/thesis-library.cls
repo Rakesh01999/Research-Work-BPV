@@ -185,9 +185,29 @@
 }
 
 
+\fancypagestyle{plain}{
+  \fancyhf{}
+  \renewcommand{\headrulewidth}{0.0pt}
+  \fancyfoot[C]{\thepage}
+}
+
 \fancypagestyle{fancy}{
   \fancyhf{}
-  %\cfoot{\thepage}
   \renewcommand{\headrulewidth}{0.0pt}
- \fancyfoot[C]{Page \thepage \hspace{1pt} of \pageref{LastPage}}
+  \fancyfoot[C]{\thepage}
+}
+
+% Command to enable the complex footer for the main body
+\newcommand{\enablemainfooter}{
+    \fancypagestyle{plain}{
+      \fancyhf{}
+      \renewcommand{\headrulewidth}{0.0pt}
+      \fancyfoot[C]{Page \thepage \hspace{1pt} of \pageref{LastPage}}
+    }
+    \fancypagestyle{fancy}{
+      \fancyhf{}
+      \renewcommand{\headrulewidth}{0.0pt}
+      \fancyfoot[C]{Page \thepage \hspace{1pt} of \pageref{LastPage}}
+    }
+    \pagestyle{fancy}
 }
