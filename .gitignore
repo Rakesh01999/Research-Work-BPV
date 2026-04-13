@@ -30,3 +30,23 @@ __pycache__/
 *.pyo
 *.pyd
 .ipynb_checkpoints/
+
+# LaTeX / Thesis Report Junk Files
+# These are automatically regenerated and make the repo "heavy"
+*.aux
+*.bbl
+*.blg
+*.toc
+*.lof
+*.lot
+*.acn
+*.acr
+*.alg
+*.glg
+*.glo
+*.gls
+*.ist
+*.fls
+*.fdb_latexmk
+*.synctex.gz
+*.pdfsync
