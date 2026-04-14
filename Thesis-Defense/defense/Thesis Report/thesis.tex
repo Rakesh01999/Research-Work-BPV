@@ -481,58 +481,35 @@ The implementation was conducted on a high-performance workstation running the x
 
 The simulation environment is a high-fidelity digitization of primary arterial roads in Khulna City, Bangladesh, as illustrated in Figure~\ref{fig:khulna_osm}. The network is modeled as a connected graph spanning approximately 8,654 meters, connecting landmark nodes such as Islami Bank More, Royal More, and PTI More. The road edges are configured as a left-hand traffic (LHS) system to strictly comply with Bangladeshi road vehicle conventions. Figure~\ref{fig:sumo_network} presents the corresponding custom microscopic topology designed for the dynamic simulation.
 
-To represent realistic urban delays and the resulting vehicle clustering, static Traffic Light Signals (\Gls{tls}) were implemented at high-saturation junctions, specifically at \textbf{Node3} and \textbf{Node8}. The TLS logic at these nodes is configured with a 90-second cycle consisting of four distinct phases: a 42-second Green phase for primary flow, a 3-second Yellow transition, followed by a matching 42-second Green and 3-second Yellow phase for cross-traffic. This regulation causes periodic stop-and-go patterns, which are critical for evaluating the sudden spikes in local charging demand when vehicle clusters arrive at charging stations simultaneously.
-
-Table~\ref{tab:landmark_dist} documents the real-world distances between the primary landmark nodes integrated into the simulation graph, while Table~\ref{tab:edge_params} defines the microscopic edge parameters applied to the SUMO network.
+To represent realistic urban delays and the resulting vehicle clustering, static Traffic Light Signals (\Gls{tls}) were implemented at high-saturation junctions, specifically at \textbf{Node3} and \textbf{Node8}. The TLS logic at these nodes is configured with a 90-second cycle consisting of four distinct phases: a 42-second Green phase for primary flow, a 3-second Yellow transition, followed by a matching 42-second Green and 3-second Yellow phase for cross-traffic. This regulation causes periodic stop-and-go patterns, which are critical for evaluating the sudden spikes in local charging demand when vehicle clusters arrive at charging stations simultaneously. Table~\ref{tab:road_network} provides a comprehensive overview of the microscopic road network configuration, documenting the edge identifiers, node connectivity, and physical parameters applied to the SUMO environment.
 
 \begin{table}[H]
-\caption{Landmark Node Connectivity and Real-World Distances}
-\label{tab:landmark_dist}
+\caption{Microscopic Road Network Configuration and Edge Parameters}
+\label{tab:road_network}
 \begin{center}
 \begin{small}
-\begin{tabular}{lllc}
+\resizebox{\textwidth}{!}{
+\begin{tabular}{llllllll}
 \toprule
-\textbf{Node / Place} & \textbf{Connected To} & \textbf{Distance} & \textbf{Direction} \\
+\textbf{Edge ID} & \textbf{From Node} & \textbf{From Location} & \textbf{To Node} & \textbf{To Location} & \textbf{Length (m)} & \textbf{Lanes} & \textbf{Speed (km/h)} \\
 \midrule
-Islami Bank/ Hospital More & Dak Bangla & 450m & Bidirectional \\
-Islami Bank & Royal More & 260m & Bidirectional \\
-Islami Bank & Stadium & 950m & Bidirectional \\
-Royal More & PTI More & 500m & Bidirectional \\
-Stadium & PTI More & 850m & Bidirectional \\
-Shordar Tower & 1 No Custom Ghat & 94m & Bidirectional \\
-Shordar Tower & Galaxco More & 1000m & Bidirectional \\
-1 No Custom Ghat & Rupsha Ferry Ghat & 1300m & Bidirectional \\
-Galaxco More & Rupsha Ferry Ghat & 750m & Bidirectional \\
-PTI More & Galaxco More & 900m & Bidirectional \\
+E0 & Node1 & Dak Bangla & Node2 & Khulna Zilla School Stadium & 850 & 2 & 40 \\
+E1 & Node2 & Khulna Zilla School Stadium & Node3 & Shordar Tower & 800 & 2 & 40 \\
+E2 & Node3 & Shordar Tower & Node4 & 1 No Custom Ghat & 94 & 2 & 30 \\
+E3 & Node4 & 1 No Custom Ghat & Node9 & Rupsha Ferry Ghat & 1300 & 2 & 50 \\
+E4 & Node1 & Dak Bangla & Node5 & Islami Bank / Hospital More & 450 & 2 & 30 \\
+E5 & Node5 & Islami Bank / Hospital More & Node6 & Royal More & 260 & 2 & 30 \\
+E6 & Node6 & Royal More & Node7 & PTI More & 500 & 2 & 30 \\
+E7 & Node7 & PTI More & Node8 & Galaxco More & 900 & 2 & 40 \\
+E8 & Node8 & Galaxco More & Node9 & Rupsha Ferry Ghat & 750 & 2 & 40 \\
+E9 & Node3 & Shordar Tower & Node8 & Galaxco More & 1000 & 2 & 50 \\
+E10 & Node2 & Khulna Zilla School Stadium & Node7 & PTI More & 850 & 2 & 40 \\
 \bottomrule
 \end{tabular}
+}
 \end{small}
-\end{center}
-\end{table}
-
-\begin{table}[H]
-\caption{Microscopic Edge Configuration and Parameters}
-\label{tab:edge_params}
-\begin{center}
-\begin{small}
-\begin{tabular}{lllccl}
-\toprule
-\textbf{ID} & \textbf{From} & \textbf{To} & \textbf{Length (m)} & \textbf{Lanes} & \textbf{Speed (km/h)} \\
-\midrule
-E0 & Node1 & Node2 & 850 & 2 & 40.0 \\
-E1 & Node2 & Node3 & 800 & 2 & 40.0 \\
-E2 & Node3 & Node4 & 94 & 2 & 30.0 \\
-E3 & Node4 & Node9 & 1300 & 2 & 50.0 \\
-E4 & Node1 & Node5 & 450 & 2 & 30.0 \\
-E5 & Node5 & Node6 & 260 & 2 & 30.0 \\
-E6 & Node6 & Node7 & 500 & 2 & 30.0 \\
-E7 & Node7 & Node8 & 900 & 2 & 40.0 \\
-E8 & Node8 & Node9 & 750 & 2 & 40.0 \\
-E9 & Node3 & Node8 & 1000 & 2 & 50.0 \\
-E10 & Node2 & Node7 & 850 & 2 & 40.0 \\
-\bottomrule
-\end{tabular}
-\end{small}
+\par\medskip
+\footnotesize \textit{Note: All edges are bidirectional (2 lanes in each direction). Place names correspond to real-world Khulna City landmarks.}
 \end{center}
 \end{table}
 
@@ -664,15 +641,36 @@ The simulation runs for a duration of 600 steps. The core execution is managed b
 
 \subsection{Real-Time Data Extraction}
 
-The extraction process is decoupled from the mobility physics to ensure simulation stability. Every second, the monitor script iterates through all active \Gls{ev} instances to retrieve their instantaneous telemetry. This high-resolution extraction (1.0 Hz) is vital for capturing the transient spikes in power demand caused by sudden cluster arrivals or traffic signal releases.
+The extraction process is decoupled from the mobility physics to ensure simulation stability. Every second, the monitor script iterates through all active \Gls{ev} instances to retrieve their instantaneous telemetry. This high-resolution extraction (1.0 Hz) results in a comprehensive dataset of 34,020 dynamic records, capturing the transient spikes in power demand caused by sudden cluster arrivals or traffic signal releases. The extracted data points (25 features in total) are buffered in transient memory and serialized to a \Gls{csv} format upon simulation termination. 
 
-\subsection{Data Logging}
+Table~\ref{tab:dataset_summary} provides a collective statistical summary of the simulation-generated dataset, detailing the record counts, vehicle statuses, and system load characteristics derived from the microscopic environment.
 
-Extracted data points are buffered in transient memory and serialized to a \Gls{csv} format upon simulation termination. This implementation minimizes the overhead of frequent disk I/O, ensuring that the simulation runs at its maximum native speed while preserving all 34,020 dynamic data records.
+\begin{table}[H]
+\caption{EV Charging Load Demand Dataset Summary}
+\label{tab:dataset_summary}
+\begin{center}
+\begin{tabular}{|l|r|}
+\hline
+\textbf{Property} & \textbf{Value} \\
+\hline
+Total records & 34,020 \\
+Number of features & 25 \\
+Unique vehicles & 49 \\
+Simulation duration (s) & 1 -- 600 \\
+Status: Driving & 19,710 (57.9\%) \\
+Status: Charging & 11,980 (35.2\%) \\
+Status: Waiting & 1,720 (5.1\%) \\
+Status: Idle & 610 (1.8\%) \\
+System load: Minimum (kW) & 0.00 \\
+System load: Mean (kW) & 922.62 \\
+System load: Maximum (kW) & 1,340.00 \\
+System load: Std. Dev. (kW) & 380.87 \\
+\hline
+\end{tabular}
+\end{center}
+\end{table}
 
-\subsection{Simulation-Generated Dataset}
-
-The resulting dataset provides a comprehensive representation of energy demand across various urban scenarios. It includes varied system states, ranging from baseline low-activity flows to severe congestion at charging hubs, ensuring that the subsequently trained \Gls{ml} models are exposed to a representative sample of real-world operational conditions.
+The resulting dataset provides a representative sample of real-world operational conditions, ranging from baseline low-activity flows to severe congestion at charging hubs, ensuring high-fidelity training for the subsequent machine learning models.
 
 \subsection{Feature Importance Analysis}
 
@@ -731,6 +729,13 @@ Linear Regression models the relationship between input features and the target 
 \[ y = w_1x_1 + w_2x_2 + \dots + w_nx_n + b \]
 where $w_i$ are the learned coefficients and $b$ is the bias term. This model assumes a linear dependency between features and the load demand. Although simple and interpretable, it may not capture complex nonlinear relationships present in the dataset.
 
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.85\textwidth]{images/scatter_linear_regression.png}
+  \caption{Actual vs. Predicted load for Linear Regression.}
+  \label{fig:scatter_lr}
+\end{figure}
+
 \subsubsection*{(b) Decision Tree Regressor}
 The Decision Tree Regressor partitions the feature space into multiple regions based on decision rules. Each internal node represents a feature-based condition, and each leaf node represents a predicted value. Instead of a mathematical equation, the model follows a hierarchical structure:
 \begin{itemize}
@@ -739,25 +744,40 @@ The Decision Tree Regressor partitions the feature space into multiple regions b
 \end{itemize}
 The final prediction is the value stored in the corresponding leaf node. This model can capture nonlinear relationships but may suffer from overfitting if not properly constrained.
 
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.85\textwidth]{images/scatter_decision_tree.png}
+  \caption{Actual vs. Predicted load for Decision Tree.}
+  \label{fig:scatter_dt}
+\end{figure}
+
 \subsubsection*{(c) Random Forest Regressor}
 Random Forest is an ensemble learning method that combines multiple decision trees to improve prediction accuracy and robustness. The final prediction is obtained by averaging the outputs of all trees:
 \[ y = \frac{1}{N} \sum_{i=1}^{N} T_i(X) \]
 where $T_i$ represents the prediction of the $i$-th decision tree. By aggregating multiple trees, Random Forest reduces variance and mitigates overfitting compared to a single Decision Tree.
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.85\textwidth]{images/scatter_random_forest.png}
+  \caption{Actual vs. Predicted load for Random Forest.}
+  \label{fig:scatter_rf}
+\end{figure}
 
 \subsubsection*{(d) XGBoost Regressor}
 XGBoost (Extreme Gradient Boosting) is an advanced ensemble method that builds trees sequentially, where each new tree learns to correct the errors of the previous ones. The model can be expressed as:
 \[ y = \sum_{i=1}^{M} f_i(X) \]
 where each $f_i$ represents a weak learner (decision tree). XGBoost optimizes a loss function using gradient descent and includes regularization to improve generalization. It is highly efficient and effective for structured/tabular data.
 
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.85\textwidth]{images/scatter_xgboost.png}
+  \caption{Actual vs. Predicted load for XGBoost.}
+  \label{fig:scatter_xgb}
+\end{figure}
+
 \subsection{Model Training and Prediction}
 
-Each model was trained using the training dataset and evaluated on the unseen test dataset. Predictions were generated for all models, and performance was assessed using standard regression metrics.
-
-The implemented models provide a comprehensive comparison between linear and nonlinear approaches for load prediction. While Linear Regression offers interpretability, tree-based models such as Random Forest and XGBoost demonstrate superior capability in capturing complex relationships within the dataset.
-
-\begin{quote}
-    ``The near-perfect performance of tree-based models indicates that the dataset exhibits strong deterministic relationships between system variables and load demand.''
-\end{quote}
+Each model was trained using the training dataset and evaluated on the unseen test dataset. Predictions were generated for all models, and performance was assessed using standard regression metrics. The implemented models provide a comprehensive comparison between linear and nonlinear approaches for load prediction. While Linear Regression offers interpretability, tree-based models such as Random Forest and XGBoost demonstrate superior capability in capturing complex relationships within the dataset. The near-perfect performance of tree-based models indicates that the dataset exhibits strong deterministic relationships between system variables and load demand.
 
 % ================================================================
 % CHAPTER 4: RESULTS AND DISCUSSION
