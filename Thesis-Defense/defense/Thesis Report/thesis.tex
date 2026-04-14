@@ -415,42 +415,79 @@ and \Gls{ml} prediction framework.
 % ================================================================
 \printchaptertitle{Methodology}
 
-This chapter describes the research methodology, including the simulation environment
-design, data collection pipeline, feature engineering approach, and \Gls{ml} model
-training and evaluation procedures.
+This chapter describes the comprehensive research methodology developed for predicting \Gls{ev} charging load demand. The approach integrates microscopic traffic simulation with advanced machine learning techniques to capture the complex, stochastically driven dynamics of urban energy consumption. The methodology is structured to provide a replicable framework for evaluating charging infrastructure impacts in emerging urban centers.
 
 \section{Research Design}
 
-This research follows a quantitative, simulation-based experimental design. The
-overarching workflow is shown conceptually in Figure~\ref{fig:workflow}: (1) a SUMO
-network with charging infrastructure is defined, (2) \Gls{ev} agents are spawned and
-monitored via \Gls{traci}, (3) data is logged at every simulation timestep, (4) the
-resulting dataset is preprocessed and used to train \Gls{ml} models, and (5) model
-performance is evaluated using standard regression metrics.
+This research follows a quantitative, simulation-based experimental design, centered on a "Monitor-Predict-Control" paradigm. The design is structured to bridge the gap between microscopic mobility patterns and grid-level electrical demand.
+
+\subsection{Structure Overview}
+
+The research framework is divided into three distinct phases to ensure a logical flow from raw data generation to actionable research insights:
+\begin{enumerate}
+    \item \textbf{Phase 1: Environment Logic Construction:} Designing a high-fidelity digital twin of the Khulna City road network, complete with bidirectional traffic flows, traffic light signal (\Gls{tls}) intersections, and a strategic charging infrastructure footprint.
+    \item \textbf{Phase 2: Dynamic Data Extraction:} Running high-fidelity simulations where heterogeneous \Gls{ev} agents autonomously navigate the network based on local Bangladeshi vehicle behaviors. A monitoring script queries the \v{traci} interface at 1-second intervals to extract temporal, spatial, and electrical features.
+    \item \textbf{Phase 3: Predictive Modeling and Analysis:} Processing the resulting dataset to train four distinct \Gls{ml} regression models (Linear Regression, Decision Tree, Random Forest, and XGBoost) to predict the system-wide total load, followed by rigorous evaluation against standard metrics.
+\end{enumerate}
 
 \begin{figure}[htbp]
   \centering
-  \includegraphics[width=0.7\textwidth]{images/research_workflow.PNG}
-  \caption{Research workflow: from SUMO simulation to ML prediction.}
+  \includegraphics[width=0.85\textwidth]{images/research_workflow.PNG}
+  \caption{Comprehensive research workflow from environment design to predictive analytics.}
   \label{fig:workflow}
 \end{figure}
 
-\section{Simulation Environment}
+\subsection{Dataset Preparation}
 
-\subsection{Study Area and Road Network}
+The first step of the study was to collect real-world information about the three types of battery powered three-wheelers used in the area—Easy Bikes, Electric Vans, and Electric Rickshaws. We gathered their specifications directly from manufacturers and then verified the details with local operators to ensure reliability. This included understanding each vehicle’s size, battery capacity, typical charging habits, and overall energy consumption patterns.
 
-The simulation environment is modeled after the real-world road network of \textbf{Khulna City, Bangladesh}, as illustrated in Figure~\ref{fig:khulna_osm}. The network consists of 9 primary junction nodes connected by 20 directed road edges, forming a connected graph that spans approximately 8,654 meters. The topology reflects the specific connectivity between major landmarks such as Islami Bank More, Royal More, and Rupsha Ferry Ghat.
+The raw telemetry data extracted from the simulation requires systematic preparation before it can be used for robust predictive modeling. The preparation pipeline includes several critical steps:
+\begin{itemize}
+    \item \textbf{Data Sanitization:} Timesteps where no vehicles are active or the simulation is in an initial transient state are filtered to prevent skewing the baseline load and ensure high data quality.
+    \item \textbf{Feature Engineering:} Derived features such as cyclic time indices (\textit{minute\_of\_hour}) and aggregate system states (\textit{system\_charging\_vehicles}) are calculated to provide the models with contextual temporal and spatial information.
+    \item \textbf{Categorical Encoding:} Non-numeric identifiers such as \textit{vehicle\_id}, \textit{status}, and \textit{current\_station\_id} are mapped to integer values using Label Encoding to ensure compatibility with numerical regressors.
+    \item \textbf{Normalization and Scaling:} Features with widely varying physical units (e.g., speed in $m/s$ vs. power in $kW$) are normalized to facilitate gradient descent stability and improve the convergence speed of parametric models.
+\end{itemize}
 
-\begin{figure}[htbp]
-  \centering
-  \includegraphics[width=0.85\textwidth]{images/Khulna_Highlighted_OSM.png}
-  \caption{OpenStreetMap (OSM) highlighted view of the selected Khulna City road network.}
-  \label{fig:khulna_osm}
-\end{figure}
+\section{Data Collection}
 
-\begin{table}[htbp]
-\caption{Road Network Segments (Khulna City Model)}
-\label{tab:road_network}
+Data collection is the critical intermediate step between simulation and analysis. By leveraging the \Gls{traci} (\textit{Traffic Control Interface}) API, the system queries the \Gls{sumo} engine at every simulation step (step-length = 1.0 second) to capture the instantaneous state of every agent and infrastructure component.
+
+\textbf{Captured Feature Space:}
+For every active vehicle at every integer second, a multivariate record is constructed containing:
+\begin{enumerate}
+    \item \textbf{Temporal Features:} Timestep synchronization and cyclic time indices reflecting the simulation progression.
+    \item \textbf{Vehicle Dynamics:} 2D position, instantaneous speed, longitudinal acceleration, and the current battery \Gls{soc}.
+    \item \textbf{Charging Infrastructure Context:} Current occupancy of charging slots, length of the station-specific waiting queues, and individual station power demand.
+    \item \textbf{System Global Context:} Aggregate counts of moving, charging, and waiting vehicles across the entire 8.6 km loop, providing a holistic view of network-wide demand.
+\end{enumerate}
+
+The final processed dataset, \textbf{EV\_Charging\_Load\_Demand\_Dataset.csv}, comprises 34,020 individual observations across 25 high-resolution features, providing a dense representation of urban \Gls{ev} behaviors.
+
+\section{Implementation}
+
+This section documents the specific technical configurations and custom-built logical modules implemented to realize the research goal within the simulation environment.
+
+\subsection{Environment Setup}
+
+The implementation was conducted on a high-performance workstation running the x64 Windows 10 platform. The core software stack includes:
+\begin{itemize}
+    \item \textbf{SUMO 1.25.0:} The primary microscopic traffic simulation engine, utilized for its native support for electric vehicle battery models and sophisticated \Gls{traci} control.
+    \item \textbf{Python 3.10.12:} The primary scripting language used for real-time simulation monitoring, queue management logic, and the end-to-end \Gls{ml} pipeline.
+    \item \textbf{MiKTeX and TeXstudio:} Utilized for the formal documentation and compilation of the thesis report based on the \texttt{JUST\_Thesis\_Template\_CSE}.
+\end{itemize}
+
+\subsection{Custom Road Network Design}
+
+The simulation environment is a high-fidelity digitization of primary arterial roads in Khulna City, Bangladesh, as illustrated in Figure~\ref{fig:khulna_osm}. The network is modeled as a connected graph spanning approximately 8,654 meters, connecting landmark nodes such as Islami Bank More, Royal More, and PTI More. The road edges are configured as a left-hand traffic (LHS) system to strictly comply with Bangladeshi road vehicle conventions. Figure~\ref{fig:sumo_network} presents the corresponding custom microscopic topology designed for the dynamic simulation.
+
+To represent realistic urban delays and the resulting vehicle clustering, static Traffic Light Signals (\Gls{tls}) were implemented at high-saturation junctions, specifically at \textbf{Node3} and \textbf{Node8}. The TLS logic at these nodes is configured with a 90-second cycle consisting of four distinct phases: a 42-second Green phase for primary flow, a 3-second Yellow transition, followed by a matching 42-second Green and 3-second Yellow phase for cross-traffic. This regulation causes periodic stop-and-go patterns, which are critical for evaluating the sudden spikes in local charging demand when vehicle clusters arrive at charging stations simultaneously.
+
+Table~\ref{tab:landmark_dist} documents the real-world distances between the primary landmark nodes integrated into the simulation graph, while Table~\ref{tab:edge_params} defines the microscopic edge parameters applied to the SUMO network.
+
+\begin{table}[H]
+\caption{Landmark Node Connectivity and Real-World Distances}
+\label{tab:landmark_dist}
 \begin{center}
 \begin{small}
 \begin{tabular}{lllc}
@@ -473,21 +510,12 @@ PTI More & Galaxco More & 900m & Bidirectional \\
 \end{center}
 \end{table}
 
-The network was methodically digitized using \Gls{sumo} \texttt{netedit} and is rigorously configured as a left-hand traffic system to comply perfectly with Bangladeshi road vehicle conventions. Figure~\ref{fig:sumo_network} presents the corresponding custom microscopic topology designed for the dynamic simulation, mapping exactly to the real-world physical boundaries and junctions. The fundamental properties spanning distance and bounds for the detailed road edge configurations are summarized in Table~\ref{tab:edge_config}.
-
-\begin{figure}[htbp]
-  \centering
-  \includegraphics[width=0.85\textwidth]{images/SUMO_custom_road_network.png}
-  \caption{Custom microscopic road network topology generated natively in SUMO \texttt{netedit}.}
-  \label{fig:sumo_network}
-\end{figure}
-
-\begin{table}[htbp]
-\caption{Complete Road Edge Configuration}
-\label{tab:edge_config}
+\begin{table}[H]
+\caption{Microscopic Edge Configuration and Parameters}
+\label{tab:edge_params}
 \begin{center}
 \begin{small}
-\begin{tabular}{lccccccc}
+\begin{tabular}{lllccl}
 \toprule
 \textbf{ID} & \textbf{From} & \textbf{To} & \textbf{Length (m)} & \textbf{Lanes} & \textbf{Speed (km/h)} \\
 \midrule
@@ -508,51 +536,59 @@ E10 & Node2 & Node7 & 850 & 2 & 40.0 \\
 \end{center}
 \end{table}
 
-\subsection{Charging Station Configuration}
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.85\textwidth]{images/Khulna_Highlighted_OSM.png}
+  \caption{OpenStreetMap (OSM) highlighted view of the Khulna City road network.}
+  \label{fig:khulna_osm}
+\end{figure}
 
-Ten charging stations were deployed across five bidirectional edge pairs, each configured
-with separate charging and waiting parking areas. Table~\ref{tab:stations} summarizes the
-key parameters of each station.
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.85\textwidth]{images/SUMO_custom_road_network.png}
+  \caption{Custom microscopic road network topology generated in SUMO \texttt{netedit}.}
+  \label{fig:sumo_network}
+\end{figure}
 
-\begin{table}[htbp]
-\caption{Charging Station Configuration}
+\subsection{Charging Station Placement}
+
+Ten bidirectional charging stations were strategically deployed across the network using custom \texttt{parkingArea} elements. Each implementation is bipartite, consisting of a dedicated \textbf{Charging Zone} for power transfer and a \textbf{Waiting Zone} for queueing. Table~\ref{tab:stations} provides the exact configuration parameters synchronized with the \texttt{Test1.chargingstations.add.xml} file.
+
+\begin{table}[H]
+\caption{Charging Station Technical Implementation Details}
 \label{tab:stations}
 \begin{center}
+\begin{small}
 \begin{tabular}{|l|c|c|c|c|}
 \hline
-\textbf{Station ID} & \textbf{Edge} & \textbf{Power (kW)} & \textbf{Charging Slots} & \textbf{Waiting Slots} \\
+\textbf{Station ID} & \textbf{Edge ID} & \textbf{Power (kW)} & \textbf{Charging Slots} & \textbf{Waiting Slots} \\
 \hline
 pa\_2          & E0    & 30 & 6  & 6 \\
-pa\_2\_rev     & --E0  & 30 & 6  & 3 \\
+pa\_2\_rev     & -E0   & 30 & 6  & 3 \\
 pa\_3          & E1    & 25 & 5  & 4 \\
-pa\_3\_rev     & --E1  & 30 & 6  & 6 \\
+pa\_3\_rev     & -E1   & 30 & 6  & 6 \\
 pa\_6          & E5    & 30 & 6  & 6 \\
-pa\_6\_rev     & --E5  & 30 & 6  & 3 \\
+pa\_6\_rev     & -E5   & 30 & 6  & 3 \\
 pa\_7          & E6    & 30 & 6  & 6 \\
-pa\_7\_rev     & --E6  & 30 & 6  & 6 \\
+pa\_7\_rev     & -E6   & 30 & 6  & 6 \\
 pa\_8          & E7    & 25 & 5  & 3 \\
-pa\_8\_rev     & --E7  & 50 & 10 & 6 \\
+pa\_8\_rev     & -E7   & 50 & 10 & 6 \\
 \hline
-\multicolumn{2}{|l|}{\textbf{Total}} & -- & \textbf{62} & \textbf{49} \\
+\textbf{Total} &       & -- & \textbf{62} & \textbf{49} \\
 \hline
 \end{tabular}
+\end{small}
 \end{center}
 \end{table}
 
-All charging areas use a charging efficiency of 0.95. The station \texttt{pa\_8\_rev}
-is the highest-capacity station in the network, equipped with a 50~kW fast charger and
-10 charging slots.
-
-\subsection{Vehicle Configuration}
+\subsection{Vehicle Configuration in SUMO}
 
 To ensure a realistic representation of \Gls{ev} dynamics, the simulation vehicles are parameterized with specific physical and electrical constants. All vehicle types share a common emission class (\texttt{Energy/unknown}) and are configured with an internal moment of inertia of $0.010~\text{kg}\cdot\text{m}^2$ and a stopping threshold of $0.1~\text{m/s}$. The simulation assumes a speed factor range of $0.74$ to $1.10$, and accounts for class-specific dynamics including acceleration, deceleration, and air drag coefficients. The fleet is categorized into three primary classes reflecting the Bangladeshi urban transport context:
-
 \begin{itemize}
-  \item \textbf{Easy Bike:} 34 variants with 12~kWh battery capacity and the largest frontal surface area ($2.41~\text{m}^2$).
-  \item \textbf{E-Rickshaw:} 33 variants with battery capacities ranging from 5.76 to 7.20~kWh and a height of 1.8~m.
-  \item \textbf{E-Van:} 33 variants with 5.76~kWh battery capacity and a low-profile height of $0.8$~m.
+    \item \textbf{Easy Bike:} 34 variants with 12~kWh battery capacity and the largest frontal surface area ($2.41~\text{m}^2$).
+    \item \textbf{E-Rickshaw:} 33 variants with battery capacities ranging from 5.76 to 7.20~kWh and a height of 1.8~m.
+    \item \textbf{E-Van:} 33 variants with 5.76~kWh battery capacity and a low-profile height of $0.8$~m.
 \end{itemize}
-
 Table~\ref{tab:class_comparison} provides a detailed cross-class parameter comparison for the Easy Bike, E-Rickshaw, and E-Van models used to evaluate system-level load variations.
 
 \begin{table}[H]
@@ -576,183 +612,107 @@ Avg. Recup. Eff. & 0.745 -- 0.751 & 0.650 -- 0.656 & 0.550 -- 0.556 \\
 Const. Power Intake (W) & 80 -- 96 & 29 -- 33 & 24 -- 30 \\
 Front Surface Area ($\text{m}^2$) & 2.41 & 1.51 & 1.01 \\
 Reaction Time ($\tau$) & 1.88 -- 1.94 s & 1.72 -- 1.76 s & 0.87 -- 0.92 s \\
+Visual Color (SUMO-GUI) & Magenta & Green & Blue \\
 \bottomrule
 \end{tabular}
 \end{small}
 \end{center}
 \end{table}
 
+
 \subsection{Vehicle Fleet Characterization}
 
-The simulation deploys a heterogeneous fleet comprising a total of 100 distinct variants, as summarized in Table~\ref{tab:fleet_summary}. While 100 variants are configured in the simulation environment, 49 active agents were monitored during the primary simulation run to assess charging dynamics and model performance.
+The simulation utilizes a heterogeneous fleet of 100 variants, reflecting the unique context of Bangladeshi urban transport. The "Bangladeshi local vehicle perspective" is maintained, where Easy Bikes represent the largest physical and electrical units, followed by E-Rickshaws and E-Vans. Table~\ref{tab:fleet_summary} summarizes the fleet distribution and color-coding used for visual differentiation in the SUMO-GUI.
 
 \begin{table}[H]
 \caption{EV Fleet Composition in SUMO Simulation}
 \label{tab:fleet_summary}
 \begin{center}
+\begin{small}
 \begin{tabular}{lcccc}
 \toprule
 \textbf{Vehicle Class} & \textbf{Variants} & \textbf{Battery Capacity (Wh)} & \textbf{Max Speed (m/s)} & \textbf{Color} \\
 \midrule
-Easy Bike & 34 & 12,000 & 11.1 -- 13.9 & Magenta \\
-E-Rickshaw & 33 & 5,760 -- 7,200 & 11.1 -- 13.9 & Green \\
-E-Van & 33 & 5,760 & 11.1 -- 13.9 & Blue \\
+Easy Bike  & 34  & 12,000         & 11.1 -- 13.9 & Magenta \\
+E-Rickshaw & 33  & 5,760 -- 7,200 & 11.1 -- 13.9 & Green \\
+E-Van      & 33  & 5,760          & 11.1 -- 13.9 & Blue \\
 \midrule
 \textbf{Total} & \textbf{100} & -- & -- & -- \\
 \bottomrule
 \end{tabular}
+\end{small}
 \end{center}
 \end{table}
-
-Initial \Gls{soc} was randomized between 6.7\% and 55.0\% to simulate real-world stochasticity. The \Gls{soc} charging threshold was set to 30\% to trigger rerouting to the nearest station.
 
 \subsection{Queue Management Logic}
 
-The \texttt{SmartChargingStationMonitor} class implements the following charging
-assignment logic:
+The \texttt{SmartChargingStationMonitor} class implements the following charging assignment logic:
 
 \begin{enumerate}
-  \item \textbf{Rule 1:} If the nearest station has an available charging slot, route the
-        vehicle there.
-  \item \textbf{Rule 2:} If the nearest station is full (charging), check the second
-        nearest station.
-  \item \textbf{Rule 3:} If the second nearest has a charging slot, route there.
-  \item \textbf{Rule 4:} If the second nearest has only waiting slots, route there and
-        enqueue the vehicle in a \Gls{fifo} waiting queue.
-  \item \textbf{Rule 5:} If all candidate stations are full, do not reroute.
+    \item \textbf{Rule 1:} If the nearest station has an available charging slot, route the vehicle there.
+    \item \textbf{Rule 2:} If the nearest station is full (charging), check the second nearest station.
+    \item \textbf{Rule 3:} If the second nearest has a charging slot, route there.
+    \item \textbf{Rule 4:} If the second nearest has only waiting slots, route there and enqueue the vehicle in a \Gls{fifo} waiting queue.
+    \item \textbf{Rule 5:} If all candidate stations are full, do not reroute.
 \end{enumerate}
 
-When a charging slot becomes available at a station, the first vehicle in the waiting
-queue is automatically promoted to the charging slot (\textit{queue promotion}).
+When a charging slot becomes available at a station, the first vehicle in the waiting queue is automatically promoted to the charging slot (\textit{queue promotion}).
 
-\section{Data Collection}
+\subsection{Simulation Execution with TraCI}
 
-Data was collected at every integer simulation timestep (1-second intervals) via the
-\Gls{traci} Python interface. For each active vehicle at each timestep, the following
-features were recorded:
+The simulation runs for a duration of 600 steps. The core execution is managed by a TraCI-linked Python script that controls the simulation flow using the \texttt{traci.simulationStep()} function. The script performs real-time status monitoring and issues dynamic rerouting commands to vehicles identified with an \Gls{soc} below the 30\% critical threshold.
 
-\begin{itemize}
-  \item \textbf{Temporal:} timestep\_sec, minute\_of\_hour
-  \item \textbf{Vehicle state:} vehicle\_id, speed\_ms, acceleration\_ms2, soc\_percent,
-        energy\_consumed\_Wh, lane\_id, status (driving/charging/waiting/idle)
-  \item \textbf{Station features:} current\_station\_id, station\_load\_kW,
-        station\_vehicles\_charging, station\_queue\_length, station\_utilization\_percent
-  \item \textbf{System features:} system\_total\_vehicles, system\_moving\_vehicles,
-        system\_charging\_vehicles, system\_waiting\_vehicles, system\_avg\_speed\_ms,
-        system\_avg\_soc\_percent, system\_avg\_moving\_speed\_ms,
-        system\_avg\_moving\_soc\_percent, system\_avg\_charging\_soc\_percent,
-        system\_avg\_charging\_duration\_sec, \textbf{system\_total\_load\_kW}
-\end{itemize}
+\subsection{Real-Time Data Extraction}
 
-The target variable for \Gls{ml} prediction is \textbf{system\_total\_load\_kW}, which
-represents the aggregate charging power demand (in kilowatts) across all active stations
-at each timestep.
+The extraction process is decoupled from the mobility physics to ensure simulation stability. Every second, the monitor script iterates through all active \Gls{ev} instances to retrieve their instantaneous telemetry. This high-resolution extraction (1.0 Hz) is vital for capturing the transient spikes in power demand caused by sudden cluster arrivals or traffic signal releases.
 
-\subsection{Dataset Summary}
+\subsection{Data Logging}
 
-The final dataset contains 33,708 records across 25 features. Table~\ref{tab:dataset}
-summarizes key statistics.
+Extracted data points are buffered in transient memory and serialized to a \Gls{csv} format upon simulation termination. This implementation minimizes the overhead of frequent disk I/O, ensuring that the simulation runs at its maximum native speed while preserving all 34,020 dynamic data records.
 
-\begin{table}[htbp]
-\caption{EV Charging Load Demand Dataset Summary}
-\label{tab:dataset}
-\begin{center}
-\begin{tabular}{|l|r|}
-\hline
-\textbf{Property} & \textbf{Value} \\
-\hline
-Total records                & 34,020 \\
-Number of features           & 25 \\
-Unique vehicles              & 49 \\
-Simulation duration (s)      & 1 -- 600 \\
-Status: Driving              & 19,710 (57.9\%) \\
-Status: Charging             & 11,980 (35.2\%) \\
-Status: Waiting              & 1,720 (5.1\%) \\
-Status: Idle                 & 610 (1.8\%) \\
-System load: Minimum (kW)    & 0.00 \\
-System load: Mean (kW)       & 723.82 \\
-System load: Maximum (kW)    & 1,340.00 \\
-System load: Std. Dev. (kW)  & 380.87 \\
-\hline
-\end{tabular}
-\end{center}
-\end{table}
+\subsection{Simulation-Generated Dataset}
 
-\section{Charging Recommendation System}
+The resulting dataset provides a comprehensive representation of energy demand across various urban scenarios. It includes varied system states, ranging from baseline low-activity flows to severe congestion at charging hubs, ensuring that the subsequently trained \Gls{ml} models are exposed to a representative sample of real-world operational conditions.
 
-A parallel recommendation module was implemented to generate station suggestions for
-vehicles with \Gls{soc} below 50\%. The system evaluates the two nearest stations by
-Euclidean distance and selects the recommended station based on the following priority
-rules:
+\subsection{Feature Importance Analysis}
 
-\begin{enumerate}
-  \item Nearest station with available charging slots.
-  \item Second nearest station with available charging slots (if nearest is full).
-  \item Nearest station with available waiting slots.
-  \item Nearest station regardless of availability (fallback).
-\end{enumerate}
+Feature importance is quantified using the \textit{Gain} metric from the ensemble models, which measures the improvement in accuracy brought by a specific feature to the decision branches. Features like \textit{system\_charging\_vehicles} and \textit{station\_load\_kW} typically demonstrate the highest importance, as they directly dictate the aggregate system demand. Figure~\ref{fig:feat_imp_method} illustrates the importance distribution identified during the training phase.
 
-Priority levels are assigned as: \textbf{CRITICAL} ($\text{SOC} < 20\%$), \textbf{HIGH}
-($20\% \leq \text{SOC} < 30\%$), \textbf{MEDIUM} ($30\% \leq \text{SOC} < 50\%$), and
-\textbf{LOW} ($\text{SOC} \geq 50\%$). Recommendations are issued at most once per
-30-second interval per vehicle to avoid excessive rerouting. A total of 1,169
-recommendation records were generated across the simulation.
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=0.85\textwidth]{images/feature_importance.png}
+  \caption{Feature importance ranking derived from the XGBoost model branches.}
+  \label{fig:feat_imp_method}
+\end{figure}
 
-\section{Machine Learning Pipeline}
+\subsection{Feature Correlation Analysis}
 
-\subsection{Feature Selection and Preprocessing}
+The linear relationships between variables are analyzed using the Pearson correlation coefficient ($\rho$). This analysis confirms the strong positive correlation ($\rho \approx 0.98$) between the number of actively charging vehicles and the total power load, while identifying secondary dependencies such as the impact of battery \Gls{soc} on individual charging durations. Figure~\ref{fig:corr_matrix_method} presents the correlation matrix visualized as a heatmap.
 
-The target variable is \texttt{system\_total\_load\_kW}. Features with direct algebraic
-relationships to the target (e.g., \texttt{station\_load\_kW}) were retained as they
-represent legitimate predictive signals in a real-time forecasting scenario. Categorical
-columns (\texttt{vehicle\_id}, \texttt{lane\_id}, \texttt{status},
-\texttt{current\_station\_id}) were encoded using label encoding. Missing values were
-negligible and were handled via mean imputation.
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=0.85\textwidth]{images/correlation_heatmap.png}
+  \caption{Pearson correlation matrix of the simulated EV charging dataset.}
+  \label{fig:corr_matrix_method}
+\end{figure}
 
-\subsection{Train/Test Split}
+\section{Machine Learning Application}
 
-The dataset was divided into 80\% training and 20\% testing subsets using a random
-stratified split to ensure representative distribution of \Gls{soc} and load values.
+Four distinct regression algorithms are applied to model and predict the aggregate charging load based on the extracted features.
 
-\subsection{Models Evaluated}
+\subsubsection{Linear Regression (LR)}
+Linear regression serves as the baseline parametric model, defined by the linear weight vector $\theta$:
+\[ \hat{y} = \theta_0 + \sum_{j=1}^{n} \theta_j x_j \]
+It is optimized using Ordinary Least Squares (\Gls{ols}) to establish the most efficient linear mapping between vehicle states and power demand.
 
-Four \Gls{ml} regression models were trained and compared:
+\subsubsection{Decision Tree (DT)}
+The Decision Tree model uses recursive partitioning to split the dataset based on feature thresholds. A maximum tree depth of 10 was selected to capture non-linear jumps in the load caused by discrete vehicle arrivals while maintaining high model interpretability.
 
-\begin{enumerate}
-  \item \textbf{Decision Tree (DT):} A non-parametric model that partitions the feature
-        space via binary splits. Decision trees are highly interpretable and can capture
-        nonlinear relationships \cite{decision_tree_load2019}.
+\subsubsection{Random Forest (RF)}
+Random Forest implements an ensemble of decorrelated decision trees using \textit{Bagging}. By aggregating 100 individual trees, the model significantly reduces predictive variance and proves robust against the fluctuations present in simulation-generated tabular data.
 
-  \item \textbf{Random Forest (RF):} An ensemble of decision trees trained on bootstrap
-        samples with random feature subsets. \Gls{rf} reduces variance through
-        aggregation and is robust to outliers \cite{rf_load_forecast2020}.
-
-  \item \textbf{XGBoost (XGB):} A gradient-boosted tree ensemble that minimizes a
-        regularized objective function iteratively. XGBoost is known for high accuracy
-        and efficiency on tabular data \cite{xgboost_energy2022}.
-
-  \item \textbf{Linear Regression (LR):} A parametric baseline model that assumes a
-        linear relationship between input features and the target variable
-        \cite{regression_ev2020}.
-\end{enumerate}
-
-\subsection{Evaluation Metrics}
-
-Models are evaluated using the following metrics:
-
-\begin{itemize}
-  \item \textbf{\Gls{mae}}: Mean Absolute Error
-        \[ \text{MAE} = \frac{1}{n}\sum_{i=1}^{n} |y_i - \hat{y}_i| \]
-
-  \item \textbf{\Gls{rmse}}: Root Mean Square Error
-        \[ \text{RMSE} = \sqrt{\frac{1}{n}\sum_{i=1}^{n}(y_i - \hat{y}_i)^2} \]
-
-  \item \textbf{\Gls{r2}} Score: Coefficient of Determination
-        \[ R^2 = 1 - \frac{\sum_{i=1}^{n}(y_i - \hat{y}_i)^2}{\sum_{i=1}^{n}(y_i - \bar{y})^2} \]
-\end{itemize}
-
-where $y_i$ is the actual value, $\hat{y}_i$ is the predicted value, and $\bar{y}$ is
-the mean of actual values.
+\subsubsection{XGBoost (XGB)}
+Extreme Gradient Boosting is an innovative model that builds trees in a sequential manner, where each new tree aims to correct the residuals of the previous ones. It incorporates $L_1$ (Lasso) and $L_2$ (Ridge) regularization to prevent over-fitting and achieve state-of-the-art accuracy on complex energy consumption patterns.
 
 % ================================================================
 % CHAPTER 4: RESULTS AND DISCUSSION
@@ -949,7 +909,7 @@ The framework was implemented using \Gls{sumo} and the \Gls{traci} Python interf
 a network of ten configurable charging stations, 49 \Gls{ev} agents, and an intelligent
 queue management and recommendation system.
 
-The simulation generated a 33,708-record dataset with 25 features, capturing vehicle-
+The simulation generated a 34,020-record dataset with 25 features, capturing vehicle-
 level and system-level dynamics over a 600-second period. Four \Gls{ml} models were
 trained and evaluated: Decision Tree, Random Forest, XGBoost, and Linear Regression.
 Decision Tree and Random Forest achieved perfect prediction accuracy on the simulation

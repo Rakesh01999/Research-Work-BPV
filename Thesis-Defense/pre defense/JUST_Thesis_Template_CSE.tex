@@ -1,0 +1,170 @@
+\documentclass{thesis-library}
+   
+\usepackage{lipsum}
+\setcode{utf8}
+
+% Abbreviations List
+\newacronym{just}{JUST}{Jashore University of Science and Technology} % Use \Gls{just} in the text
+\newacronym{cse}{CSE}{Computer Science and Engineering} % Use \Gls{cse} in the text
+
+\begin{document}
+\newcommand{\thesisTitle}{[Thesis Title]}
+%\newcommand{\subtitle}{[ Thesis Subtitle ]}
+\newcommand{\byLabel}{Submitted By:}
+\newcommand{\studentID}{[Student ID]}
+\newcommand{\studentRegYear}{[Registration Year:]}
+\newcommand{\studentAcaYear}{[Academic Year:]}
+\newcommand{\studentName}{[Student Name]}
+\newcommand{\supervisorLabel}{Supervisor:}
+\newcommand{\supervisorName}{[Supervisor Name]}
+\newcommand{\supervisorDesig}{[Supervisor Designation]}
+\newcommand{\supervisorAff}{[Supervisor Affiliation]}
+\newcommand{\coSupervisorLabel}{Co-Supervisor:}
+\newcommand{\coSupervisorName}{[Co-supervisor Name]}
+\newcommand{\cosupervisorDesig}{[Co-supervisor Designation]}
+\newcommand{\cosupervisorAff}{[Co-supervisor Affiliation]}
+\newcommand{\degreeLineALabel}{This thesis report was submitted in partial fulfillment of the}
+\newcommand{\degreeLineBLabel}{Requirements for the Master’s Degree}
+\newcommand{\majorName}{In \textbf{[Department name]}}
+\newcommand{\facultyName}{[Faculty name]}
+\newcommand{\universityName}{Jashore University of Science and Technology}
+\newcommand{\regionName}{Jashore-7408, Bangladesh}
+\newcommand{\degreeyearName}{[2023]}
+\newcommand{\degreemonthName}{[February]}
+\newcommand{\approvalText}{[Thesis approval text]}
+\newcommand{\studentSign}{\underline{Signature of the Student}}
+
+\newcommand{\supervisorSign}{\underline{Signature of the Supervisor}}
+
+\newcommand{\cosupervisorSign}{\underline{Signature of the Co-Supervisor}}
+
+\makecoverpage
+
+\makeapprovalpage
+
+\pagenumbering{roman}
+
+\chapter*{Dedication}
+\addcontentsline{toc}{chapter}{Dedication}
+\lipsum[1]
+
+\chapter*{Acknowledgments}
+\addcontentsline{toc}{chapter}{Acknowledgments}
+\lipsum[2-3]
+
+\newpage
+\listofabbreviations
+
+\tableofcontents
+
+\newpage
+\listoffigures
+
+\newpage
+\listoftables
+
+\chapter*{Abstract}
+\addcontentsline{toc}{chapter}{Abstract}
+\Gls{just} 
+\lipsum[4-5]
+\Gls{cse}
+
+\newpage
+\pagenumbering{arabic}
+
+\printchaptertitle{Introduction}
+\newpage
+\Gls{just}
+\lipsum[6-7]
+
+\section{Background}
+\lipsum[8-9]
+
+\subsection{Definition}
+\lipsum[10]
+
+\subsubsection{Def 1}
+\lipsum[11]
+
+\section{Problem Statement}
+\lipsum[12]
+
+\section{Objectives}
+\lipsum[13]
+
+\section{Research Questions}
+\lipsum[14]
+
+\section{Significance of the Study}
+\lipsum[15]
+
+\printchaptertitle{Literature Review}
+\lipsum[16]
+
+\printchaptertitle{Methodology}
+\lipsum[17-18]
+
+\begin{table}[htbp]
+\caption{Table Type Styles}
+\begin{center}
+\begin{tabular}{|c|c|c|c|}
+\hline
+\textbf{Table}&\multicolumn{3}{|c|}{\textbf{Table Column Head}} \\
+\cline{2-4} 
+\textbf{Head} & \textbf{\textit{Table column subhead}}& \textbf{\textit{Subhead}}& \textbf{\textit{Subhead}} \\
+\hline
+copy& More table copy$^{\mathrm{a}}$& &  \\
+\hline
+\multicolumn{4}{l}{$^{\mathrm{a}}$Sample of a Table footnote.}
+\end{tabular}
+\label{tab1}
+\end{center}
+\end{table}
+
+\section{Research Design}
+\lipsum[19-20]
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=0.5\textwidth]{images/dummy-post-horisontal.jpg}
+  \caption{Example image}
+  \label{fig:example}
+\end{figure}
+
+\section{Data Collection}
+\lipsum[21-22]
+
+\section{Implementation}
+\lipsum[23-24]
+
+\printchaptertitle{Results and Discussion}
+\lipsum[25-26]
+
+\section{Results}
+\lipsum[29-30]
+
+\section{Discussion of Results}
+\lipsum[33-34]
+
+\section{Implications}
+\Gls{cse}
+\lipsum[35-36]
+
+\printchaptertitle{Conclusion}
+\lipsum[39-40]
+
+\section{Concluding Remarks}
+\lipsum[41-42]
+
+\section{Limitations}
+\lipsum[37-38]
+
+\section{Recommendations for Further Research}
+\lipsum[43]
+\cite{app12136490}
+
+\renewcommand{\bibname}{References}
+\bibliographystyle{plain}
+\bibliography{references.bib}
+
+\end{document}
