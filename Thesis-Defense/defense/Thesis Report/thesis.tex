@@ -430,7 +430,7 @@ The research framework is divided into three distinct phases to ensure a logical
     \item \textbf{Phase 3: Predictive Modeling and Analysis:} Processing the resulting dataset to train four distinct \Gls{ml} regression models (Linear Regression, Decision Tree, Random Forest, and XGBoost) to predict the system-wide total load, followed by rigorous evaluation against standard metrics.
 \end{enumerate}
 
-\begin{figure}[htbp]
+\begin{figure}[H]
   \centering
   \includegraphics[width=0.85\textwidth]{images/research_workflow.PNG}
   \caption{Comprehensive research workflow from environment design to predictive analytics.}
@@ -678,7 +678,7 @@ The resulting dataset provides a comprehensive representation of energy demand a
 
 Feature importance is quantified using the \textit{Gain} metric from the ensemble models, which measures the improvement in accuracy brought by a specific feature to the decision branches. Features like \textit{system\_charging\_vehicles} and \textit{station\_load\_kW} typically demonstrate the highest importance, as they directly dictate the aggregate system demand. Figure~\ref{fig:feat_imp_method} illustrates the importance distribution identified during the training phase.
 
-\begin{figure}[htbp]
+\begin{figure}[H]
   \centering
   \includegraphics[width=0.85\textwidth]{images/feature_importance.png}
   \caption{Feature importance ranking derived from the XGBoost model branches.}
@@ -689,7 +689,7 @@ Feature importance is quantified using the \textit{Gain} metric from the ensembl
 
 The linear relationships between variables are analyzed using the Pearson correlation coefficient ($\rho$). This analysis confirms the strong positive correlation ($\rho \approx 0.98$) between the number of actively charging vehicles and the total power load, while identifying secondary dependencies such as the impact of battery \Gls{soc} on individual charging durations. Figure~\ref{fig:corr_matrix_method} presents the correlation matrix visualized as a heatmap.
 
-\begin{figure}[htbp]
+\begin{figure}[H]
   \centering
   \includegraphics[width=0.85\textwidth]{images/correlation_heatmap.png}
   \caption{Pearson correlation matrix of the simulated EV charging dataset.}
@@ -698,21 +698,66 @@ The linear relationships between variables are analyzed using the Pearson correl
 
 \section{Machine Learning Application}
 
-Four distinct regression algorithms are applied to model and predict the aggregate charging load based on the extracted features.
+In this study, multiple supervised machine learning models were implemented to predict the system-level electric load demand, denoted as \textit{system\_total\_load\_kW}. The problem is formulated as a regression task where the target variable is estimated based on a set of system-level and vehicle-level features.
 
-\subsubsection{Linear Regression (LR)}
-Linear regression serves as the baseline parametric model, defined by the linear weight vector $\theta$:
-\[ \hat{y} = \theta_0 + \sum_{j=1}^{n} \theta_j x_j \]
-It is optimized using Ordinary Least Squares (\Gls{ols}) to establish the most efficient linear mapping between vehicle states and power demand.
+\subsection{Problem Formulation}
 
-\subsubsection{Decision Tree (DT)}
-The Decision Tree model uses recursive partitioning to split the dataset based on feature thresholds. A maximum tree depth of 10 was selected to capture non-linear jumps in the load caused by discrete vehicle arrivals while maintaining high model interpretability.
+The load prediction task can be mathematically expressed as:
+\[ y = f(X) \]
+where:
+\begin{itemize}
+    \item $y$ represents the target variable (\textit{system\_total\_load\_kW}),
+    \item $X$ represents the input feature vector,
+    \item $f$ represents the function learned by the machine learning model.
+\end{itemize}
+The input features include variables such as time progression, vehicle dynamics, and system-level charging statistics.
 
-\subsubsection{Random Forest (RF)}
-Random Forest implements an ensemble of decorrelated decision trees using \textit{Bagging}. By aggregating 100 individual trees, the model significantly reduces predictive variance and proves robust against the fluctuations present in simulation-generated tabular data.
+\subsection{Data Preprocessing}
 
-\subsubsection{XGBoost (XGB)}
-Extreme Gradient Boosting is an innovative model that builds trees in a sequential manner, where each new tree aims to correct the residuals of the previous ones. It incorporates $L_1$ (Lasso) and $L_2$ (Ridge) regularization to prevent over-fitting and achieve state-of-the-art accuracy on complex energy consumption patterns.
+Before model training, several preprocessing steps were applied to ensure data quality and model efficiency:
+\begin{itemize}
+    \item \textbf{Removal of Data Leakage:} The feature \textit{station\_load\_kW} was removed to prevent direct leakage into the target variable.
+    \item \textbf{Removal of High-Cardinality Features:} Features such as \textit{vehicle\_id}, \textit{lane\_id}, and \textit{current\_station\_id} were excluded, as they represent identifiers rather than generalizable patterns.
+    \item \textbf{Feature-Target Separation:} The dataset was divided into input features ($X$) and target variable ($y$).
+    \item \textbf{Train-Test Split:} The dataset was split into training (80\%) and testing (20\%) subsets using random shuffling to ensure generalization across different system states.
+\end{itemize}
+
+\subsection{Implemented Machine Learning Models}
+
+Four regression models were implemented and evaluated:
+
+\subsubsection*{(a) Linear Regression}
+Linear Regression models the relationship between input features and the target variable as a linear combination:
+\[ y = w_1x_1 + w_2x_2 + \dots + w_nx_n + b \]
+where $w_i$ are the learned coefficients and $b$ is the bias term. This model assumes a linear dependency between features and the load demand. Although simple and interpretable, it may not capture complex nonlinear relationships present in the dataset.
+
+\subsubsection*{(b) Decision Tree Regressor}
+The Decision Tree Regressor partitions the feature space into multiple regions based on decision rules. Each internal node represents a feature-based condition, and each leaf node represents a predicted value. Instead of a mathematical equation, the model follows a hierarchical structure:
+\begin{itemize}
+    \item If a condition is satisfied $\rightarrow$ traverse left
+    \item Otherwise $\rightarrow$ traverse right
+\end{itemize}
+The final prediction is the value stored in the corresponding leaf node. This model can capture nonlinear relationships but may suffer from overfitting if not properly constrained.
+
+\subsubsection*{(c) Random Forest Regressor}
+Random Forest is an ensemble learning method that combines multiple decision trees to improve prediction accuracy and robustness. The final prediction is obtained by averaging the outputs of all trees:
+\[ y = \frac{1}{N} \sum_{i=1}^{N} T_i(X) \]
+where $T_i$ represents the prediction of the $i$-th decision tree. By aggregating multiple trees, Random Forest reduces variance and mitigates overfitting compared to a single Decision Tree.
+
+\subsubsection*{(d) XGBoost Regressor}
+XGBoost (Extreme Gradient Boosting) is an advanced ensemble method that builds trees sequentially, where each new tree learns to correct the errors of the previous ones. The model can be expressed as:
+\[ y = \sum_{i=1}^{M} f_i(X) \]
+where each $f_i$ represents a weak learner (decision tree). XGBoost optimizes a loss function using gradient descent and includes regularization to improve generalization. It is highly efficient and effective for structured/tabular data.
+
+\subsection{Model Training and Prediction}
+
+Each model was trained using the training dataset and evaluated on the unseen test dataset. Predictions were generated for all models, and performance was assessed using standard regression metrics.
+
+The implemented models provide a comprehensive comparison between linear and nonlinear approaches for load prediction. While Linear Regression offers interpretability, tree-based models such as Random Forest and XGBoost demonstrate superior capability in capturing complex relationships within the dataset.
+
+\begin{quote}
+    ``The near-perfect performance of tree-based models indicates that the dataset exhibits strong deterministic relationships between system variables and load demand.''
+\end{quote}
 
 % ================================================================
 % CHAPTER 4: RESULTS AND DISCUSSION
