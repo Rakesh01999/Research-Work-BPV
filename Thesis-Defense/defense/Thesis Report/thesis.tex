@@ -361,9 +361,13 @@ Overall, this integrated ecosystem ensures seamless integration between simulati
 
 \subsection{Custom Road Network Design}
 
-The simulation environment is a high-fidelity digitization of primary arterial roads in Khulna City, Bangladesh, as illustrated in Figure~\ref{fig:khulna_osm}. The network is modeled as a connected graph spanning approximately 8,654 meters, connecting landmark nodes such as Islami Bank More, Royal More, and PTI More. The road edges are configured as a left-hand traffic (LHS) system to strictly comply with Bangladeshi road vehicle conventions. Figure~\ref{fig:sumo_network} presents the corresponding custom microscopic topology designed for the dynamic simulation.
+In this research the created simulation environment represents a high-reliably, digitally constructed road network inspired by the structure of Khulna's arterial roads. The main purpose of this design is to realistically capture urban traffic patterns, vehicle interactions and their indirect impact on electric vehicles (\Gls{ev}) charging demand . The network is modeled as a connected graph, consisting of multiple nodes and edges, with a total estimated length of 8,654 meters. 
 
-To represent realistic urban delays and the resulting vehicle clustering, static Traffic Light Signals (\Gls{tls}) were implemented at high-saturation junctions, specifically at \textbf{Node3} and \textbf{Node8}. The TLS logic at these nodes is configured with a 90-second cycle consisting of four distinct phases: a 42-second Green phase for primary flow, a 3-second Yellow transition, followed by a matching 42-second Green and 3-second Yellow phase for cross-traffic. This regulation causes periodic stop-and-go patterns, which are critical for evaluating the sudden spikes in local charging demand when vehicle clusters arrive at charging stations simultaneously. Table~\ref{tab:road_network} provides a comprehensive overview of the microscopic road network configuration, documenting the edge identifiers, node connectivity, and physical parameters applied to the SUMO environment.
+Important intersections and road segments are mapped to well-known urban landmarks such as Islami Bank Intersection, Royal Intersection, PTI Intersection and Rupsha Ferry Ghat. This ensures that the simulated environment closely reflects the geographical and infrastructural features of the real world. The entire network follows a left-hand traffic (LHS) system, which is standard in Bangladesh. To make traffic patterns feel real—especially the jams and car bunching—we've used static traffic lights at the busiest intersections. That's why the system puts lights at \textbf{Node 3 (Shordar Tower)} and \textbf{Node 8 (Galaxco More)}. Each light follows a fixed 90-second cycle with four phases: 42 seconds of green for the main direction, a quick 3-second yellow, then 42 seconds of green and another 3 seconds of yellow for the cross direction. 
+
+This cycle creates that classic stop-and-go traffic, which ends up making cars group together naturally. Clustering really matters here because it shapes how charging demand plays out. When a group of vehicles with low battery levels all hit the charging stations at once due to traffic delays, sudden spikes in load demand can occur. By adding controlled traffic interruptions like stoplights into the simulation, it’s possible to capture those spikes more realistically. That’s a key step if you want to build and test models that predict load accurately. Table~\ref{tab:road_network} breaks down the road network—showing how roads connect, their distances, lane setups, and speed limits. Figure~\ref{fig:khulna_osm} gives you a look at the real-world map from OpenStreetMap, and Figure~\ref{fig:sumo_network} shows the custom microscopic layout built in \Gls{sumo}. 
+
+This carefully designed road network serves as the foundation for the simulation. It ensures accurate representation of both traffic behavior and its impact on EV charging dynamics.
 
 \begin{table}[H]
 \caption{Microscopic Road Network Configuration and Edge Parameters}
@@ -405,13 +409,15 @@ E10 & Node2 & Khulna Zilla School Stadium & Node7 & PTI More & 850 & 2 & 40 \\
 \begin{figure}[H]
   \centering
   \includegraphics[width=0.85\textwidth]{images/SUMO_custom_road_network.png}
-  \caption{Custom microscopic road network topology in SUMO \texttt{netedit}.}
+  \caption{Custom microscopic road network in SUMO \texttt{netedit}.}
   \label{fig:sumo_network}
 \end{figure}
 
 \subsection{Charging Station Placement}
 
-Ten bidirectional charging stations were strategically deployed across the network using custom \texttt{parkingArea} elements. Each implementation is bipartite, consisting of a dedicated \textbf{Charging Zone} for power transfer and a \textbf{Waiting Zone} for queueing. Table~\ref{tab:stations} provides the exact configuration parameters synchronized with the \texttt{Test1.chargingstations.add.xml} file.
+According to the actual data in the \texttt{Test1.chargingstations.add.xml} file, the charging stations are spread out on both the front and reverse sides of important road sections. Those road sections/edges are as: E0, E1, E5, E6, and E7. This setup covers the entire 8.6~km loop, so vehicles can always find a charging spot, no matter which way they're headed.
+
+The stations don’t all deliver the same power. Charging speeds go from 25~kW all the way up to 50~kW at the \texttt{pa\_8\_rev} station. This variation lets the simulation reflect a real-world mix of fast and standard chargers. Altogether, there are 62 charging slots and 49 spots for waiting vehicles, giving the simulation enough capacity to study sudden spikes in demand. For all the technical specifications of each station, check Table~\ref{tab:stations}.
 
 \begin{table}[H]
 \caption{Charging Station Technical Implementation Details}
@@ -442,13 +448,11 @@ pa\_8\_rev     & -E7   & 50 & 10 & 6 \\
 
 \subsection{Vehicle Configuration in SUMO}
 
-To ensure a realistic representation of \Gls{ev} dynamics, the simulation vehicles are parameterized with specific physical and electrical constants. All vehicle types share a common emission class (\texttt{Energy/unknown}) and are configured with an internal moment of inertia of $0.010~\text{kg}\cdot\text{m}^2$ and a stopping threshold of $0.1~\text{m/s}$. The simulation assumes a speed factor range of $0.74$ to $1.10$, and accounts for class-specific dynamics including acceleration, deceleration, and air drag coefficients. The fleet is categorized into three primary classes reflecting the Bangladeshi urban transport context:
-\begin{itemize}
-    \item \textbf{Easy Bike:} 34 variants with 12~kWh battery capacity and the largest frontal surface area ($2.41~\text{m}^2$).
-    \item \textbf{E-Rickshaw:} 33 variants with battery capacities ranging from 5.76 to 7.20~kWh and a height of 1.8~m.
-    \item \textbf{E-Van:} 33 variants with 5.76~kWh battery capacity and a low-profile height of $0.8$~m.
-\end{itemize}
-Table~\ref{tab:class_comparison} provides a detailed cross-class parameter comparison for the Easy Bike, E-Rickshaw, and E-Van models used to evaluate system-level load variations.
+To ensure the simulation reflects the real-world mobility landscape of urban Bangladesh, the vehicle fleet is meticulously configured with heterogeneous physical and electrical constants. We have modeled a total of 100 unique vehicle variants, distributed across three primary classes: 34 Easy Bikes, 33 E-Rickshaws, and 33 Electric Vans (E-Vans). This diversity is a critical design choice; by varying parameters like maximum battery capacity, vehicle mass, and speed factors, the simulation can accurately capture the stochastic nature of charging demand and the resulting load variations across a diverse urban fleet.
+
+According to the configuration data established in the \texttt{Test1.rou.xml} file, each class is parameterized to reflect its unique operational characteristics. The \textbf{Easy Bike} variants are equipped with a substantial 12~kWh battery capacity and the largest frontal surface area ($2.41~\text{m}^2$), reflecting their role as the primary high-capacity mobility solution. In contrast, the \textbf{E-Rickshaws} are modeled with battery capacities ranging from 5.76 to 7.20~kWh and a taller profile of 1.8~m. Finally, the \textbf{E-Van} is implemented as a light-weight, low-profile vehicle with a 5.76~kWh battery and a height of only 0.8~m, significantly altering its aerodynamic drag and energy consumption profile. 
+
+All electric vehicles share a common emission class (\texttt{Energy/unknown}) and are configured with a moment of inertia of $0.010~\text{kg}\cdot\text{m}^2$ and a stopping threshold of $0.1~\text{m/s}$. To model realistic driver diversity, speed factors are distributed between 0.74 and 1.10, while maximum speeds are constrained between 40 and 50~km/h. These detailed specifications, summarized in Table~\ref{tab:class_comparison}, ensure that the simulated energy dynamics provide a high-fidelity dataset for load prediction.
 
 \begin{table}[H]
 \caption{Cross-Class Vehicle Parameter Comparison (Averaged Values)}
