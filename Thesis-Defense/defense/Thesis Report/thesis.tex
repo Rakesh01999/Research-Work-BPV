@@ -483,9 +483,32 @@ Visual Color (SUMO-GUI) & Magenta & Green & Blue \\
 \end{table}
 
 
-\subsection{Vehicle Fleet Characterization}
+\subsection{Route Creation \& Vehicle Fleet Characterization}
 
-The simulation utilizes a heterogeneous fleet of 100 variants, reflecting the unique context of Bangladeshi urban transport. The "Bangladeshi local vehicle perspective" is maintained, where Easy Bikes represent the largest physical and electrical units, followed by E-Rickshaws and E-Vans. Table~\ref{tab:fleet_summary} summarizes the fleet distribution and color-coding used for visual differentiation in the SUMO-GUI.
+The construction of routes and the subsequent characterization of the vehicle fleet are essential for capturing the complex, multi-directional traffic dynamics of the study area. In this research, we have defined eight base routes—four forward and four reverse—which are meticulously mapped to the arterial edges of the Khulna city network to ensure bidirectional mobility across the 8.6~km loop. As summarized in Table~\ref{tab:route_definitions}, these routes ensure that the simulation captures bidirectional flow, allowing vehicles to traverse the corridor from multiple entry and exit points.
+
+\begin{table}[H]
+\caption{Base Route Definitions and Edge Sequences in SUMO}
+\label{tab:route_definitions}
+\begin{center}
+\begin{small}
+\begin{tabular}{|l|l|l|}
+\hline
+\textbf{Direction} & \textbf{Route ID} & \textbf{Edge Sequence} \\ \hline
+Forward & route1\_forward & E0 $\rightarrow$ E1 $\rightarrow$ E2 $\rightarrow$ E3 \\
+Forward & route2\_forward & E0 $\rightarrow$ E1 $\rightarrow$ E9 $\rightarrow$ E8 \\
+Forward & route3\_forward & E4 $\rightarrow$ E5 $\rightarrow$ E6 $\rightarrow$ E7 $\rightarrow$ E8 \\
+Forward & route4\_forward & E0 $\rightarrow$ E10 $\rightarrow$ E7 $\rightarrow$ E8 \\ \hline
+Reverse & route1\_reverse & -E3 $\rightarrow$ -E2 $\rightarrow$ -E1 $\rightarrow$ -E0 \\
+Reverse & route2\_reverse & -E8 $\rightarrow$ -E9 $\rightarrow$ -E1 $\rightarrow$ -E0 \\
+Reverse & route3\_reverse & -E8 $\rightarrow$ -E7 $\rightarrow$ -E6 $\rightarrow$ -E5 $\rightarrow$ -E4 \\
+Reverse & route4\_reverse & -E8 $\rightarrow$ -E7 $\rightarrow$ -E10 $\rightarrow$ -E0 \\ \hline
+\end{tabular}
+\end{small}
+\end{center}
+\end{table}
+
+Through assigning 100 distinct vehicle flows to these eight routes, fleet characterization further refines this system. Each flow is assigned a specific vehicle type (Easy-Bike, E-Rickshaw, or E-Van) and a measured number of departures ranging from 3 to 81 vehicles per hour. This custom diversity helps the simulation to mirror the real traffic in cities or urban areas across Bangladesh. In some areas, a lot of three-wheeled vehicles are seen on the roads, whereas other areas are not as busy. By mixing different departure times and entry points, the simulation mimics real-life, unpredictable traffic patterns. This setup helps test how well the load prediction models actually work. You can find a summary of the fleet composition and color-coding for easy identification in \Gls{sumo}-GUI in Table~\ref{tab:fleet_summary}.
 
 \begin{table}[H]
 \caption{EV Fleet Composition in SUMO Simulation}
@@ -507,9 +530,15 @@ E-Van      & 33  & 5,760          & 11.1 -- 13.9 & Blue \\
 \end{center}
 \end{table}
 
-\subsection{Queue Management Logic}
+\subsection{Smart Charging Logic Implementation}
 
-The \texttt{SmartChargingStationMonitor} class implements the following charging assignment logic:
+The smart charging logic forms the operational core of the simulation framework. Which actually coordinates real-time decisions about when and where each electric vehicle will charge. The whole logic is encapsulated in the \texttt{Smart\-Charging\-Station\-Monitor} class. And this is implemented in the \texttt{load\_\allowbreak demand\_\allowbreak prediction.py} file.
+
+This class communicates directly with the \Gls{sumo} simulation engine via \Gls{traci} and simultaneously maintains a continuous understanding of the battery status of each vehicle and the number of vehicles at each station, every second, across a fleet of 100 vehicles. The monitor works with clear thresholds to manage when charging starts and stops. When the State of Charge (\Gls{soc}) drops to 30\%, charging kicks in. The goal is to reach a \Gls{soc} of 70\% by the end of each charging session. To avoid unrealistic simulation errors, the estimated charging duration is dynamically calculated. The calculation is based on energy shortages and station capacity. And the charging-duration is limited to between 30 and 300 seconds.
+
+The monitor keeps tabs on all bidirectional charging stations and active \Gls{ev} agents using a few in-memory data structures. There’s \texttt{station\_\allowbreak charging\_\allowbreak slots} and \texttt{station\_\allowbreak waiting\_\allowbreak queue}—which uses a \texttt{collections.\allowbreak deque}—for tracking station occupancy. On top of that, the \texttt{currently\_\allowbreak charging} and \texttt{currently\_\allowbreak waiting} dictionaries let it check real-time status for each \Gls{ev}. A comprehensive \texttt{vehicle\_\allowbreak states} map stores per-vehicle metadata, such as charging start times, session \Gls{soc} values, and routed station identities, ensuring continuous tracking and preventing duplicate rerouting commands across simulation timesteps.
+
+When a vehicle’s \Gls{soc} falls below the 30\% threshold, the system invokes a route-aware nearest-neighbor selection algorithm. Rather than relying on simple Euclidean distance, the monitor queries the engine via \texttt{traci.\allowbreak simulation.\allowbreak findRoute} for every candidate station. This allows the system to evaluate the actual network route length along the road graph, accounting for the unidirectional nature of lanes and city topology. Reachable stations are sorted by route length and evaluated according to a strict five-rule assignment hierarchy:
 
 \begin{enumerate}
     \item \textbf{Rule 1:} If the nearest station has an available charging slot, route the vehicle there.
@@ -519,11 +548,11 @@ The \texttt{SmartChargingStationMonitor} class implements the following charging
     \item \textbf{Rule 5:} If all candidate stations are full, do not reroute.
 \end{enumerate}
 
-When a charging slot becomes available at a station, the first vehicle in the waiting queue is automatically promoted to the charging slot (\textit{queue promotion}).
+Once a target is determined, the vehicle is redirected using \texttt{traci.\allowbreak vehicle.\allowbreak setRoute} followed by a \texttt{traci.\allowbreak vehicle.\allowbreak setParkingAreaStop} command to register the stop in the simulation's schedule. For vehicles assigned to waiting slots, a \textbf{FIFO Queue Promotion Mechanism} is executed at every timestep. When a charging slot becomes available, the monitor retrieves the vehicle at the front of the station's deque using \texttt{popleft()}, resumes it via \texttt{traci.\allowbreak vehicle.\allowbreak resume()}, and reassigns it to the active charging area. This automated promotion ensures that waiting times are kept to a minimum and provides precise data on queuing delays. Upon session completion or vehicle departure from the network, the \texttt{handle\_\allowbreak charging\_\allowbreak complete} and \texttt{cleanup\_\allowbreak departed\_\allowbreak vehicle} methods record the final telemetry and clear the associated state maps to maintain simulation integrity.
 
 \subsection{Simulation Execution with TraCI}
 
-The simulation runs for a duration of 600 steps. The core execution is managed by a TraCI-linked Python script that controls the simulation flow using the \texttt{traci.simulationStep()} function. The script performs real-time status monitoring and issues dynamic rerouting commands to vehicles identified with an \Gls{soc} below the 30\% critical threshold.
+The simulation runs for a duration of 600 steps. The core execution is managed by a TraCI-linked Python script that controls the simulation flow using the \texttt{traci.\allowbreak simulation\-Step()} function. The script performs real-time status monitoring and issues dynamic rerouting commands to vehicles identified with an \Gls{soc} below the 30\% critical threshold.
 
 \subsection{Real-Time Data Extraction}
 
