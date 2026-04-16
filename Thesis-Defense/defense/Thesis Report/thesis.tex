@@ -317,7 +317,7 @@ This chapter describes the comprehensive research methodology developed for pred
 
 \section{Research Design}
 
-This research follows a quantitative, simulation-based experimental design centered on the “observation–prediction–control” paradigm. Which is designed to bridge the gap between microscopic dynamics patterns and grid level electrical load - demand. As shown in Figure 3.1, the research design is performed through a systematic multi stage workflow. It begins with extensive \textbf{Data Collection} and \textbf{Environment Setup} on the simulation platform. Using this foundation, a \textbf{Custom Road Network Design} was performed to model the real characteristics of urban area of Bangladesh~\cite{ev_bangladesh2023} ( as for sample Khulna city's particular are is selected ). Then \textbf{Traffic Light System Placement} and \textbf{Charging Station Placement} were strategically placed to simulate realistic infrastructural limitation and constraints. After the establishment of the physical environment , the approach shifts to  modeling by determining \textbf{Vehicle Configuration in SUMO}~\cite{sumo2018} and \textbf{Vehicle Fleet Characterization}, representing the operational behavior of electric three-wheeled vehicles.
+This research follows a quantitative, simulation-based experimental design centered on the “Monitor–Predict–Control” paradigm. Which is designed to bridge the gap between microscopic dynamics patterns and grid level electrical load - demand. As shown in Figure 3.1, the research design is performed through a systematic multi stage workflow. It begins with extensive \textbf{Data Collection} and \textbf{Environment Setup} on the simulation platform. Using this foundation, a \textbf{Custom Road Network Design} was performed to model the real characteristics of urban area of Bangladesh~\cite{ev_bangladesh2023} ( as for sample Khulna city's particular are is selected ). Then \textbf{Traffic Light System Placement} and \textbf{Charging Station Placement} were strategically placed to simulate realistic infrastructural limitation and constraints. After the establishment of the physical environment , the approach shifts to  modeling by determining \textbf{Vehicle Configuration in SUMO}~\cite{sumo2018} and \textbf{Vehicle Fleet Characterization}, representing the operational behavior of electric three-wheeled vehicles.
 
 \begin{figure}[H]
   \centering
@@ -343,16 +343,21 @@ After collecting and validating the data, we use it to determine vehicle types a
 
 \section{Implementation}
 
-This section documents the specific technical configurations and custom-built logical modules implemented to realize the research goal within the simulation environment.
+This section represents the detailed technical application of proposed research framework. Which includes the configuration of the simulation environment.  The development of custom logical modules and the integration of data extraction and machine learning components. Main target of this implementation is to transform the conceptual “Monitor–Predict–Control” framework into a functional system capable of simulating realistic electric vehicles(EV) behavior. And this makes possible to  generate high-quality data for load prediction.
 
 \subsection{Environment Setup}
 
-The implementation was conducted on a high-performance workstation running the x64 Windows 10 platform. The core software stack includes:
-\begin{itemize}
-    \item \textbf{SUMO 1.25.0:} The primary microscopic traffic simulation engine, utilized for its native support for electric vehicle battery models and sophisticated \Gls{traci} control.
-    \item \textbf{Python 3.10.12:} The primary scripting language used for real-time simulation monitoring, queue management logic, and the end-to-end \Gls{ml} pipeline.
-    \item \textbf{MiKTeX and TeXstudio:} Utilized for the formal documentation and compilation of the thesis report based on the \texttt{JUST\_Thesis\_Template\_CSE}.
-\end{itemize}
+For this research-work, the simulation environment was carefully configured to support high reliably modeling of electric vehicle (EV) dynamics and charging behavior under controlled yet realistic conditions. All the experiments and tests were conducted on a 64-bit Windows 10-based workstation to ensure consistency, stability and efficient execution of both simulation and data processing tasks.
+
+The main simulation platform used in this study is \Gls{sumo} (Simulation of Urban Mobility, version 1.25.0). It is an open-source microscopic traffic simulator, globally familiar for its ability to model the dynamics of individual vehicles and its built-in support for electric mobility features, including battery management, energy consumption and charging station management. 
+
+We built the custom road network and simulation setup using \Gls{sumo}'s NetEdit, the graphical net-editor. It lets users design and tweak everything—roads, intersections, traffic signals, even where the charging stations are placed. With this tool, we were able to shape a real traffic scenario that reflects how things are laid out in urban areas like Khulna and Jashore city. For real-time interaction, we used the \Gls{traci} (\textit{Traffic Control Interface}). \Gls{traci} makes it possible for external programs to directly control the simulation, check system states and even modify vehicle behavior on the road.
+
+We used Python 3.10.12 as the primary scripting language to control the simulation, collect data and integrate all analysis. With \Gls{traci}, we wrote Python scripts to handle each simulation step, set up queue management, enable smart charging features and collect real-time data while the simulation was running. 
+
+This data contains information about both individual vehicles and the entire system, such as speed, \Gls{soc}, the number of charging vehicles, station occupancy and the total system load. We processed the resulting datasets using the \texttt{pandas} library and exported the refined data to structured formats like CSV or Excel for deeper analysis and machine learning modeling.
+
+Overall, this integrated ecosystem ensures seamless integration between simulation execution and real-time monitoring while providing data-driven analytics. It provides a robust and flexible framework for EV charging ecosystem modeling, enabling the generation of high-quality datasets required for accurate load demand prediction and system-level performance evaluation.
 
 \subsection{Custom Road Network Design}
 
@@ -400,7 +405,7 @@ E10 & Node2 & Khulna Zilla School Stadium & Node7 & PTI More & 850 & 2 & 40 \\
 \begin{figure}[H]
   \centering
   \includegraphics[width=0.85\textwidth]{images/SUMO_custom_road_network.png}
-  \caption{Custom microscopic road network topology generated in SUMO \texttt{netedit}.}
+  \caption{Custom microscopic road network topology in SUMO \texttt{netedit}.}
   \label{fig:sumo_network}
 \end{figure}
 
