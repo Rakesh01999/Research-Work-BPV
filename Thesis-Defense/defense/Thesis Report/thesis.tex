@@ -331,30 +331,15 @@ To increase the system's realism and decision making capabilities , a queue mana
 
 \section{Data Collection}
  
- \subsection{Dataset Preparation}
- 
- The first step of the study was to collect real-world information about the three types of battery powered three-wheelers used in the area—Easy Bikes, Electric Vans, and Electric Rickshaws. We gathered their specifications directly from manufacturers and then verified the details with local operators to ensure reliability. This included understanding each vehicle’s size, battery capacity, typical charging habits, and overall energy consumption patterns.
- 
- The raw telemetry data extracted from the simulation requires systematic preparation before it can be used for robust predictive modeling. The preparation pipeline includes several critical steps:
- \begin{itemize}
-     \item \textbf{Data Sanitization:} Timesteps where no vehicles are active or the simulation is in an initial transient state are filtered to prevent skewing the baseline load and ensure high data quality.
-     \item \textbf{Feature Engineering:} Derived features such as cyclic time indices (\textit{minute\_of\_hour}) and aggregate system states (\textit{system\_charging\_vehicles}) are calculated to provide the models with contextual temporal and spatial information.
-     \item \textbf{Categorical Encoding:} Non-numeric identifiers such as \textit{vehicle\_id}, \textit{status}, and \textit{current\_station\_id} are mapped to integer values using Label Encoding to ensure compatibility with numerical regressors.
-     \item \textbf{Normalization and Scaling:} Features with widely varying physical units (e.g., speed in $m/s$ vs. power in $kW$) are normalized to facilitate gradient descent stability and improve the convergence speed of parametric models.
- \end{itemize}
+ The data collection phase of this research was designed so that the simulation environment and subsequent machine learning models were based on realistic operational characteristics of electric three-wheeled vehicles commonly used in urban areas of Bangladesh~\cite{ev_bangladesh2023}. Initially, detailed data was collected on three main categories of battery-powered vehicles : Easy Bikes, Electric Rickshaws and Electric Vans —which are known to be the main means of electric mobility in areas like Khulna.
 
-Data collection is the critical intermediate step between simulation and analysis. By leveraging the \Gls{traci} (\textit{Traffic Control Interface}) API, the system queries the \Gls{sumo} engine at every simulation step (step-length = 1.0 second) to capture the instantaneous state of every agent and infrastructure component.
+The main objective of this stage was to capture both the physical and behavioral characteristics of these vehicles, so that the simulation could accurately reflect real world dynamics. We gathered vehicle specifications from a variety of sources—manufacturer information, publicly available technical documents and feedback from local drivers and operators. We thoroughly verified everything from these sources to ensure that the information was consistent and reliable.
 
-\textbf{Captured Feature Space:}
-For every active vehicle at every integer second, a multivariate record is constructed containing:
-\begin{enumerate}
-    \item \textbf{Temporal Features:} Timestep synchronization and cyclic time indices reflecting the simulation progression.
-    \item \textbf{Vehicle Dynamics:} 2D position, instantaneous speed, longitudinal acceleration, and the current battery \Gls{soc}.
-    \item \textbf{Charging Infrastructure Context:} Current occupancy of charging slots, length of the station-specific waiting queues, and individual station power demand.
-    \item \textbf{System Global Context:} Aggregate counts of moving, charging, and waiting vehicles across the entire 8.6 km loop, providing a holistic view of network-wide demand.
-\end{enumerate}
+The data included things like the size of the vehicles (length, width, height), their speed, how quickly they can accelerate or decelerate and all the key details of the power—such as battery size, charging capacity, energy consumption and mobility . We also looked at how these vehicles actually are operated in the real world : how drivers typically behave, their typical commute patterns and when and how they charge . As a result, we got a clear idea of exactly how these vehicles connect to charging stations in everyday life.
 
-The final processed dataset, \textbf{EV\_Charging\_Load\_Demand\_Dataset.csv}, comprises 34,020 individual observations across 25 high-resolution features, providing a dense representation of urban \Gls{ev} behaviors.
+The data collection was not just focused on specific vehicle details. It also looked at broader contextual factors— such as how people use charging stations, how long charging-time typically are and how charging demand varies throughout the day. Those details were crucial to creating realistic simulation inputs and assembling a dataset that reflected both the details (such as specific vehicles) and the larger system as a whole.
+
+After collecting and validating the data, we use it to determine vehicle types and create behavior rules in simulations, which lay the foundation for accurately generating and predicting load demand. Finally, this thorough data collection ensures that the research is not just on paper, it is consistent with what actually happens in electric mobility. As a result, the research survives in the real world and people can use its results.
 
 \section{Implementation}
 
