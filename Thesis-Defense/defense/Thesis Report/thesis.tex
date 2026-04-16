@@ -552,13 +552,21 @@ Once a target is determined, the vehicle is redirected using \texttt{traci.\allo
 
 \subsection{Simulation Execution with TraCI}
 
-The simulation runs for a duration of 600 steps. The core execution is managed by a TraCI-linked Python script that controls the simulation flow using the \texttt{traci.\allowbreak simulation\-Step()} function. The script performs real-time status monitoring and issues dynamic rerouting commands to vehicles identified with an \Gls{soc} below the 30\% critical threshold.
+The simulation runs for 600 seconds, which gives plenty of time to see how vehicles interact from all directions and watch for any electrical load spikes in the area. The \texttt{load\_\allowbreak demand\_\allowbreak prediction.py} script handles everything—it kicks off the detailed environment in \Gls{sumo}-GUI and sets up a fast connection with the \Gls{traci} API.
+
+When the simulation runs, the loop moves forward one second at a time. Every time \texttt{traci.\allowbreak simulation\-Step()} kicks in, the \texttt{Smart\-Charging\-Station\-Monitor} jumps in to check up on all 100 cars. It doesn’t just skim the surface—it tracks every little detail, like how the batteries are doing, where each vehicle has moved, and how fast they're going right at that moment.
+
+When a vehicle’s State of Charge (\Gls{soc}) drops below 30\%, the Python script jumps into action. It works out on the fly whether the vehicle needs rerouting or a charging stop, then sends the right commands right away. That quick response shifts the simulation from a fixed, predictable scene to something much more lively—one that can really capture all the messy, real-world charging patterns needed for accurate load forecasting. Once the simulation hits 600 seconds, the script wraps things up: it closes out the \Gls{traci} connection and gets busy turning all the collected vehicle data into the finished research dataset.
 
 \subsection{Real-Time Data Extraction}
 
-The extraction process is decoupled from the mobility physics to ensure simulation stability. Every second, the monitor script iterates through all active \Gls{ev} instances to retrieve their instantaneous telemetry. This high-resolution extraction (1.0 Hz) results in a comprehensive dataset of 34,020 dynamic records, capturing the transient spikes in power demand caused by sudden cluster arrivals or traffic signal releases. The extracted data points (25 features in total) are buffered in transient memory and serialized to a \Gls{csv} format upon simulation termination. 
+To create a solid dataset for the predictive models, we set up a real-time data extraction pipeline inside the simulation framework. This pipeline runs separately from the main mobility physics, which keeps the simulation stable and lets us grab high-resolution telemetry data. Every second, during each simulation step, the monitoring script checks all active electric vehicles through the \Gls{traci} interface and pulls their real-time performance metrics.
 
-Table~\ref{tab:dataset_summary} provides a collective statistical summary of the simulation-generated dataset, detailing the record counts, vehicle statuses, and system load characteristics derived from the microscopic environment.
+Capturing these power demand shifts at a high frequency—every second, actually—lets us spot quick, sharp changes that broader models just miss. Think of those sudden surges when a bunch of vehicles pile up at an intersection or when a new group arrives at a charging hub. Each record pulls together 25 features: some track what each car’s up to (like speed, acceleration, state of charge), some focus on what’s happening at the station itself (how many spots are full, how long the lines are), and others look at the bigger system.
+
+Over a 600-second simulation, this approach collected 34,020 dynamic records—a pretty thorough set of data. At first, all this information gets stored in memory to avoid slowdowns from writing straight to disk. Once the simulation wraps up, everything is saved in a structured \Gls{csv} file. Table~\ref{tab:dataset_summary} breaks it all down, showing stats on things like vehicle statuses and power loads.
+
+This dataset actually captures a wide range of real-world operating conditions. It covers everything from slow, low-traffic periods to those times when charging hubs are packed and congested. That mix gives the machine learning models really solid, realistic data to learn from.
 
 \begin{table}[H]
 \caption{EV Charging Load Demand Dataset Summary}
