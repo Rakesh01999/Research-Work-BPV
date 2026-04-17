@@ -36,6 +36,10 @@
 \newacronym{ai}{AI}{Artificial Intelligence}
 \newacronym{iot}{IoT}{Internet of Things}
 \newacronym{gps}{GPS}{Global Positioning System}
+\newacronym{lstm}{LSTM}{Long Short-Term Memory}
+\newacronym{gru}{GRU}{Gated Recurrent Unit}
+\newacronym{cnn}{CNN}{Convolutional Neural Network}
+\newacronym{am}{AM}{Attention Mechanism}
 
 % -------------------------------------------------------
 % Document metadata
@@ -175,21 +179,21 @@ In this field, one of the key challenges is to accurately predict system-level c
 
 \section{Background}
 
-The rapid increasing of electric vehicles is reshaping transportation and electricity distribution systems. Unlike conventional fueled vehicles, electric vehicles, shift energy demand from fuel stations to the power grid . This creates loads that vary over time and space. Understanding the movement, energy consumption and charging behavior of electric vehicles is essential for load prediction, grid reliability and optimal utilization of charging infrastructure. In cities of Bangladesh , a major drawback is the unorganized and untested charging behavior of electric vehicles . Vehicles oftenly crowd around specific nodes or roadside charging points. Which is resulting in large amounts of energy consumption during peak hours . This often results in stress on the local grid, voltage drops and overloading of transformers problems. Which that already exist in rapidly growing cities like Khulna, Jashore, Satkhira. Besides, energy consumption, charging-load varies greatly depending on vehicle speed, congestion levels, route selection, and driver behavior . Without proper modeling and prediction of these parameters, city authorities and electricity distributors face increasing difficulties in ensuring grid reliability, planning future charging stations and controlling unbalanced load distribution. This research work uses traffic simulation tools such as SUMO to model real-world urban mobility. Where EV extensions to SUMO help model battery behavior, charging events, energy consumption, system load behavior. These outputs are integrated with load prediction models to create a robust approach for analyzing the load impact of EV adoption.
+The rapid increasing of electric vehicles is reshaping transportation and electricity distribution systems. Unlike conventional fueled vehicles, electric vehicles, shift energy demand from fuel stations to the power grid . This creates loads that vary over time and space. Understanding the movement, energy consumption and charging behavior of electric vehicles is essential for load prediction, grid reliability and optimal utilization of charging infrastructure \cite{ml_ev_load2021}. In cities of Bangladesh , a major drawback is the unorganized and untested charging behavior of electric vehicles . Vehicles oftenly crowd around specific nodes or roadside charging points. Which is resulting in large amounts of energy consumption during peak hours . This often results in stress on the local grid, voltage drops and overloading of transformers problems. Which that already exist in rapidly growing cities like Khulna, Jashore, Satkhira. Besides, energy consumption, charging-load varies greatly depending on vehicle speed, congestion levels, route selection, and driver behavior . Without proper modeling and prediction of these parameters, city authorities and electricity distributors face increasing difficulties in ensuring grid reliability, planning future charging stations and controlling unbalanced load distribution. This research work uses traffic simulation tools such as SUMO to model real-world urban mobility. Where EV extensions to SUMO help model battery behavior, charging events, energy consumption, system load behavior. These outputs are integrated with load prediction models to create a robust approach for analyzing the load impact of EV adoption.
 
 \subsection{Definition}
 
 \subsubsection{Battery-Powered Vehicle (BPV) or EV}
-A Battery Powered Vehicle(BPV) or Electric Vehicle (EV) is a transportation system which is powered entirely by rechargeable batteries and electric motors instead of an internal combustion engine. EVs store electrical energy in lithium-ion or lead-acid batteries and through an electric drivetrain, they convert this stored energy into mechanical energy . In the context of Bangladesh in urban areas like Khulna and Jessore -electric vehicles include the widely used low-cost electric three-wheelers (e.g., easy bikes , e-rickshaws, e-vans). Those vehicles are popular due to their low operating costs, absence of exhaust emissions and suitability for short-distance travel within cities or urban area . Their electricity-based operations directly link transportation demand to local electrical grid-loads. Which is making EV behavior a critical element in grid planning.
+A Battery Powered Vehicle(BPV) or Electric Vehicle (EV) is a transportation system which is powered entirely by rechargeable batteries and electric motors instead of an internal combustion engine. EVs store electrical energy in lithium-ion or lead-acid batteries and through an electric drivetrain, they convert this stored energy into mechanical energy \cite{smart_charging2022}. In the context of Bangladesh in urban areas like Khulna and Jessore -electric vehicles include the widely used low-cost electric three-wheelers (e.g., easy bikes , e-rickshaws, e-vans). Those vehicles are popular due to their low operating costs, absence of exhaust emissions and suitability for short-distance travel within cities or urban area . Their electricity-based operations directly link transportation demand to local electrical grid-loads. Which is making EV behavior a critical element in grid planning.
 
 \subsubsection{Load Prediction}
-Load prediction refers to the process of estimating the total electrical demand of a system based on historical or observed data. In this study, it specifically refers to the prediction of the system-level charging load (\texttt{system\_total\_load\_kW}) generated by electric vehicles using machine learning models . The prediction is performed by understanding the relationship between various input characteristics ---such as time progress , number of vehicles charging, system-level vehicle statistics and battery charge status and the corresponding load demand . Unlike traditional analytical approaches , this research uses data-driven models to understand the complex and nonlinear dependencies within the system. Proper load prediction can help to understand in better way how electric vehicle charging behavior affects overall energy demand and helps in efficient planning and management of charging infrastructure.
+Load prediction refers to the process of estimating the total electrical demand of a system based on historical or observed data. In this study, it specifically refers to the prediction of the system-level charging load (\texttt{system\_total\_load\_kW}) generated by electric vehicles using machine learning models \cite{rf_load_forecast2020}. The prediction is performed by understanding the relationship between various input characteristics ---such as time progress , number of vehicles charging, system-level vehicle statistics and battery charge status and the corresponding load demand . Unlike traditional analytical approaches , this research uses data-driven models to understand the complex and nonlinear dependencies within the system. Proper load prediction can help to understand in better way how electric vehicle charging behavior affects overall energy demand and helps in efficient planning and management of charging infrastructure.
 
 \subsubsection{Traffic Microsimulation}
 Traffic microsimulation is a precise, vehicle-level modeling technique that which captures the detailed movements of individual vehicles over time. It represents the interaction of speed, acceleration, deceleration, lane change behavior, path selection, stop-and-go cycles and congestion with high temporal accuracy. Microsimulation becomes increasingly important in EV research. As vehicle speed directly affects the dynamics of energy consumption and battery degradation. By integrating microsimulation with EV models , researchers can generate realistic estimates of power consumption, load behavior under different road, time and traffic conditions. Which ultimately helps in more accurate charging load analysis and prediction .
 
 \subsubsection{State of Charge (SOC)}
-State of Charge (SOC) is a quantitative measurement which indicates the remaining energy stored in an electric vehicle (EV) battery. It is usually expressed as a percentage (0--100\%). SOC decreases when the vehicle is being driven due to the use of propulsion power and it increases when the vehicle is connected to a charging station. As it determines when and where a vehicle will need charging , SOC is a fundamental variable for understanding electric vehicle behavior . In simulation environments like SUMO, SOC-logs give : time-step-level insights into real-time power consumption. This enables the creation of detailed charging demand models and node-level load prediction profiles.
+State of Charge (SOC) is a quantitative measurement which indicates the remaining energy stored in an electric vehicle (EV) battery \cite{soc_prediction2021}. It is usually expressed as a percentage (0--100\%). SOC decreases when the vehicle is being driven due to the use of propulsion power and it increases when the vehicle is connected to a charging station. As it determines when and where a vehicle will need charging , SOC is a fundamental variable for understanding electric vehicle behavior . In simulation environments like SUMO, SOC-logs give : time-step-level insights into real-time power consumption. This enables the creation of detailed charging demand models and node-level load prediction profiles.
 
 \subsubsection{Charging Station}
 A charging station is a road-side power supply point where electric vehicles (EVs) recharge their batteries. In simulation-based studies, charging stations are modeled as infrastructure elements . Those are connected to specific network nodes or road segments. Each station has certain characteristics, such as : charging capacity, availability, deployment strategy and charging session duration.
@@ -210,7 +214,7 @@ A load forecasting model is a computational method—often statistical or machin
 Urban electric vehicle mobility patterns refer to the characteristic movement behavior of electric vehicles within a city. It includes typical routes, peak congestion times, center-level activity , trip length and charging intervals. By understanding mobility patterns, researchers can link electric load distribution to traffic dynamics . In Bangladeshi cities —where electric vehicles like Easy Bikes, E-Rickshaws follow regular routes between markets, hospitals and government institutions. This analyzing mobility patterns becomes essential for accurate simulation modeling and load forecasting.
 
 \subsubsection{Queue Management and Promotion Logic}
-Queue management is an infrastructure-level process -which coordinates the flow of vehicles at a charging station. It distinguishes between active charging slots (where energy is transferred) and waiting slots (where vehicles are queuing for service). Promotion logic refers to the systematic process of moving a vehicle from a waiting state to a charging state as soon as a slot becomes available. This typically follows a first-in, first-out (FIFO) protocol to ensure fairness and simulation accuracy .
+Queue management is an infrastructure-level process -which coordinates the flow of vehicles at a charging station. It distinguishes between active charging slots (where energy is transferred) and waiting slots (where vehicles are queuing for service). Promotion logic refers to the systematic process of moving a vehicle from a waiting state to a charging state as soon as a slot becomes available. This typically follows a first-in, first-out (FIFO) protocol to ensure fairness and simulation accuracy \cite{queue_management2023}.
 
 \subsubsection{Rule-Based Recommendation System}
 A rule-based recommendation system is a decision-making algorithm -which uses some predefined "if-then" conditional statements to suggest the best optimal actions . In the case of EV charging, this system evaluates real-time telemetry. Such as a vehicle's SOC, distance to the nearest station and current queue length to recommend the most suitable charging locations . It also balances the overall load of the network with the needs of each vehicle.
@@ -313,7 +317,7 @@ This thesis addresses these shortcomings through an integrated simulation, data 
 % ================================================================
 \printchaptertitle{Methodology}
 
-This chapter describes the comprehensive research methodology developed for predicting \Gls{ev} charging load demand. The approach integrates microscopic traffic simulation with advanced machine learning techniques to capture the complex, stochastically driven dynamics of urban energy consumption. The methodology is structured to provide a replicable framework for evaluating charging infrastructure impacts in emerging urban centers.
+This chapter describes the comprehensive research methodology developed for predicting \Gls{ev} charging load demand. The approach integrates microscopic traffic simulation with advanced machine learning techniques to capture the complex, stochastically driven dynamics of urban energy consumption \cite{sumo2018}. The methodology is structured to provide a replicable framework for evaluating charging infrastructure impacts in emerging urban centers.
 
 \section{Research Design}
 
@@ -349,7 +353,7 @@ This section represents the detailed technical application of proposed research 
 
 For this research-work, the simulation environment was carefully configured to support high reliably modeling of electric vehicle (EV) dynamics and charging behavior under controlled yet realistic conditions. All the experiments and tests were conducted on a 64-bit Windows 10-based workstation to ensure consistency, stability and efficient execution of both simulation and data processing tasks.
 
-The main simulation platform used in this study is \Gls{sumo} (Simulation of Urban Mobility, version 1.25.0). It is an open-source microscopic traffic simulator, globally familiar for its ability to model the dynamics of individual vehicles and its built-in support for electric mobility features, including battery management, energy consumption and charging station management. 
+The main simulation platform used in this study is \Gls{sumo} (Simulation of Urban Mobility, version 1.25.0). It is an open-source microscopic traffic simulator, globally familiar for its ability to model the dynamics of individual vehicles and its built-in support for electric mobility features, including battery management, energy consumption and charging station management \cite{sumo2018}.
 
 We built the custom road network and simulation setup using \Gls{sumo}'s NetEdit, the graphical net-editor. It lets users design and tweak everything—roads, intersections, traffic signals, even where the charging stations are placed. With this tool, we were able to shape a real traffic scenario that reflects how things are laid out in urban areas like Khulna and Jashore city. For real-time interaction, we used the \Gls{traci} (\textit{Traffic Control Interface}). \Gls{traci} makes it possible for external programs to directly control the simulation, check system states and even modify vehicle behavior on the road.
 
@@ -597,7 +601,7 @@ The resulting dataset provides a representative sample of real-world operational
 
 \section{Machine Learning Application}
 
-In this study, multiple supervised machine learning models were implemented to predict the system-level electric load demand, denoted as \textit{system\_total\_load\_kW}. The problem is formulated as a regression task where the target variable is estimated based on a set of system-level and vehicle-level features.
+In this study, multiple supervised machine learning models were implemented to predict the system-level electric load demand, denoted as \textit{system\_total\_load\_kW}. The problem is formulated as a regression task where the target variable is estimated based on a set of system-level and vehicle-level features \cite{regression_ev2020}.
 
 \subsection{Problem Formulation}
 
@@ -687,7 +691,7 @@ This approach doesn’t limit itself to straight lines like Linear Regression do
 
 \subsubsection*{(c) Random Forest Regressor}
 
-Random Forest generally works by combining a group of different Decision Trees, each of them trained on random chunks of the data. To make a prediction, it takes the average of all their outputs:
+Random Forest generally works by combining a group of different Decision Trees, each of them trained on random chunks of the data \cite{rf_load_forecast2020}. To make a prediction, it takes the average of all their outputs:
 \[ y = \frac{1}{N} \sum_{i=1}^{N} T_i(X) \]
 where $T_i$ represents the prediction of the $i$-th tree.
 
@@ -702,7 +706,7 @@ This method pulls in more stability and cuts down the variance usually getting f
 
 \subsubsection*{(d) XGBoost Regressor}
 
-XGBoost (Extreme Gradient Boosting) builds one decision tree after another, and each new tree focuses on fixing the errors made by the last batch. It’s clever, it’s fast, and with tools like gradient optimization and regularization, it really shines---especially with structured data:
+XGBoost (Extreme Gradient Boosting) builds one decision tree after another, and each new tree focuses on fixing the errors made by the last batch. It’s clever, it’s fast, and with tools like gradient optimization and regularization, it really shines---especially with structured data \cite{xgboost_energy2022}:
 \[ y = \sum_{i=1}^{M} f_i(X) \]
 where each $f_i$ is a weak learner (decision tree).
 
@@ -838,7 +842,7 @@ The results of this research provide important insights into load forecasting, s
 
 \subsection{Grid and Charging Network Management}
 
-The near-perfect prediction accuracy of machine learning (\Gls{ml}) models ($R^2 \approx 1.0$) shows that it is possible to reliably predict system-level \Gls{ev} charging loads using data from simulations. This enables power grid operators to adopt a \textbf{predictive management approach}, which can anticipate demand before peak congestion occurs. Moreover, the simulation also shows that using smart charging logic with queue management spreads out charging demand across stations. This helps cut down on local overload. It’s clear that blending real-time control strategies with predictive models really boosts grid stability and makes everything run smoother.
+The near-perfect prediction accuracy of machine learning (\Gls{ml}) models ($R^2 \approx 1.0$) shows that it is possible to reliably predict system-level \Gls{ev} charging loads using data from simulations. This enables power grid operators to adopt a \textbf{predictive management approach}, which can anticipate demand before peak congestion occurs. This methodology is consistent with recent findings in integrated forecasting frameworks that emphasize the synergy between simulation and deep learning to stabilize urban grids \cite{siddiqui2025electric}. Moreover, the simulation also shows that using smart charging logic with queue management spreads out charging demand across stations. This helps cut down on local overload. It’s clear that blending real-time control strategies with predictive models really boosts grid stability and makes everything run smoother.
 
 \subsection{Data-Driven Feature Insights}
 
@@ -854,7 +858,7 @@ The \Gls{sumo} simulation environment works like a digital twin of city traffic 
 
 \subsection{Machine Learning for Load Forecasting}
 
-When comparing the machine learning models, it’s clear that tree-based methods like Decision Trees, Random Forest, and especially \Gls{xgboost} leave linear models in the dust. \Gls{xgboost} stands out as it nails that sweet spot between accuracy and generalization. The accuracy numbers aren’t just high—they’re almost off the charts—which means the data has some strong, predictable patterns. All this just proves one thing: machine learning is a powerful tool for tackling structured \Gls{ev} load prediction. In fact, it can be directly integrated with smart grid systems to obtain reliable and real-time forecasts.
+When comparing the machine learning models, it’s clear that tree-based methods like Decision Trees, Random Forest, and especially \Gls{xgboost} leave linear models in the dust. \Gls{xgboost} stands out as it nails that sweet spot between accuracy and generalization. The accuracy numbers aren’t just high—they’re almost off the charts—which means the data has some strong, predictable patterns. All this just proves one thing: machine learning is a powerful tool for tackling structured \Gls{ev} load prediction. Broader research trends similarly suggest that while tree-based models excel in structured settings, hybrid architectures such as CNN-LSTM-AM are increasingly necessary to capture more complex, multi-scale temporal dependencies \cite{ran2025ev}. Consequently, these models can be directly integrated with smart grid systems to obtain reliable and real-time forecasts.
 
 \subsection{Roadmap for Smart and Sustainable Electrification}
 
@@ -884,96 +888,39 @@ Our results show simulation-based data works really well when real-world \Gls{ev
 
 We got solid results predicting \Gls{ev} charging loads and running simulations, but there are still some real limitations here. It's important to keep these in mind when looking at what we found and thinking about how we can do better next time.
 
+\vspace{0.5em}
+\noindent\textbf{Dependence on Simulation Data:} For this research, the dataset was built using a \Gls{sumo}-based simulation instead of real traffic data. We have made great efforts to make the simulation as close to reality as possible, trying to reflect real traffic patterns and the behavior of electric vehicles. Still, simulations can only go so far. There are always those unpredictable things---how people actually drive, sudden traffic jams, or drivers charging their cars at odd times---that are tough to capture on a computer. Because of that, the model probably looks a bit better in testing than it would in the real world.
 
-\subsection{Dependence on Simulation Data}
-For this research, the dataset was built using a \Gls{sumo}-based simulation instead of real traffic data. We have made great efforts to make the simulation as close to reality as possible, trying to reflect real traffic patterns and the behavior of electric vehicles. Still, simulations can only go so far. There are always those unpredictable things---how people actually drive, sudden traffic jams, or drivers charging their cars at odd times---that are tough to capture on a computer. Because of that, the model probably looks a bit better in testing than it would in the real world.
+\vspace{0.5em}
+\noindent\textbf{Limited Feature Diversity:} The dataset covers a range of system-level and vehicle-level features, but it misses some important real-world details. Things like weather---temperature or rain---aren’t included. There is nothing about how people behave when charging---like their preferences or sense of urgency. Changes in electricity prices or tariffs aren’t factored in and the model doesn’t account for sudden infrastructure failures. Without these elements, the model doesn’t tell the whole story.
 
+\vspace{0.5em}
+\noindent\textbf{Lack of Temporal Deep Learning Models:} Traditional machine learning models held up pretty well, but advanced models like \Gls{lstm} were not fully included in the final evaluation due to time constraints. That means we probably missed some of the patterns and dependencies that show up over time in the data.
 
-\subsection{Highly Deterministic Data Patterns}
-Tree-based models like Random Forest and \Gls{xgboost} perform almost flawlessly here, which tells that the data has some pretty clear and predictable connections between the features and the target. That’s great for accuracy, but it can be a problem for any other model working in another research to handle messy or complicated real-world cases. It also raises the risk of overfitting---that model might just be memorizing the answers instead of really learning how things work.
-
-
-
-\subsection{Limited Feature Diversity}
-The dataset covers a range of system-level and vehicle-level features, but it misses some important real-world details. Things like weather---temperature or rain---aren’t included. There is nothing about how people behave when charging---like their preferences or sense of urgency. Changes in electricity prices or tariffs aren’t factored in and the model doesn’t account for sudden infrastructure failures. Without these elements, the model doesn’t tell the whole story.
-
-
-
-\subsection{Simplified Charging Behavior}
-The smart charging logic and queue management in this simulation follow basic, rule-based systems. They get the job done here, but they're a far cry from how things work in real life. Real-world charging involves way more---people’s preferences, changes in pricing, and more flexible or adaptive scheduling. This setup skips all those complexities.
-
-
-
-\subsection{Lack of Temporal Deep Learning Models}
-Traditional machine learning models held up pretty well, but advanced models like \Gls{lstm} were not fully included in the final evaluation due to time constraints. That means we probably missed some of the patterns and dependencies that show up over time in the data.
-
-
-\subsection{Static Infrastructure Assumptions}
-The simulation sticks to one setup: charging stations never move, their capacity stays the same, and the network layout doesn’t change. But that’s not really how things play out in the real world. Charging infrastructure shifts---new stations pop up, old ones get shut down for maintenance, and everything from network design to capacity can shift around. These changes can throw off predictions and affect how the load gets spread out.
-
-
-\subsection{Limited Geographic Scope}
-This study looks only at Khulna City, so its findings fit this area best. Other cities have their own traffic patterns, road designs, and levels of \Gls{ev} use. Because of that, these results don’t always translate perfectly to other places unless adjusting them to local conditions.
-
-
-\subsection{Absence of Real-Time Deployment Validation}
-So far, the models were only tested in an offline setting---they never actually ran in a live, real-time system. That means things like delays, handling streams of incoming data, and making instant decisions weren’t really put to the test.
-
-\vspace{1em}
-
-This research clearly shows that using simulation-driven machine learning works for predicting \Gls{ev} load. But the work isn’t finished. There’s still a gap between the lab and the real world. To move forward, these models need to face real-world trials, consider more factors that affect performance, and use more advanced techniques. Fixing these gaps will really strengthen the system and make it more useful for smart grids in practice.
+\vspace{0.5em}
+\noindent\textbf{Static Infrastructure Assumptions:} The simulation sticks to one setup: charging stations never move, their capacity stays the same, and the network layout doesn’t change. But that’s not really how things play out in the real world. Charging infrastructure shifts---new stations pop up, old ones get shut down for maintenance, and everything from network design to capacity can shift around. These changes can throw off predictions and affect how the load gets spread out.
 
 \section{Recommendations for Further Research}
 
 For further extension of the scope and applicability of this research, several recommendations for future work are identified:
 
-\subsection{Integration of Real-World Data}
+\vspace{0.5em}
+\noindent\textbf{Integration of Real-World Data:} Going forward, researchers need to lean on real-world \Gls{ev} charging and traffic data---to make their work hold up outside the lab. \Gls{sumo} simulations are great for control and detail, but without much realistic data, they miss a lot. Real traffic is messy. People drive unpredictably, infrastructure isn’t always up to speed, and demand can swing wildly in ways a simulator might gloss over. Mixing in data from actual charging stations, smart meters, or transport authorities will let future models learn from the real thing. That makes predictions tougher but also way more dependable and relevant. This shift will help these predictive models actually work when plugged into real-world smart grid systems, especially in places like Bangladesh, where data-driven city planning is just starting to catch on.
 
-\begin{itemize}
-    \item Incorporating real-world \Gls{ev} charging and traffic datasets from operational environments.
-    \item Validating simulated results against real-world observations to improve model reliability.
-    \item Improving generalizability for practical deployment in smart grid systems.
-\end{itemize}
+\vspace{0.5em}
+\noindent\textbf{Advanced Deep Learning Models:} There is still plenty of room to push things further with deep learning. Next steps could look at sequence-based models like \Gls{lstm} and \Gls{gru} networks. These were built to pick up on time-based patterns, which actually matters a lot for \Gls{ev} charging since demand shifts throughout the day. By feeding these models with historical data---like vehicle movement, \Gls{soc} levels, charging events---they can pull out trends and connections that older methods like tree-based or linear models tend to miss. Even taking it a step further by mixing in hand-picked features from simulations and then letting deep learning do the heavy lifting, such as in the refined CNN-LSTM-AM architectures \cite{ran2025ev}, can paint a much clearer picture of how load demand changes over time.
 
-\subsection{Advanced Deep Learning Models}
+\vspace{0.5em}
+\noindent\textbf{Intelligent Charging Optimization:} This study implements a rule-based smart-charging system, providing a basic method for distributing charging demand among multiple stations. However, it can be significantly improved by using intelligent optimization techniques. Future research could include advanced methods like reinforcement learning, genetic algorithms, or multi-objective optimization to enable adaptive and autonomous decision-making. These types of systems can dynamically assign vehicles to optimal charging locations by continuously learning from real-time traffic conditions, station utilization, and grid constraints. This would result in more efficient load balancing, reduced waiting times, and decreased stress on the electrical grid, ultimately contributing to a more resilient and intelligent charging infrastructure.
 
-\begin{itemize}
-    \item Exploring time series models such as \Gls{lstm} and \Gls{gru} for capturing temporal dependencies, building on refined architectures like CNN-LSTM-AM \cite{ran2025ev}.
-    \item Investigating hybrid methods by combining simulation features with deep learning.
-    \item Comparing performance with existing \Gls{ml} models for improvement evaluation.
-\end{itemize}
+\vspace{0.5em}
+\noindent\textbf{Expansion of Simulation Environment:} To further improve the generalizability and realism of the study, future research should consider the extension of the simulation environment to represent larger and more complex urban systems. This can include additional road networks, junctions, and traffic control systems. As well, modeling a wider variety of vehicle types with diverse behavioral characteristics can be included in an enhanced version of this work. Including random factors such as sudden traffic jams, accidents, or sudden demand increases will make the simulation more representative of real-world situations. Such improvements will allow researchers to evaluate the performance of load forecasting models under diverse and uncertain conditions, increasing their robustness and applicability in different urban contexts.
 
-\subsection{Intelligent Charging Optimization}
+\vspace{0.5em}
+\noindent\textbf{Integration of Renewable Energy:} The inclusion of renewable energy sources in the \Gls{ev} charging ecosystem is an important extension of this research. Future research could model charging stations powered by solar panels or hybrid power systems, analyzing how renewable energy generation can be effectively used to meet charging demand. This would require studying the temporal balance between energy generation and consumption, as well as developing energy storage and load shifting methods. Bringing renewable energy into the simulation framework pushes transportation toward sustainability and reduces dependence on the traditional power grid, making the whole setup more environmentally friendly and cost-effective.
 
-\begin{itemize}
-    \item Replacing rule-based logic with advanced optimization techniques.
-    \item Applying reinforcement learning for adaptive and real-time charging decisions.
-    \item Developing dynamic load balancing methods through multiple charging stations.
-\end{itemize}
-
-\subsection{Expansion of Simulation Environment}
-
-\begin{itemize}
-    \item Expanding the road network to cover larger and more complex urban areas.
-    \item Including additional vehicle types and heterogeneous traffic behavior to increase vehicle diversity.
-    \item Incorporating random factors such as traffic congestion variability.
-\end{itemize}
-
-\subsection{Integration of Renewable Energy}
-
-\begin{itemize}
-    \item Setting up models for charging stations which run on solar or hybrid power.
-    \item Analyzing how adding renewable energy changes load distribution and supports grid stability.
-    \item Finding ways to match \Gls{ev} charging schedules with the periods when green energy is actually available.
-\end{itemize}
-
-\subsection{Real-Time System Deployment}
-
-\begin{itemize}
-    \item Integrating prediction models directly into \Gls{iot}-based smart grids, potentially utilizing integrated frameworks like DeepBoost \cite{siddiqui2025electric} for enhanced robustness.
-    \item Ensuring systems can monitor in real time and assist in making quick decisions.
-    \item Bridging the gap between simulation-based research and real-world implementation.
-\end{itemize}
+\vspace{0.5em}
+\noindent\textbf{Real-Time System Deployment:} Finally, future research should focus on moving from simulation-based testing to deploying real-time systems. This requires integrating advanced machine learning models into \Gls{iot}-enabled smart grid infrastructures where data can be continuously collected, processed, and analyzed. Utilizing robust integrated frameworks like DeepBoost \cite{siddiqui2025electric} can offer the necessary precision for such real-time monitors. Putting real-time deployment into action means keeping an eye on charging demand as it happens, predicting future load patterns, and using automated controls to manage resources more efficiently. Rolling out these systems allows utility companies and policymakers to make smarter choices, directly connecting academic research with the physical realities of transportation and energy management.
 
 \renewcommand{\bibname}{References}
 \bibliographystyle{IEEEtran}
