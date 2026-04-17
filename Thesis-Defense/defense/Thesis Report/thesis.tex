@@ -653,12 +653,17 @@ Most of the other features are not that important. They don't add much, because 
 
 \subsection{Implemented Machine Learning Models}
 
-Four regression models were implemented and evaluated:
+We used four different regression-based machine learning models to predict the system-level \Gls{ev} charging load (\textit{system\_total\_load\_kW}). We chose models that cover both linear and nonlinear methods, which allowed us to better see how each was performing and how effective they were overall. To show how each model did, we created \textit{Actual vs. Predicted} scatter plots (Figures \ref{fig:scatter_lr}--\ref{fig:scatter_xgb}). The closer the points fall to the diagonal line ($y = x$), the more accurate the predictions are.
 
 \subsubsection*{(a) Linear Regression}
-Linear Regression models the relationship between input features and the target variable as a linear combination:
-\[ y = w_1x_1 + w_2x_2 + \dots + w_nx_n + b \]
-where $w_i$ are the learned coefficients and $b$ is the bias term. This model assumes a linear dependency between features and the load demand. Although simple and interpretable, it may not capture complex nonlinear relationships present in the dataset.
+
+Linear regression represents the relationship between input features and target variables as a simple sum of weighted values:
+\[ y = w_1x_1 + w_2x_2 + \cdots + w_nx_n + b \]
+where $w_i$ represents feature coefficients and $b$ is the bias term.
+
+In this study, this is our starting point---the baseline---mainly because it is easy to use and read. The model works internally based on the assumption that there is a linear relationship between system characteristics, such as the number of vehicles or \Gls{soc} level, and the predicted load demand. 
+
+In Figure \ref{fig:scatter_lr}, it is seen that the predicted values follow the diagonal quite closely, so the model generally fits well. However, there are some minor deviations, especially when the load values are in the low or mid-range. What we can understand from this is that the model captures the overall trend really well ($R^2$ is about 0.9993), but it stumbles a bit when it comes to handling the more complex, nonlinear parts of the system. To conclude, Linear regression works fairly well.
 
 \begin{figure}[H]
   \centering
@@ -668,12 +673,10 @@ where $w_i$ are the learned coefficients and $b$ is the bias term. This model as
 \end{figure}
 
 \subsubsection*{(b) Decision Tree Regressor}
-The Decision Tree Regressor partitions the feature space into multiple regions based on decision rules. Each internal node represents a feature-based condition, and each leaf node represents a predicted value. Instead of a mathematical equation, the model follows a hierarchical structure:
-\begin{itemize}
-    \item If a condition is satisfied $\rightarrow$ traverse left
-    \item Otherwise $\rightarrow$ traverse right
-\end{itemize}
-The final prediction is the value stored in the corresponding leaf node. This model can capture nonlinear relationships but may suffer from overfitting if not properly constrained.
+
+A decision tree regressor analyzes data using a series of decision rules. It repeatedly splits the data based on specific feature values, creating a tree in the process. Inside the tree, there are internal nodes, which act as decision checkpoints, and at the end of each branch---that is, at the leaf nodes---there remain predicted values. 
+
+This approach doesn’t limit itself to straight lines like Linear Regression does. It handles complex, nonlinear relationships pretty well. In Figure \ref{fig:scatter_dt}, every prediction lands exactly where it should, right on the diagonal: $y = x$. There’s zero error ($MAE$ and $RMSE$ are both 0, $R^2$ is 1.0). That sounds great. Finally, it can be said that the model nails the predictions, but it can’t generalize beyond this data.
 
 \begin{figure}[H]
   \centering
@@ -683,9 +686,12 @@ The final prediction is the value stored in the corresponding leaf node. This mo
 \end{figure}
 
 \subsubsection*{(c) Random Forest Regressor}
-Random Forest is an ensemble learning method that combines multiple decision trees to improve prediction accuracy and robustness. The final prediction is obtained by averaging the outputs of all trees:
+
+Random Forest generally works by combining a group of different Decision Trees, each of them trained on random chunks of the data. To make a prediction, it takes the average of all their outputs:
 \[ y = \frac{1}{N} \sum_{i=1}^{N} T_i(X) \]
-where $T_i$ represents the prediction of the $i$-th decision tree. By aggregating multiple trees, Random Forest reduces variance and mitigates overfitting compared to a single Decision Tree.
+where $T_i$ represents the prediction of the $i$-th tree.
+
+This method pulls in more stability and cuts down the variance you usually get from a single Decision Tree. In Figure \ref{fig:scatter_rf}, all the predictions land perfectly on the diagonal---just like with a Decision Tree. The evaluation metrics are flawless, which sounds great. Basically, the model is nailing every pattern in the dataset. But it’s almost too good; when a result is perfect, it’s usually one of two things: either the data is very simple and straightforward, or the model is overfitting a bit, clinging too closely to the training data. In this case, our data points are strongly deterministic. In short, Random Forest brings much-needed stability and it’s incredibly accurate.
 
 \begin{figure}[H]
   \centering
@@ -695,9 +701,12 @@ where $T_i$ represents the prediction of the $i$-th decision tree. By aggregatin
 \end{figure}
 
 \subsubsection*{(d) XGBoost Regressor}
-XGBoost (Extreme Gradient Boosting) is an advanced ensemble method that builds trees sequentially, where each new tree learns to correct the errors of the previous ones. The model can be expressed as:
+
+XGBoost (Extreme Gradient Boosting) builds one decision tree after another, and each new tree focuses on fixing the errors made by the last batch. It’s clever, it’s fast, and with tools like gradient optimization and regularization, it really shines---especially with structured data:
 \[ y = \sum_{i=1}^{M} f_i(X) \]
-where each $f_i$ represents a weak learner (decision tree). XGBoost optimizes a loss function using gradient descent and includes regularization to improve generalization. It is highly efficient and effective for structured/tabular data.
+where each $f_i$ is a weak learner (decision tree).
+
+From Figure \ref{fig:scatter_xgb}, it is noticeable that the predictions land right on the diagonal, barely straying off course. \Gls{xgboost} doesn’t just edge ahead of Decision Tree and Random Forest---it pretty much nails it, but still keeps things real. The mean absolute error ($MAE$) sits at about 0.0004, so there’s a touch of imperfection. And honestly, that’s a good sign. It means the model’s not just memorizing---it’s actually picking up on patterns. In the end, \Gls{xgboost} finds that magic balance between accuracy and generalization. Out of all the models in this study, this is the most reliable model.
 
 \begin{figure}[H]
   \centering
@@ -708,7 +717,12 @@ where each $f_i$ represents a weak learner (decision tree). XGBoost optimizes a 
 
 \subsection{Model Training and Prediction}
 
-Each model was trained using the training dataset and evaluated on the unseen test dataset. Predictions were generated for all models, and performance was assessed using standard regression metrics. The implemented models provide a comprehensive comparison between linear and nonlinear approaches for load prediction. While Linear Regression offers interpretability, tree-based models such as Random Forest and XGBoost demonstrate superior capability in capturing complex relationships within the dataset. The near-perfect performance of tree-based models indicates that the dataset exhibits strong deterministic relationships between system variables and load demand.
+After finishing the preprocessing, we split everything into training and test sets---80\% for training and 20\% for testing. That way, we could see how well the models did on data they hadn't seen before. We trained several models: Linear Regression, which finds the best-fit line by minimizing errors; and then Decision Tree, Random Forest, and \Gls{xgboost}, which use tree-based methods to pick up on more complex patterns. We only scaled the features for Linear Regression, just to keep things numerically stable. Tree-based models don't really care about scaling, so we left their features as-is.
+
+Once training wrapped up, we gave each model a chance to predict system load on the test set. Then, we compared their predictions to the actual numbers to see how close they came. To do this, we examined the mean absolute error ($MAE$), root mean squared error ($RMSE$), and $R^2$ scores. We also created an actual vs. predicted plot---if the dots were close to the diagonal, the model was doing well.
+
+The tree-based models did a really good job here---they captured all the important patterns in the data. Linear regression was not as powerful, but it still did pretty well. Overall, these models proved to be reliable in predicting \Gls{ev} charging loads, and \Gls{xgboost} came out on top as the most consistent and accurate.
+
 
 % ================================================================
 % CHAPTER 4: RESULTS AND DISCUSSION
