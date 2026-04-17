@@ -585,37 +585,15 @@ Status: Charging & 11,980 (35.2\%) \\
 Status: Waiting & 1,720 (5.1\%) \\
 Status: Idle & 610 (1.8\%) \\
 System load: Minimum (kW) & 0.00 \\
-System load: Mean (kW) & 922.62 \\
+System load: Mean (kW) & 723.82 \\
 System load: Maximum (kW) & 1,340.00 \\
-System load: Std. Dev. (kW) & 380.87 \\
+System load: Std. Dev. (kW) & 443.80 \\
 \hline
 \end{tabular}
 \end{center}
 \end{table}
 
 The resulting dataset provides a representative sample of real-world operational conditions, ranging from baseline low-activity flows to severe congestion at charging hubs, ensuring high-fidelity training for the subsequent machine learning models.
-
-\subsection{Feature Importance Analysis}
-
-Feature importance is quantified using the \textit{Gain} metric from the ensemble models, which measures the improvement in accuracy brought by a specific feature to the decision branches. Features like \textit{system\_charging\_vehicles} and \textit{station\_load\_kW} typically demonstrate the highest importance, as they directly dictate the aggregate system demand. Figure~\ref{fig:feat_imp_method} illustrates the importance distribution identified during the training phase.
-
-\begin{figure}[H]
-  \centering
-  \includegraphics[width=0.85\textwidth]{images/feature_importance.png}
-  \caption{Feature importance ranking derived from the XGBoost model branches.}
-  \label{fig:feat_imp_method}
-\end{figure}
-
-\subsection{Feature Correlation Analysis}
-
-The linear relationships between variables are analyzed using the Pearson correlation coefficient ($\rho$). This analysis confirms the strong positive correlation ($\rho \approx 0.98$) between the number of actively charging vehicles and the total power load, while identifying secondary dependencies such as the impact of battery \Gls{soc} on individual charging durations. Figure~\ref{fig:corr_matrix_method} presents the correlation matrix visualized as a heatmap.
-
-\begin{figure}[H]
-  \centering
-  \includegraphics[width=0.85\textwidth]{images/correlation_heatmap.png}
-  \caption{Pearson correlation matrix of the simulated EV charging dataset.}
-  \label{fig:corr_matrix_method}
-\end{figure}
 
 \section{Machine Learning Application}
 
@@ -642,6 +620,36 @@ Before model training, several preprocessing steps were applied to ensure data q
     \item \textbf{Feature-Target Separation:} The dataset was divided into input features ($X$) and target variable ($y$).
     \item \textbf{Train-Test Split:} The dataset was split into training (80\%) and testing (20\%) subsets using random shuffling to ensure generalization across different system states.
 \end{itemize}
+
+\subsection{Feature Correlation Analysis}
+
+Feature correlation analysis helps to see which input features are most connected to the target variable, \textit{system\_total\_load\_kW}. Here, the Pearson correlation method measures how closely each feature’s values track with the target.
+
+The \textit{system\_charging\_vehicles} has the strongest positive correlation with the target (about 0.996). In simple words, the main thing driving the system load is how many vehicles are charging at any moment. Time-based features like \textit{timestep\_sec} and \textit{minute\_of\_hour} also show strong correlations, telling us that demand ramps up as time passes during a simulation.
+
+Other broad system metrics—like \textit{system\_total\_vehicles}, \textit{system\_moving\_vehicles}, and \textit{system\_waiting\_vehicles}—also tie closely to load demand. But if you’re wondering about things like \textit{speed}, \textit{acceleration}, or \textit{status}, they barely move the needle. These features have weak or no correlation and don’t really affect the total system load.
+
+So, system-wide and time-related features play the biggest role in predicting load demand. Figure~\ref{fig:corr_matrix_method} presents the correlation matrix visualized as a heatmap.
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.85\textwidth]{images/correlation_heatmap.png}
+  \caption{Pearson correlation matrix of the simulated EV charging dataset.}
+  \label{fig:corr_matrix_method}
+\end{figure}
+
+\subsection{Feature Importance Analysis}
+
+We used the \Gls{xgboost} regressor to see which features really drive the prediction of \textit{system\_total\_load\_kW}. It turns out that \textit{timestep\_sec} is at the top, followed closely by \textit{system\_total\_vehicles} and \textit{system\_charging\_vehicles}. These three are the most important, as they reflect what is actually happening in the system---i.e., how active the systems are and how much charging is taking place.
+
+Most of the other features are not that important. They don't add much, because those core features already explain almost everything the model needs to know. So this is clear that the model relies heavily on a handful of system-level features and that's enough to achieve high prediction accuracy. Figure~\ref{fig:feat_imp_method} illustrates the importance distribution identified during the training phase.
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.85\textwidth]{images/feature_importance.png}
+  \caption{Feature importance ranking derived from the XGBoost model branches.}
+  \label{fig:feat_imp_method}
+\end{figure}
 
 \subsection{Implemented Machine Learning Models}
 
