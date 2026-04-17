@@ -730,19 +730,12 @@ The tree-based models did a really good job here---they captured all the importa
 \printchaptertitle{Results and Discussion}
 
 This chapter presents the experimental results of the SUMO-based \Gls{ev} charging
-simulation and the \Gls{ml} load prediction models, followed by a detailed discussion of
-the findings.
+simulation and the \Gls{ml} load prediction models. Detailed discussion of
+the findings are as follows -
 
 \section{Results}
 
-\subsection{System Load Profile}
-
-Over the 600-second simulation period, the system-level charging load exhibited a
-characteristic ramp-up pattern as increasing numbers of \Gls{ev}s reached charging
-stations. The mean system load was 723.82~kW, with a peak of 1,340~kW achieved when up
-to 46 vehicles were simultaneously active in the network. The standard deviation of
-380.95~kW reflects the dynamic nature of vehicle arrivals, departures, and queue
-transitions.
+The simulation really digs into how the electrical system and vehicle behaviors play out in this mixed \Gls{ev} network. Over 600 seconds, the model tracked everything at a fine level and collected a detailed dataset—34,020 records in all—catching every move and state change of the 100 vehicles in the fleet. The biggest takeaway is the \textbf{System Load Profile} shown in Figure~\ref{fig:load_profile}. Right from the start, the load ramps up quickly as cars hit the road and begin their first round of charging.
 
 \begin{figure}[htbp]
   \centering
@@ -751,31 +744,13 @@ transitions.
   \label{fig:load_profile}
 \end{figure}
 
-\subsection{Vehicle Status Distribution}
+Power demand hit its highest point at 1,340~kW when the busiest charging stations—like \texttt{pa\_8\_rev}—were packed. On average, the system pulled about 723.82~kW, but the standard deviation was pretty high at 443.80~kW. That big swing shows how unpredictable things can get; sometimes a bunch of vehicles show up all at once at intersections or charging hubs and the load jumps, then drops right after as cars finish charging and leave.
 
-Throughout the simulation, the majority of timestep-vehicle records corresponded to the
-\textit{driving} status (57.9\%), followed by \textit{charging} (35.2\%), \textit{waiting}
-(5.1\%), and \textit{idle} (1.8\%). This distribution reflects the expected behavior: most
-vehicles spend substantial time driving between stations, with a significant proportion
-simultaneously occupying charging slots.
+\textbf{Vehicle Status Distribution} shows how vehicles spend their time: most of it goes to driving—about 58\%. This means there’s always a steady flow of cars that’ll need charging soon. Around 35\% of the total records show vehicles were actually charging, and that’s the part putting real demand on the grid. Then there’s the waiting status, which shows up in about 5\% of the records. That’s a sign that some charging stations are getting overcrowded, which then leads to delays and pushes the demand to other times.
 
-\subsection{Station Utilization}
+Where all this happens isn’t random, either. The layout of the roads really matters. Certain streets—especially those with heavy traffic, like \texttt{pa\_2} and \texttt{pa\_7}—keep popping up as trouble spots where cars pile up and wait to charge. For charging demand, these high-traffic areas end up creating bottlenecks.
 
-The highest-capacity station, \texttt{pa\_8\_rev} (50~kW, 10 charging slots), contributed
-the largest share of total load when fully occupied (500~kW from a single station).
-Stations on edges with higher traffic density (\texttt{pa\_2}, \texttt{pa\_7})
-experienced earlier saturation, triggering waiting queue activations and subsequent
-queue promotions.
-
-\subsection{Charging Recommendation Results}
-
-The recommendation system generated 1,169 recommendations across the simulation. Of these,
-the majority were triggered by \textit{MEDIUM} priority (\Gls{soc}: 30--50\%), with a
-smaller proportion of \textit{HIGH} and \textit{CRITICAL} priority alerts. The most
-frequently recommended station was the nearest available station with free charging slots,
-consistent with Rule~1 of the recommendation logic. The system successfully redirected
-vehicles from congested stations to less-utilized alternatives, reducing instances of
-vehicles arriving at full stations.
+In addition to the core load demand forecasting framework, we added a charging recommendation system to make the simulation run more smoothly. This additional system provided 1,169 recommendations, directing vehicles away from crowded chargers and toward stations with sufficient space. Even though this “intelligent routing” wasn’t the core of our predictive modeling, it made sure our dataset looked like it came from a smart, well-managed charging network—not just a jumble of random traffic. That way, when we trained our machine learning models, they picked up on patterns shaped by real system tweaks, making them stronger and more practical for real-world smart grid setups.
 
 \section{Discussion of Results}
 
