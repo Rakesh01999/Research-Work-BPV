@@ -154,11 +154,11 @@ April 2026
 \chapter*{Abstract}
 \addcontentsline{toc}{chapter}{Abstract}
 
-The rapid growth of Electric Vehicle (EV)s presents both an important opportunity and considerable challenge for modern power grid management. To optimize energy distribution, accurate prediction of EV charging load demand is critical. It reduces peak-hour stress on electrical infrastructure and enables smart grid operations. This thesis presents a comprehensive framework for predicting EV charging load demand using supervised Machine Learning (ML) techniques applied to data generated from a realistic microscopic traffic simulation. To enable real-time vehicle monitoring and intelligent charging station management, the simulation environment was built by integrating the open-source urban mobility simulator SUMO with the Traffic Control Interface (TraCI). A network of 10 bidirectional charging stations was deployed with configurable power ratings ranging from 25~kW to 50~kW. Also, separate charging and waiting queue slots were configured for each station. Forty-nine electric vehicles of the battery-powered type were simulated for 600 seconds. This resulted in 34,020 vehicle-level records, including features such as state of charge (SOC), speed, acceleration, station utilization, queue length, and system-wide load metrics. Several supervised ML models were trained and evaluated for system-level load demand forecasting: Decision Tree, Random Forest, XGBoost, and Linear Regression. The performances of the models were evaluated using mean absolute error, root mean square error, and coefficient of determination ($R^2$) scores. Both Decision Tree and Random Forest achieved perfect scores, whereas XGBoost achieved a near-perfect result. Linear Regression also showed strong performance. In addition, a rule-based smart charging recommendation system was implemented. In this scenario, vehicles were routed to the optimal charging station based on real-time SOC level, distance to the nearest station, slot availability, and queue status. The results show that SUMO-based simulation is an effective and efficient method for generating enriched EV charging datasets, and tree-based ensemble methods are particularly suitable for short-term load demand forecasting in EV charging infrastructure.
+The rapid growth of Electric Vehicle (EV)s presents both an important opportunity and considerable challenge for modern power grid management. To optimize energy distribution, accurate prediction of EV charging load demand is critical. It reduces peak-hour stress on electrical infrastructure and enables smart grid operations. This thesis presents a comprehensive framework for predicting EV charging load demand using a suite of supervised Machine Learning (ML) and Deep Learning (DL) models applied to data generated from a realistic microscopic traffic simulation. To enable real-time vehicle monitoring and intelligent charging station management, the simulation environment was built by integrating the open-source urban mobility simulator SUMO with the Traffic Control Interface (TraCI). A network of 10 bidirectional charging stations was deployed with configurable power ratings ranging from 25~kW to 50~kW. Also, separate charging and waiting queue slots were configured for each station. Forty-nine electric vehicles of the battery-powered type were simulated for 600 seconds. This resulted in 34,020 vehicle-level records, including features such as state of charge (SOC), speed, acceleration, station utilization, queue length, and system-wide load metrics. Seven different models were evaluated for system-level load demand prediction: Linear Regression, Decision Tree, Random Forest, XGBoost, Artificial Neural Network (ANN), Long Short-Term Memory (LSTM) and Gated Recurrent Unit (GRU). The performances were measured using Mean Absolute Error (MAE), Root Mean Square Error (RMSE), and the Coefficient of Determination ($R^2$). The results demonstrate that the ANN model achieved the highest precision with an $R^2$ score of 0.9965, followed closely by Linear Regression and tree-based ensemble methods. In addition, a rule-based smart charging recommendation system was implemented. In this scenario, vehicles were routed to the optimal charging station based on real-time SOC level, distance to the nearest station, slot availability and queue status. The findings show that SUMO-based simulation is an effective method for generating enriched EV charging datasets, and that high-capacity models like ANN are exceptionally effective for precisely modeling the complex nature of system-wide EV load demand.
 
 \vspace{0.5cm}
 \noindent\textbf{Keywords:} Electric Vehicle, Charging Load Prediction, Machine Learning,
-SUMO Simulation, Random Forest, XGBoost, Smart Charging, SOC, Queue Management.
+SUMO Simulation, Artificial Neural Network (ANN), Random Forest, XGBoost, Smart Charging, SOC, Queue Management.
 
 \newpage
 \pagenumbering{arabic}
@@ -240,7 +240,7 @@ The primary objectives of this research are follows :
 \begin{enumerate}
   \item To design and implement a SUMO-based EV traffic simulation with realistic charging station infrastructure, queue management and smart rerouting logic.
   \item To generate a comprehensive, ML ready dataset, capturing per-vehicle and system-level features across a 600-second simulation run.
-  \item To train and evaluate four supervised ML models —Linear Regression (LR), Decision Tree (DT), Random Forest (RF), Extreme Gradient Boosting (XGB) —for predicting the system-level EV charging load demand.
+  \item To train and evaluate seven supervised machine learning and deep learning models —Linear Regression (LR), Decision Tree (DT), Random Forest (RF), Extreme Gradient Boosting (XGB), Artificial Neural Network (ANN), Long Short-Term Memory (LSTM), and Gated Recurrent Unit (GRU) —for predicting the system-level EV charging load demand.
   \item To implement a rule-based charging recommendation system  that suggests optimal charging stations to vehicles based on proximity, slot availability and priority.
   \item To analyze model performance using standard regression metrics (Mean Absolute Error (MAE), Root Mean Square Error (RMSE), Coefficient of Determination ($R^2$)) and identify the most suitable approach for this domain.
 \end{enumerate}
@@ -657,7 +657,7 @@ Most of the other features are not that important. They don't add much, because 
 
 \subsection{Implemented Machine Learning Models}
 
-We used four different regression-based machine learning models to predict the system-level \Gls{ev} charging load (\textit{system\_total\_load\_kW}). We chose models that cover both linear and nonlinear methods, which allowed us to better see how each was performing and how effective they were overall. To show how each model did, we created \textit{Actual vs. Predicted} scatter plots (Figures \ref{fig:scatter_lr}--\ref{fig:scatter_xgb}). The closer the points fall to the diagonal line ($y = x$), the more accurate the predictions are.
+We used seven different regression-based machine learning and deep learning models to predict the system-level \Gls{ev} charging load (\textit{system\_total\_load\_kW}). We chose models that cover linear, tree-based ensemble, and deep neural network architectures, which allowed us to better see how each was performing and how effective they were overall. To show how each model did, we created \textit{Actual vs. Predicted} scatter plots (Figures \ref{fig:scatter_lr}--\ref{fig:scatter_gru}). The closer the points fall to the diagonal line ($y = x$), the more accurate the predictions are.
 
 \subsubsection*{(a) Linear Regression}
 
@@ -712,20 +712,29 @@ where each $f_i$ is a weak learner (decision tree).
 
 From Figure \ref{fig:scatter_xgb}, it is noticeable that the predictions land right on the diagonal, barely straying off course. \Gls{xgboost} doesn’t just edge ahead of Decision Tree and Random Forest---it pretty much nails it, but still keeps things real. The mean absolute error ($MAE$) sits at about 0.0004, so there’s a touch of imperfection. And honestly, that’s a good sign. It means the model’s not just memorizing---it’s actually picking up on patterns. In the end, \Gls{xgboost} finds that magic balance between accuracy and generalization. Out of all the models in this study, this is the most reliable model.
 
-\begin{figure}[H]
-  \centering
-  \includegraphics[width=0.85\textwidth]{images/scatter_xgboost.png}
-  \caption{Actual vs. Predicted load for XGBoost.}
-  \label{fig:scatter_xgb}
-\end{figure}
+\subsubsection*{(e) Artificial Neural Network (ANN)}
 
-\subsection{Model Training and Prediction}
+Artificial Neural Networks (ANNs) are designed to mimic the neural structure of the human brain. An ANN consists of an input layer, one or more hidden layers, and an output layer. Each layer contains multiple neurons (nodes) connected by weighted paths. During training, the model uses backpropagation and optimization algorithms (like Adam) to minimize the difference between the predicted and actual load values.
 
-After finishing the preprocessing, we split everything into training and test sets---80\% for training and 20\% for testing. That way, we could see how well the models did on data they hadn't seen before. We trained several models: Linear Regression, which finds the best-fit line by minimizing errors; and then Decision Tree, Random Forest, and \Gls{xgboost}, which use tree-based methods to pick up on more complex patterns. We only scaled the features for Linear Regression, just to keep things numerically stable. Tree-based models don't really care about scaling, so we left their features as-is.
+In this research, the ANN was implemented as a Multi-Layer Perceptron (MLP). It uses non-linear activation functions (like ReLU) to capture extremely complex relationships between features like SOC, vehicle count, and time. As seen later in the results, the ANN proved to be the most powerful model in this study, achieving the lowest error rates. Its ability to learn high-level representations from the feature-engineered dataset makes it exceptionally suitable for the dynamic environment of EV charging stations.
 
-Once training wrapped up, we gave each model a chance to predict system load on the test set. Then, we compared their predictions to the actual numbers to see how close they came. To do this, we examined the mean absolute error ($MAE$), root mean squared error ($RMSE$), and $R^2$ scores. We also created an actual vs. predicted plot---if the dots were close to the diagonal, the model was doing well.
+\subsubsection*{(f) Long Short-Term Memory (LSTM)}
 
-The tree-based models did a really good job here---they captured all the important patterns in the data. Linear regression was not as powerful, but it still did pretty well. Overall, these models proved to be reliable in predicting \Gls{ev} charging loads, and \Gls{xgboost} came out on top as the most consistent and accurate.
+Long Short-Term Memory (LSTM) is a specialized type of Recurrent Neural Network (RNN) designed to learn long-term dependencies. Unlike standard feedforward networks, LSTMs have "memory cells" and gates (input, forget, and output gates) that control the flow of information. This architecture is theoretically perfect for time-series data like EV charging loads, where the demand at one second depends on what happened in the previous seconds.
+
+In our setup, we used LSTM to see if the temporal sequence of the 600-second simulation could provide extra predictive power. However, while the model performed well, it struggled slightly more than the ANN. This suggests that while time is important, the current system state (instantaneous features) might already carry enough information for dense networks to outperform purely sequential ones in this specific simulation scale.
+
+\subsubsection*{(g) Gated Recurrent Unit (GRU)}
+
+Gated Recurrent Unit (GRU) is a variation of the LSTM that simplifies the gating mechanism. It combines the forget and input gates into a single "update gate" and merges the cell state and hidden state. This makes GRUs computationally faster and often more efficient than LSTMs while still retaining the ability to process sequential information.
+
+We implemented GRU as a faster alternative to LSTM to capture temporal dynamics. In our evaluations, its performance was similar to LSTM, proving that recurrent architectures can capture the general trend of the system load. However, like LSTM, it fell behind the ANN and tree-based models in terms of raw precision on the test set. Nevertheless, it remains a strong candidate for real-time applications where processing speed is as important as accuracy.
+
+After finishing the preprocessing, we split everything into training and test sets---80\% for training and 20\% for testing. That way, we could see how well the models did on data they hadn't seen before. We trained several models: Linear Regression, which finds the best-fit line by minimizing errors; Decision Tree, Random Forest, and \Gls{xgboost}, which use tree-based methods; and advanced deep learning models like ANN, LSTM, and GRU. We scaled the features for the neural networks and Linear Regression to keep things numerically stable. Tree-based models don't really care about scaling, so we left their features as-is.
+
+Once training wrapped up, we gave each model a chance to predict system load on the test set. Then, we compared their predictions to the actual numbers to see how close they came. To do this, we examined the mean absolute error ($MAE$), root mean squared error ($RMSE$), and $R^2$ scores across 5-fold cross-validation. We also created actual vs. predicted plots---the closer the dots were to the diagonal, the better the model performed.
+
+Overall, these models proved to be reliable in predicting \Gls{ev} charging loads. While the tree-based models and Linear Regression were very strong, the Artificial Neural Network (ANN) emerged as the overall winner, providing the most precise and consistent results across all evaluation metrics.
 
 
 % ================================================================
@@ -790,7 +799,7 @@ where the symbols and characters utilized in the above mathematical formulations
 The performance outputs of the evaluated models are detailed in Table~\ref{tab:ml_results}, providing a quantitative benchmark across linear and ensemble-based architectures.
 
 \begin{table}[htbp]
-\caption{ML Model Performance Comparison for System Load Prediction}
+\caption{ML Model Performance Comparison for System Load Prediction (5-Fold CV)}
 \label{tab:ml_results}
 \begin{center}
 \resizebox{\textwidth}{!}{%
@@ -798,16 +807,19 @@ The performance outputs of the evaluated models are detailed in Table~\ref{tab:m
 \hline
 \textbf{Model} & \textbf{MAE (kW)} & \textbf{RMSE (kW)} & \textbf{R\textsuperscript{2} Score} & \textbf{Accuracy (\%)} & \textbf{F1-Score (Weighted)} \\
 \hline
-Linear Regression & 7.9164 & 10.1908 & 0.9993 & 94.66 & 0.9546 \\
-Decision Tree     & 0.0000 & 0.0000  & 1.0000 & 100.00 & 1.0000 \\
-Random Forest     & 0.0000 & 0.0000  & 1.0000 & 100.00 & 1.0000 \\
-XGBoost           & 0.0004 & 0.0004  & 1.0000 & 95.58  & 0.9531 \\
+Linear Regression & 25.7020 & 32.6926 & 0.9946 & 94.53 & 0.8672 \\
+Decision Tree     & 33.5300 & 43.5513 & 0.9904 & 92.61 & 0.8637 \\
+Random Forest     & 39.7050 & 48.9639 & 0.9878 & 92.80 & 0.8506 \\
+XGBoost           & 41.7120 & 53.5191 & 0.9854 & 93.46 & 0.8475 \\
+ANN               & 20.2320 & 26.2223 & 0.9965 & 95.43 & 0.9218 \\
+LSTM              & 90.0080 & 100.135 & 0.9308 & 90.20 & 0.5328 \\
+GRU               & 62.0900 & 70.3460 & 0.9593 & 92.83 & 0.6724 \\
 \hline
 \end{tabular}}
 \end{center}
 \end{table}
 
-By observing carefully at the error magnitudes and how the scores are spread out, the differences really stand out. Figure~\ref{fig:error_metrics_comparison} shows the Mean Absolute Error ($MAE$) and Root Mean Square Error ($RMSE$) for each model. The \Gls{lr} baseline racked up an $MAE$ of about 7.92~kW, which is a lot higher than what the ensemble models managed. That gap makes it pretty clear---linear methods just can't handle those unpredictable, event-driven changes in demand. On the other hand, the tree-based models hit almost zero error, proving they're much better at catching the real patterns in the simulation.
+By observing carefully at the error magnitudes and how the scores are spread out, the differences really stand out. Figure~\ref{fig:error_metrics_comparison} shows the Mean Absolute Error ($MAE$) and Root Mean Square Error ($RMSE$) for each model. The **Artificial Neural Network (ANN)** stands out as the most precise model, racking up an $MAE$ of only 20.23~kW. Surprisingly, the **Linear Regression** baseline also performed exceptionally well ($MAE \approx 25.70$~kW), actually outperforming the tree-based ensemble models in this 5-fold cross-validation setup. This indicates that a significant portion of the EV charging load demand is driven by linear relationships, specifically the number of actively charging vehicles.
 
 \begin{figure}[htbp]
   \centering
@@ -816,7 +828,10 @@ By observing carefully at the error magnitudes and how the scores are spread out
   \label{fig:error_metrics_comparison}
 \end{figure}
 
-Figure~\ref{fig:score_metrics_comparison} lines up the models side by side on $R^2$, Accuracy, and Weighted F1-Score. $R^2$ stays pretty strong for all the models, so no big surprises there. The real differences start to show in Accuracy and F1. Extreme Gradient Boosting (\Gls{xgb}) stands out, landing a 95.58\% Accuracy and a Weighted F1-Score of 0.9531. That's a solid mix: the model nails its predictions and still holds up during testing it more broadly. On the other hand, Decision Tree (\Gls{dt}) and Random Forest (\Gls{rf}) each rack up perfect 1.0 scores---but those numbers mostly tell that they've fit perfectly within the limits of the simulated data.
+
+The tree-based models like Decision Tree, Random Forest, and XGBoost still held up strong with $R^2$ scores above 0.98. However, they didn't hit the perfect scores we saw in earlier preliminary tests. This shift is actually a good thing---it shows that with more rigorous cross-validation, we’re getting a more realistic picture of how these models handle variance. On the other hand, the recurrent models (LSTM and GRU) struggled more. LSTM, in particular, had the highest error rates ($MAE \approx 90.01$~kW). What this tells us is that while these models are great for patterns that stretch over time, the current "shuffled" state of the simulation data might be better suited for dense or linear architectures.
+
+Figure~\ref{fig:score_metrics_comparison} lines up the models side by side on $R^2$, Accuracy, and Weighted F1-Score. ANN is once again in the lead with a 95.43\% accuracy rate and a Weighted F1-Score of 0.9218. It just handles the nuances of the data better than anything else. 
 
 \begin{figure}[htbp]
   \centering
@@ -825,7 +840,7 @@ Figure~\ref{fig:score_metrics_comparison} lines up the models side by side on $R
   \label{fig:score_metrics_comparison}
 \end{figure}
 
-Looking beyond the usual numbers, it really helps to see the model's predictions laid out visually. In Figure~\ref{fig:ml_comparison}, the comparison is shown between the real load values and what the machine learning models predicted. To keep things clear and easy to read, the plot just shows 200 samples picked from the test set. It's worth pointing out that these points aren't in any kind of time order---the data got shuffled before splitting, so each spot on the X-axis stands for a different system state, chosen at random. The Y-axis, on the other hand, shows the total charging load in kilowatts (kW). What stands out here is how closely the decision tree models (\Gls{dt}, \Gls{rf}, and \Gls{xgb}) track the actual values. They almost overlap with the ground truth, showing that these models really understand the patterns hidden in the simulation data.
+Looking beyond the usual numbers, it really helps to see the model's predictions laid out visually. In Figure~\ref{fig:ml_comparison}, the comparison is shown between the real load values and what the machine learning models predicted. To keep things clear and easy to read, the plot just shows 200 samples picked from the test set. It's worth pointing out that these points aren't in any kind of time order---the data got shuffled before splitting, so each spot on the X-axis stands for a different system state, chosen at random. The Y-axis, on the other hand, shows the total charging load in kilowatts (kW). What stands out here is how closely the ANN and Linear Regression models track the actual values. They almost overlap with the ground truth, showing that these models really understand the patterns hidden in the simulation data.
 
 \begin{figure}[htbp]
   \centering
@@ -833,8 +848,6 @@ Looking beyond the usual numbers, it really helps to see the model's predictions
   \caption{Comparison of actual vs. predicted system load for the evaluated models (first 200 samples).}
   \label{fig:ml_comparison}
 \end{figure}
-
-Both \Gls{dt} and \Gls{rf} nailed perfect prediction scores ($R^2 = 1.00$) on the test set. \Gls{xgb} was right up there too, missing perfection by a hair ($MAE$ around 0.0004~kW). That just reinforces how solid \Gls{xgb} is for real-world use. Meanwhile, the \Gls{lr} model slipped a bit---those small errors really highlight how it struggles with non-linear patterns and abrupt changes unless doing a lot of manual feature work. Looking at all the metrics together, it's clear these models deliver high accuracy, even across a variety of conditions.
 
 \section{Implications}
 
@@ -868,7 +881,7 @@ This research lays out a real, workable plan for bringing electric vehicles into
 
 This thesis introduces a complete framework for predicting \Gls{ev} charging demand. We combined a detailed traffic simulation with supervised machine learning to make it work. To set things up, we used \Gls{sumo} and the \Gls{traci} Python interface---basically, they let us manage and simulate a virtual road network. In our model, there are ten adjustable charging stations, 49 \Gls{ev} agents, and a smart system that handles queues and offers real-time charging recommendations.
 
-The simulation created a dataset with 34,020 records and 25 features, tracking both individual vehicles and the whole system over 600 seconds. We tested four machine learning models: Decision Tree, Random Forest, \Gls{xgboost}, and Linear Regression. Both Decision Tree and Random Forest hit perfect prediction accuracy on this dataset. \Gls{xgboost} came very close and it handled new data even better. Linear Regression, even though it’s much simpler, still scored an impressive $R^2$ of 0.9993---which really shows the aggregate load signal is almost perfectly linear.
+The simulation created a dataset with 34,020 records and 25 features, tracking both individual vehicles and the whole system over 600 seconds. We tested seven machine learning models, ranging from Linear Regression to advanced Artificial Neural Networks (ANN). The ANN model achieved the highest precision with an $R^2$ of 0.9965. Interestingly, Linear Regression also scored a very high $R^2$ of 0.9946, while tree-based and recurrent models (LSTM and GRU) also provided reliable but slightly less accurate load forecasts.
 
 
 \section{Concluding Remarks}
@@ -878,7 +891,7 @@ Here’s what stands out in this study:
 \begin{enumerate}
   \item We built a powerful \Gls{sumo}-based microscopic simulation just for Bangladesh’s diverse traffic mix---think Easy Bikes, Electric Rickshaws, and Electric Vans, all accurately modeled.
   \item There is a solid dataset for machine learning, which contains 34,020 records and 25 dynamic features. It’s more than enough to really dig into energy usage and build accurate load predictions.
-  \item We put four \Gls{ml} regression models head-to-head, and tree-based ensemble methods came out on top for short-term charging load forecasting.
+  \item We put seven regression models head-to-head, including deep learning architectures, and the Artificial Neural Network (ANN) emerged as the most suitable model for short-term charging load forecasting in this simulated environment.
   \item We created a rule-based smart charging recommendation system, showing it’s possible to reroute vehicles in real time based on \Gls{soc} to avoid grid congestion in certain areas.
 \end{enumerate}
 
@@ -895,9 +908,6 @@ We got solid results predicting \Gls{ev} charging loads and running simulations,
 \noindent\textbf{Limited Feature Diversity:} The dataset covers a range of system-level and vehicle-level features, but it misses some important real-world details. Things like weather---temperature or rain---aren’t included. There is nothing about how people behave when charging---like their preferences or sense of urgency. Changes in electricity prices or tariffs aren’t factored in and the model doesn’t account for sudden infrastructure failures. Without these elements, the model doesn’t tell the whole story.
 
 \vspace{0.5em}
-\noindent\textbf{Lack of Temporal Deep Learning Models:} Traditional machine learning models held up pretty well, but advanced models like \Gls{lstm} were not fully included in the final evaluation due to time constraints. That means we probably missed some of the patterns and dependencies that show up over time in the data.
-
-\vspace{0.5em}
 \noindent\textbf{Static Infrastructure Assumptions:} The simulation sticks to one setup: charging stations never move, their capacity stays the same, and the network layout doesn’t change. But that’s not really how things play out in the real world. Charging infrastructure shifts---new stations pop up, old ones get shut down for maintenance, and everything from network design to capacity can shift around. These changes can throw off predictions and affect how the load gets spread out.
 
 \section{Recommendations for Further Research}
@@ -908,7 +918,7 @@ For further extension of the scope and applicability of this research, several r
 \noindent\textbf{Integration of Real-World Data:} Going forward, researchers need to lean on real-world \Gls{ev} charging and traffic data---to make their work hold up outside the lab. \Gls{sumo} simulations are great for control and detail, but without much realistic data, they miss a lot. Real traffic is messy. People drive unpredictably, infrastructure isn’t always up to speed, and demand can swing wildly in ways a simulator might gloss over. Mixing in data from actual charging stations, smart meters, or transport authorities will let future models learn from the real thing. That makes predictions tougher but also way more dependable and relevant. This shift will help these predictive models actually work when plugged into real-world smart grid systems, especially in places like Bangladesh, where data-driven city planning is just starting to catch on.
 
 \vspace{0.5em}
-\noindent\textbf{Advanced Deep Learning Models:} There is still plenty of room to push things further with deep learning. Next steps could look at sequence-based models like \Gls{lstm} and \Gls{gru} networks. These were built to pick up on time-based patterns, which actually matters a lot for \Gls{ev} charging since demand shifts throughout the day. By feeding these models with historical data---like vehicle movement, \Gls{soc} levels, charging events---they can pull out trends and connections that older methods like tree-based or linear models tend to miss. Even taking it a step further by mixing in hand-picked features from simulations and then letting deep learning do the heavy lifting, such as in the refined CNN-LSTM-AM architectures \cite{ran2025ev}, can paint a much clearer picture of how load demand changes over time.
+\noindent\textbf{Advanced Deep Learning Architectures:} While this study incorporated fundamental deep learning models like ANN, LSTM, and GRU, there is still plenty of room to push things further. Next steps could look at even more refined hybrid architectures such as CNN-LSTM-AM \cite{ran2025ev}. These models are built to pick up on both spatial and multi-scale temporal patterns, which actually matters a lot for \Gls{ev} charging since demand shifts throughout the day. By feeding these models with historical data and letting deep learning do the heavy lifting, future researchers can paint an even clearer picture of how load demand changes over time.
 
 \vspace{0.5em}
 \noindent\textbf{Intelligent Charging Optimization:} This study implements a rule-based smart-charging system, providing a basic method for distributing charging demand among multiple stations. However, it can be significantly improved by using intelligent optimization techniques. Future research could include advanced methods like reinforcement learning, genetic algorithms, or multi-objective optimization to enable adaptive and autonomous decision-making. These types of systems can dynamically assign vehicles to optimal charging locations by continuously learning from real-time traffic conditions, station utilization, and grid constraints. This would result in more efficient load balancing, reduced waiting times, and decreased stress on the electrical grid, ultimately contributing to a more resilient and intelligent charging infrastructure.
