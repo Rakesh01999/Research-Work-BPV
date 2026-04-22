@@ -609,28 +609,26 @@ The input features include variables such as time progression, vehicle dynamics,
 
 \subsection{Data Preprocessing}
 
-Before model training, several preprocessing steps were applied to ensure data quality and model efficiency:
+Before training the models, some preprocessing steps were implemented to ensure data quality and model efficiency:
 \begin{itemize}
-    \item \textbf{Removal of Data Leakage:} The feature \textit{station\_load\_kW} was removed to prevent direct leakage into the target variable.
-    \item \textbf{Removal of High-Cardinality Features:} Features such as \textit{vehicle\_id}, \textit{lane\_id}, and \textit{current\_station\_id} were excluded, as they represent identifiers rather than generalizable patterns.
-    \item \textbf{Feature-Target Separation:} The dataset was divided into input features ($X$) and target variable ($y$).
-    \item \textbf{Validation Strategy (5-Fold Cross-Validation):} Instead of a simple train-test split, a 5-fold cross-validation strategy was employed to ensure robust performance evaluation. The dataset is partitioned into five equal subsets; in each iteration, four subsets are used for training and the remaining subset for testing. The final metrics reported are the mean values across all five folds, minimizing bias from a single random split.
-    \item \textbf{Temporal Aggregation and Sequencing:} To align vehicle-level simulation logs with system-level load requirements, two distinct data structures were utilized. For Classical ML and ANN models, the 34,020 raw transaction records were aggregated by timestep, resulting in 600 high-fidelity samples representing the total system state per second. For Recurrent models (LSTM and GRU), the raw dataset was transformed into a sequential format using a \textit{sliding window} of $W=5$, allowing the architectures to capture temporal dependencies across five consecutive seconds of vehicle activity.
+    \item \textbf{Removal of Data Leakage:} The 'station\_load\_kW' feature was removed to prevent direct leakage into the target variable.
+    \item \textbf{Removal of High-Cardinality Features:} Features such as:- vehicle\_id, lane\_id and current\_station\_id were excluded, as they were representing identifiers rather than generalizable patterns.
+    \item \textbf{Feature-Target Separation:} The dataset was partitioned into input features-(X) and target variable-(y).
+    \item \textbf{Validation Strategy (5-Fold Cross-Validation):} Instead of the usual random train test split, five fold cross validation method is applied to ensure strong performance evaluation. The dataset is divided into five equal subsets. In every iteration- four subsets are used for training and remaining subset for testing. The final metrics reported are the average values of five folds. Thus it minimizes bias from a single random split.
+    \item \textbf{Temporal Aggregation and Sequencing:} To align vehicle level simulation logs with system level load requirements, two distinct data structures were utilized. For Classical ML and ANN models- the 34,020 raw transaction records were aggregated by timestep. This is resulting in 600 high fidelity samples representing the total system state per second. For Recurrent models (LSTM and GRU), the raw dataset was transformed into a sequential format using a sliding window of W = 5, allowing the architectures to capture temporal dependencies through five consecutive seconds of vehicle activity.
 \end{itemize}
 
 \subsection{Deterministic Execution and Reproducibility}
 
-To ensure experimental rigor and bit-for-bit reproducible results across different training runs, a comprehensive deterministic seed block was implemented. This involves locking the global stochasticity of the environment by fixing the seeds for:
-\begin{itemize}
-    \item \texttt{PYTHONHASHSEED} (Environment level),
-    \item \texttt{random} and \texttt{numpy} (Array and sequence level),
-    \item \texttt{TensorFlow} and \texttt{TF\_DETERMINISTIC\_OPS} (Model and GPU hardware level).
-\end{itemize}
-By re-applying these seeds within each iteration of the k-fold cross-validation and during the initial weight initialization of the neural networks, the variance from random weight assignment is eliminated, providing a stable benchmark for comparative analysis.
+\begin{sloppypar}
+To ensure experimental accuracy and exactly reproducible results across different training cycles, a comprehensive deterministic seed block was implemented. This includes confining the global uncertainty of the environment by fixing seeds for the following: \texttt{PYTHONHASHSEED} (Environment level), \texttt{random} and \texttt{numpy} (Array and sequence level), \texttt{TensorFlow} and \texttt{TF\_DETERMINISTIC\_OPS} (Model and GPU hardware level).
+By reapplying these seeds within each iteration of the k-fold cross-validation and during the initial weight initialization of the neural networks- the variance from random weight assignment is eliminated. Which provides a stable benchmark for comparative analysis.
+\end{sloppypar}
 
 \subsection{Feature Correlation Analysis}
 
-Feature correlation analysis helps to see which input features are most connected to the target variable, \textit{system\_total\_load\_kW}. Here, the Pearson correlation method measures how closely each feature’s values track with the target.
+Feature correlation analysis helps to observe-which input features are most closely related to the target variable-\textit{system\_total\_load\_kW}. 
+Here the Pearson correlation method measures how closely each feature value is consistent with the target.
 
 The \textit{system\_charging\_vehicles} has the strongest positive correlation with the target (about 0.996). In simple words, the main thing driving the system load is how many vehicles are charging at any moment. Time-based features like \textit{timestep\_sec} and \textit{minute\_of\_hour} also show strong correlations, telling us that demand ramps up as time passes during a simulation.
 
@@ -660,12 +658,12 @@ Most of the other features are not that important. They don't add much, because 
 
 \subsection{Implemented Machine Learning Models}
 
-After finishing the preprocessing, the dataset was split into training and test sets---80\% for training and 20\% for testing. This ensures that the model's performance is evaluated on unseen data, testing its ability to generalize to new traffic scenarios. We implemented seven different regression-based models: Linear Regression; tree-based ensembles including Decision Tree, Random Forest, and \Gls{xgboost}; and advanced deep learning architectures such as ANN, LSTM, and GRU. To maintain numerical stability during gradient descent, feature scaling was applied using the \texttt{MinMaxScaler} for Linear Regression and all neural networks, while tree-based models were trained on raw features as they are invariant to feature magnitude.
+After preprocessing complete- the dataset was split into training and test sets. 80\% -data for training and remain 20\% for testing. It ensures that the performance of model is evaluated on unknown data, testing its ability to generalize to new traffic scenarios. We implemented seven different regression-based models: Linear Regression; tree-based ensembles including Decision Tree, Random Forest, and \Gls{xgboost}; and advanced deep learning architectures such as ANN, LSTM, and GRU. To maintain numerical stability during gradient descent, feature scaling was applied using the \texttt{MinMaxScaler} for Linear Regression and all neural networks, while tree-based models were trained on raw features as they are invariant to feature magnitude.
 
-Once the training phase concluded, each model predicted the system load on the held-out test set. Evaluation was performed using Mean Absolute Error ($MAE$), Root Mean Squared Error ($RMSE$), and $R^2$ scores across 5-fold cross-validation to ensure robustness. To visualize performance, \textit{Actual vs. Predicted} scatter plots (Figures \ref{fig:scatter_lr}--\ref{fig:scatter_gru}) were generated; closer proximity of data points to the diagonal line ($y = x$) signifies higher predictive precision.
+Once the training phase concluded, each model predicted the system load on the held-out test set. Evaluation was performed using Mean Absolute Error($MAE$), Root Mean Squared Error ($RMSE$) and $R^2$ scores through five fold cross-validation to ensure robustness. Actual vs. Predicted scatter plots (Figures \ref{fig:scatter_lr}--\ref{fig:scatter_gru}) shows the visualization of performance. Where closer proximity of data points to the diagonal line ($y = x$) signifies higher predictive precision.
 
 \subsubsection*{(a) Linear Regression}
-Linear Regression represents the relationship between independent variables and the target as a simple weighted sum. In this study, we implemented \textbf{Ridge Regression} ($L2$ regularization) with a regularization strength of $\alpha=100$. This choice was made because the system-level vehicle count has a near-linear relationship with charging load; unregularized regression risked achieving near-perfect training scores but failing to generalize. The regularization helps the model ignore noise in the aggregated simulation data, maintaining stability across the 5-fold cross-validation. The prediction is calculated as:
+Linear Regression shows the relationship between independent variables and the target as a simple weighted sum. In this research, we implemented \textbf{Ridge Regression} ($L2$ regularization). Where regularization strength of $\alpha=100$. This choice was made because the system-level vehicle count has a near linear relationship with charging load. Unregularized regression risked achieving near-perfect training scores but failing to generalize. The regularization helps model to ignore noise in the aggregated simulation data. It also maintains stability across the five fold cross-validation. The prediction is calculated as:
 \begin{equation}
     y = w_1x_1 + w_2x_2 + \dots + w_nx_n + b
 \end{equation}
@@ -679,7 +677,7 @@ where $w$ represents the weights, $x$ the features, and $b$ the intercept.
 \end{figure}
 
 \subsubsection*{(b) Decision Tree}
-A Decision Tree splits the data into branches based on feature thresholds to minimize the prediction error (variance). To avoid "memorizing" individual data points in our 600-sample dataset, we constrained the model to a maximum depth of \textit{3} and required at least \textit{30} samples per leaf node. This shallow architecture ensures that each terminal node captures at least 5\% of the training data, providing an honest and interpretable estimate of system load patterns.
+A Decision Tree splits the data into branches based on feature thresholds to minimize the prediction error(variance). To avoid individual data points-"memorizing" in our 600-sample dataset, we constrained the model to a maximum depth of \textit{3} and required at least \textit{30} samples per leaf node. This shallow architecture ensures that each terminal node captures at least 5\% of the training data. That provides an honest and interpretable estimate of system load patterns.
 
 \begin{figure}[H]
   \centering
@@ -689,7 +687,7 @@ A Decision Tree splits the data into branches based on feature thresholds to min
 \end{figure}
 
 \subsubsection*{(c) Random Forest}
-Random Forest is an ensemble of multiple decision trees, each trained on a bootstrap sample of the data. To maintain robust generalization, we implemented a constrained ensemble of \textit{50} estimators with a maximum depth of \textit{3}. Additionally, each split only considered \textit{30\%} of the available features (\textit{max\_features=0.3}). This heavy constraint prevents the forest from over-fitting to simulation-specific artifacts, ensuring the model identifies the fundamental drivers of load demand. 
+Random Forest is an ensemble of multiple decision trees. Where each trained on a bootstrap sample of the data. To maintain robust generalization, we implemented a constrained ensemble of \textit{50} estimators with a maximum depth of \textit{3}. Besides, each split only considered \textit{30\%} of the available features (\textit{max\_features=0.3}). This heavy constraint prevents the forest from over fitting to simulation-specific artifacts. Through which it is ensured that the model identifies the fundamental drivers of load demand.
 
 \begin{figure}[H]
   \centering
@@ -699,7 +697,7 @@ Random Forest is an ensemble of multiple decision trees, each trained on a boots
 \end{figure}
 
 \subsubsection*{(d) XGBoost}
-XGBoost is a powerful gradient boosting framework that builds trees sequentially, with each new tree correcting the errors of the combined group. For this implementation, we used a low learning rate (\textit{0.05}) and limited tree stumps (\textit{max\_depth=2}). We also applied strong $L1$ and $L2$ regularization ($\alpha=1, \lambda=5$) and aggressive row subsampling (\textit{0.55}). These parameters were optimized to prevent the boosting process from over-converging on the small training set, prioritizing long-term predictive stability over raw training accuracy.
+XGBoost is a powerful gradient boosting framework. It builds trees sequentially, with every new tree corrects the errors of the combined group. To apply this into our work, we used a low learning rate (\textit{0.05}) and limited tree stumps (\textit{max\_depth=2}). We also implemented strong $L1$ and $L2$ regularization ($\alpha=1, \lambda=5$) and aggressive row subsampling (\textit{0.55}). These parameters were optimized to prevent the boosting process from over converging on the small training set. Rather, it prioritizes long-term predictive stability over raw training accuracy.
 
 \begin{figure}[H]
   \centering
@@ -710,7 +708,7 @@ XGBoost is a powerful gradient boosting framework that builds trees sequentially
 
 \subsubsection*{(e) Artificial Neural Network (ANN)}
 
-In this research, the ANN was implemented as a Multi-Layer Perceptron (MLP) consisting of 18 input features, followed by three hidden layers with 128, 64, and 32 neurons, respectively. Batch Normalization and Dropout (rate of 0.2) were integrated after the first hidden layer to enhance training stability and prevent overfitting. The model uses non-linear activation functions (ReLU), the Adam optimizer (learning rate of 0.001), and a batch size of 32 for efficient weight updates. As seen in Figure \ref{fig:scatter_ann}, the ANN proved to be the most powerful model in this study, achieving the lowest error rates and tracking the diagonal very precisely. Its ability to learn high-level representations from the feature-engineered dataset makes it exceptionally suitable for the dynamic environment of EV charging stations.
+In this research, the ANN was implemented as a Multi-Layer Perceptron(MLP). Which is consisting of 18 input features and followed by three hidden layers with 128, 64, and 32 neurons, respectively. Batch Normalization and Dropout (rate of 0.2) were integrated after the first hidden layer to enhance training stability and prevent overfitting. The model uses non-linear activation functions (ReLU), the Adam optimizer (learning rate of 0.001), and a batch size of 32 for efficient weight updates. As seen in Figure \ref{fig:scatter_ann}, the ANN proved to be the most powerful model in this study, achieving the lowest error rates and tracking the diagonal very precisely. Its ability to learn high-level representations from the feature-engineered dataset makes it exceptionally suitable for the dynamic environment of EV charging stations.
 
 \begin{figure}[H]
   \centering
@@ -721,7 +719,7 @@ In this research, the ANN was implemented as a Multi-Layer Perceptron (MLP) cons
 
 \subsubsection*{(f) Long Short-Term Memory (LSTM)}
 
-In our setup, we used LSTM to see if the temporal sequence of the 600-second simulation could provide extra predictive power. The architecture consists of a 64-unit LSTM layer (with \texttt{return\_sequences=True}), followed by a 0.2 Dropout layer, a 32-unit LSTM layer, another 0.2 Dropout, and a 16-neuron Dense layer with ReLU activation. A look-back window of $W=5$ was utilized, meaning the model considers the previous five seconds of system state to predict the current load. Training was performed using the Adam optimizer and Mean Squared Error (MSE) loss, with an \textit{EarlyStopping} callback (patience of 5) to restore the best weights and prevent overfitting. However, while the model performed well, it struggled slightly more than the ANN, which is reflected in the spread of points in Figure \ref{fig:scatter_lstm}. This suggests that while time is important, the current system state (instantaneous features) might already carry enough information for dense networks to outperform purely sequential ones in this specific simulation scale.
+In our setup, we used LSTM to see if the temporal sequence of the 600-second simulation could provide extra predictive power. The architecture consists of a 64-unit LSTM layer (with \texttt{return\_sequences=True}), followed by a 0.2 Dropout layer, a 32-unit LSTM layer, another 0.2 Dropout, and a 16-neuron Dense layer with ReLU activation. A look back window of $W = 5$ was used. That means that the model considers the previous five seconds of system state to estimate the current load. Training was performed using the Adam optimizer and Mean Squared Error ($MSE$) loss, with an \textit{EarlyStopping} callback (patience of 5) to restore the best weights and prevent overfitting. However, when the model performed well, it struggled slightly more than the ANN, which is reflected in the spread of points in Figure \ref{fig:scatter_lstm}. This provides suggestion that- while time is important, the current system state (instantaneous features) might already carry enough information for dense networks to outperform purely sequential ones in this specific simulation scale.
 
 \begin{figure}[H]
   \centering
