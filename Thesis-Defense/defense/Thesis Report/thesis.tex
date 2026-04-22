@@ -900,9 +900,10 @@ This research lays out a real, workable plan for bringing electric vehicles into
 
 \printchaptertitle{Conclusion}
 
-This thesis introduces a complete framework for predicting \Gls{ev} charging demand. We combined a detailed traffic simulation with supervised machine learning to make it work. To set things up, we used \Gls{sumo} and the \Gls{traci} Python interface---basically, they let us manage and simulate a virtual road network. In our model, there are ten adjustable charging stations, 49 \Gls{ev} agents, and a smart system that handles queues and offers real-time charging recommendations.
+This thesis introduces a complete framework for predicting EV charging demand. We combined a detailed traffic simulation with supervised machine learning to make it work. To set things up, we used SUMO and the TraCI Python interface—basically, they let us manage and simulate a virtual road network. 
+In our model, there are 10 adjustable charging stations, several Electric Vehicles and a smart system that handles queues and offers real-time charging recommendations.
 
-The simulation created a dataset with 34,020 records and 25 features, tracking both individual vehicles and the whole system over 600 seconds. We tested seven machine learning models, ranging from Linear Regression to advanced Artificial Neural Networks (ANN). The ANN model achieved the highest precision with an $R^2$ of 0.9967. Interestingly, Linear Regression also scored a very high $R^2$ of 0.9946, while tree-based and recurrent models (LSTM and GRU) also provided reliable but slightly less accurate load forecasts.
+The simulation generated a dataset with 34,020 records and 25 features. Which is tracking both individual vehicles and the whole system over 600 seconds. We tested seven machine learning models, ranging from Linear Regression to advanced Artificial Neural Networks (ANN). The ANN-model achieved the highest precision with an $R^2$ of 0.9967. Interestingly, Linear Regression also scored a very high $R^2$ of 0.9946. Where tree-based and recurrent models (LSTM and GRU) also provided reliable but slightly less accurate load forecasts.
 
 
 \section{Concluding Remarks}
@@ -923,10 +924,21 @@ Our results show simulation-based data works really well when real-world \Gls{ev
 We got solid results predicting \Gls{ev} charging loads and running simulations, but there are still some real limitations here. It's important to keep these in mind when looking at what we found and thinking about how we can do better next time.
 
 \vspace{0.5em}
-\noindent\textbf{Dependence on Simulation Data:} For this research, the dataset was built using a \Gls{sumo}-based simulation instead of real traffic data. We have made great efforts to make the simulation as close to reality as possible, trying to reflect real traffic patterns and the behavior of electric vehicles. Still, simulations can only go so far. There are always those unpredictable things---how people actually drive, sudden traffic jams, or drivers charging their cars at odd times---that are tough to capture on a computer. Because of that, the model probably looks a bit better in testing than it would in the real world.
+\noindent\textbf{Dependence on Simulation Data:} 
+For this research-work, the dataset was built using a SUMO
+based simulation instead of real traffic data. We have made great efforts to make the simulation
+as close to reality as possible. Through which, we have tried to reflect real traffic patterns and the behavior of electric
+vehicles. Still, simulations can only go so far. There are always those unpredictable things—
+how people actually drive, sudden traffic jams or drivers charging their cars at odd times —that
+are tough to capture on a computer. Because of that, the model probably looks a bit better in
+testing than it would in the real world.
 
 \vspace{0.5em}
-\noindent\textbf{Limited Feature Diversity:} The dataset covers a range of system-level and vehicle-level features, but it misses some important real-world details. Things like weather---temperature or rain---aren’t included. There is nothing about how people behave when charging---like their preferences or sense of urgency. Changes in electricity prices or tariffs aren’t factored in and the model doesn’t account for sudden infrastructure failures. Without these elements, the model doesn’t tell the whole story.
+\noindent\textbf{Limited Feature Diversity:} The dataset (from the SUMO-simulation) covers a range of system-level and vehicle-level features. But it misses some important real-world details. Things like : weather—temperature or
+rain—aren’t included. There is nothing about how people behave when charging like- their
+preferences or sense of urgency . Changes in electricity prices or tariffs aren’t factored in and
+the model doesn’t account for sudden infrastructure failures. Without these elements, the model
+doesn’t tell the whole story.
 
 \vspace{0.5em}
 \noindent\textbf{Static Infrastructure Assumptions:} The simulation sticks to one setup: charging stations never move, their capacity stays the same, and the network layout doesn’t change. But that’s not really how things play out in the real world. Charging infrastructure shifts---new stations pop up, old ones get shut down for maintenance, and everything from network design to capacity can shift around. These changes can throw off predictions and affect how the load gets spread out.
@@ -939,19 +951,39 @@ For further extension of the scope and applicability of this research, several r
 \noindent\textbf{Integration of Real-World Data:} Going forward, researchers need to lean on real-world \Gls{ev} charging and traffic data---to make their work hold up outside the lab. \Gls{sumo} simulations are great for control and detail, but without much realistic data, they miss a lot. Real traffic is messy. People drive unpredictably, infrastructure isn’t always up to speed, and demand can swing wildly in ways a simulator might gloss over. Mixing in data from actual charging stations, smart meters, or transport authorities will let future models learn from the real thing. That makes predictions tougher but also way more dependable and relevant. This shift will help these predictive models actually work when plugged into real-world smart grid systems, especially in places like Bangladesh, where data-driven city planning is just starting to catch on.
 
 \vspace{0.5em}
-\noindent\textbf{Advanced Deep Learning Architectures:} While this study incorporated fundamental deep learning models like ANN, LSTM, and GRU, there is still plenty of room to push things further. Next steps could look at even more refined hybrid architectures such as CNN-LSTM-AM \cite{ran2025ev}. These models are built to pick up on both spatial and multi-scale temporal patterns, which actually matters a lot for \Gls{ev} charging since demand shifts throughout the day. By feeding these models with historical data and letting deep learning do the heavy lifting, future researchers can paint an even clearer picture of how load demand changes over time.
+\noindent\textbf{Advanced Deep Learning Architectures:} Although this study integrated fundamental deep learning models like ANN, LSTM and GRU, there is still some of space to push things further. Next steps could look at even more refined hybrid architectures such as CNN-LSTM-AM \cite{ran2025ev}. These models are built to pick up on both spatial and multi-scale temporal patterns. Which actually matters a lot for EV charging since demand shifts throughout the day. By feeding these models with historical data and letting deep learning do the heavy lifting, future researchers can paint an even clearer picture of how load demand changes over time.
 
 \vspace{0.5em}
-\noindent\textbf{Intelligent Charging Optimization:} This study implements a rule-based smart-charging system, providing a basic method for distributing charging demand among multiple stations. However, it can be significantly improved by using intelligent optimization techniques. Future research could include advanced methods like reinforcement learning, genetic algorithms, or multi-objective optimization to enable adaptive and autonomous decision-making. These types of systems can dynamically assign vehicles to optimal charging locations by continuously learning from real-time traffic conditions, station utilization, and grid constraints. This would result in more efficient load balancing, reduced waiting times, and decreased stress on the electrical grid, ultimately contributing to a more resilient and intelligent charging infrastructure.
+\noindent\textbf{Intelligent Charging Optimization:} In this study rule based smart charging system is implemented. This gives a basic method for distributing charging demand among multiple stations. Anyway, it can be significantly enhanced by using intelligent optimization techniques. Future research could include- advanced methods like reinforcement learning, genetic algorithms or
+multi-objective optimization to enable adaptive and autonomous decision-making . These kind 
+of systems can assign dynamically -vehicles to optimal charging locations , through continuous
+learning from real-time traffic conditions, station utilization and grid constraints. This would result
+in more efficient load balancing, reduced waiting times and decreased huge-pressue on the electrical
+grid. Ultimately this will be contributing to a more resilient and intelligent charging infrastructures.
 
 \vspace{0.5em}
-\noindent\textbf{Expansion of Simulation Environment:} To further improve the generalizability and realism of the study, future research should consider the extension of the simulation environment to represent larger and more complex urban systems. This can include additional road networks, junctions, and traffic control systems. As well, modeling a wider variety of vehicle types with diverse behavioral characteristics can be included in an enhanced version of this work. Including random factors such as sudden traffic jams, accidents, or sudden demand increases will make the simulation more representative of real-world situations. Such improvements will allow researchers to evaluate the performance of load forecasting models under diverse and uncertain conditions, increasing their robustness and applicability in different urban contexts.
+\noindent\textbf{Expansion of Simulation Environment:} To further enhance the generalizability and realism
+of this research work, future research should consider the extension of the simulation environment to
+represent larger and more complex urban systems. This can include- additional road networks,
+junctions and traffic control systems. As well, modeling a wider variety of vehicle types with
+diverse behavioral characteristics can be included in an improved version of this work. 
+Including randomfactors such as : suddentraffic jams, accidents or sudden demand increases will make
+the simulation more representative of real-world situations. Such improvements will allow
+ researchers to evaluate the performance of load forecasting models under diverse and uncertain
+conditions. This will increase their robustness and applicability in different urban contexts.
 
 \vspace{0.5em}
-\noindent\textbf{Integration of Renewable Energy:} The inclusion of renewable energy sources in the \Gls{ev} charging ecosystem is an important extension of this research. Future research could model charging stations powered by solar panels or hybrid power systems, analyzing how renewable energy generation can be effectively used to meet charging demand. This would require studying the temporal balance between energy generation and consumption, as well as developing energy storage and load shifting methods. Bringing renewable energy into the simulation framework pushes transportation toward sustainability and reduces dependence on the traditional power grid, making the whole setup more environmentally friendly and cost-effective.
+\noindent\textbf{Integration of Renewable Energy:} Renewable energy sources integration into the Electric Vehicle charging ecosystem can be an important expansion of this study. Future research could model
+charging stations powered by solar panels or hybrid power systems . Also could model analyzing how renew
+able energy generation can be effectively used to meet charging demand. It would require
+researching the temporal balance between energy generation and consumption, as well as 
+developing energy storage and load shifting methods. Into the simulation
+framework , by bringing renewable energy will push transportation toward sustainability . And it will reduce dependence on the
+ traditional power grid, making the whole setup more environmentally friendly and cost effective.
 
 \vspace{0.5em}
-\noindent\textbf{Real-Time System Deployment:} Finally, future research should focus on moving from simulation-based testing to deploying real-time systems. This requires integrating advanced machine learning models into \Gls{iot}-enabled smart grid infrastructures where data can be continuously collected, processed, and analyzed. Utilizing robust integrated frameworks like DeepBoost \cite{siddiqui2025electric} can offer the necessary precision for such real-time monitors. Putting real-time deployment into action means keeping an eye on charging demand as it happens, predicting future load patterns, and using automated controls to manage resources more efficiently. Rolling out these systems allows utility companies and policymakers to make smarter choices, directly connecting academic research with the physical realities of transportation and energy management.
+\noindent\textbf{Real-Time System Deployment:} 
+In the last future research should focus on moving from simulation based testing to deploying real time systems. This requires integrating advanced machine learning models into Internet of Things (IoT -enabled) smart grid infrastructures. Where data can be continuously collected, processed and analyzed. Utilizing robust integrated frameworks like DeepBoost \cite{siddiqui2025electric} can offer the necessary precision for such real-time monitors. Putting real time deployment into action means keeping an eye on charging demand as it happens, predicting future load patterns and using automated controls to manage resources more efficiently. Incorporating these systems will allow service organizations and policymakers to make more informed decisions. Moreover it'll allow directly connecting academic research to the realities of transportation and energy management.
 
 \renewcommand{\bibname}{References}
 \bibliographystyle{IEEEtran}
