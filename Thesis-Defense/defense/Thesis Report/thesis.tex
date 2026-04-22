@@ -109,22 +109,13 @@ towards a sustainable, electrified future of transportation.}
 \chapter*{Acknowledgments}
 \addcontentsline{toc}{chapter}{Acknowledgments}
 
-First and foremost, I would like to express my deepest gratitude and sincere thanks to
-my supervisor, \textbf{Monishanker Halder}, for his invaluable guidance, constant
-encouragement, and expert advice throughout this research. His/her constructive feedback
-and unwavering support were pivotal in shaping this work.
+\begin{sloppypar}
+At First, I want to express my heartfelt gratitude and sincere thanks- to my supervisor, \mbox{\textbf{Monishanker Halder}}. And this thank is just not for his invaluable guidance but also for his constant encouragement and expert advice accross this research-work. His constructive feedback and unwavering support played a key role in shaping this work.
+\end{sloppypar}
 
-I extend my appreciation to the faculty members of the Department of
-\Gls{cse} at \Gls{just} for providing an intellectually stimulating environment and for
-their continued support during my graduate studies.
+I would like to express my sincere gratitude- to the faculty members of the Computer Science and Engineering (CSE) Department of Jessore University of Science and Technology (JUST) for giving an intellectually stimulating environment and their continuous support during my graduate studies.
 
-Special thanks are due to my fellow graduate students and labmates for their camaraderie
-and many productive conversations. I also wish to acknowledge the open-source communities
-behind \Gls{sumo}, Python, scikit-learn, and XGBoost, whose tools formed the backbone of
-this research.
-
-Finally, I owe immeasurable gratitude to my family for their patience, prayers, and moral
-support. This work would not have been possible without them.
+In the last, I am immensely grateful- to my family for their patience, prayers, and moral support. Without them, this work would not have been possible.
 
 \vspace{1.5cm}
 \begin{flushright}
@@ -136,16 +127,13 @@ April 2026
 % -------------------------------------------------------
 % List of Abbreviations
 % -------------------------------------------------------
-\newpage
 \listofabbreviations
 
 % -------------------------------------------------------
 % Table of Contents / Figures / Tables
 % -------------------------------------------------------
 \tableofcontents
-\newpage
 \listoffigures
-\newpage
 \listoftables
 
 % -------------------------------------------------------
@@ -199,16 +187,16 @@ State of Charge (SOC) is a quantitative measurement which indicates the remainin
 A charging station is a road-side power supply point where electric vehicles (EVs) recharge their batteries. In simulation-based studies, charging stations are modeled as infrastructure elements . Those are connected to specific network nodes or road segments. Each station has certain characteristics, such as : charging capacity, availability, deployment strategy and charging session duration.
 
 \subsubsection{Simulation of Urban Mobility (SUMO)}
-SUMO (Simulation of Urban Mobility) is an open-source, microscopic traffic simulation platform . It is used for modeling and analyzing transportation networks. SUMO supports user-defined road networks, custom vehicle flows, routing algorithms, and mobility patterns. Through its EV extension, Sumo can simulate battery discharge, energy consumption, regenerative braking and real-time charging events. Sumo provides a controlled environment for research on the EV ecosystem in Bangladesh. Here in SUMO urban traffic behavior can be simulated and the resulting charging demand can be measured without the need for large-scale real-world experiments.
+SUMO (Simulation of Urban Mobility) \cite{sumo2018} is an open-source, microscopic traffic simulation platform. It is used for modeling and analyzing transportation networks. SUMO supports user-defined road networks, custom vehicle flows, routing algorithms, and mobility patterns. Through its EV extension, Sumo can simulate battery discharge, energy consumption, regenerative braking and real-time charging events. Sumo provides a controlled environment for research on the EV ecosystem in Bangladesh. Here in SUMO urban traffic behavior can be simulated and the resulting charging demand can be measured without the need for large-scale real-world experiments.
 
 \subsubsection{Traffic Control Interface (TraCI)}
-The Traffic Control Interface (TraCI) is SUMO's external programming interface . It allows real-time interaction between the simulation and external applications. TraCI enables dynamic control of vehicle characteristics, simulation variable extraction, traffic signal management and continuous logging of EV parameters such as SOC, speed, energy consumption and charging events. In EV load prediction research, TraCI plays an important role in automated data collection . It also integrates SUMO outputs with Python-based analytical models for prediction and visualization.
+The Traffic Control Interface (TraCI) \cite{traci2012} is SUMO's external programming interface. It allows real-time interaction between the simulation and external applications. TraCI enables dynamic control of vehicle characteristics, simulation variable extraction, traffic signal management and continuous logging of EV parameters such as SOC, speed, energy consumption and charging events. In EV load prediction research, TraCI plays an important role in automated data collection. It also integrates SUMO outputs with Python-based analytical models for prediction and visualization.
 
 \subsubsection{Power Consumption Analysis}
-Power consumption analysis refers to the study of how electric vehicles (EVs) use electricity across different driving conditions, speeds, accelerations and network paths. This includes quantifying energy consumption per route, per node and per unit distance . Which helps researchers to understand which locations or routes are putting the most pressure on the grid. In urban environments like Khulna and Jessore, this type of analysis is really significant for identifying charging hotspots, peak demand periods and areas that need infrastructure reinforcement.
+Power consumption analysis refers to the study of how electric vehicles (EVs) use electricity across different driving conditions, speeds, accelerations and network paths. This includes quantifying energy consumption per route, per node and per unit distance \cite{featurengineering_ev2022}. Which helps researchers to understand which locations or routes are putting the most pressure on the grid. In urban environments like Khulna and Jessore, this type of analysis is really significant for identifying charging hotspots, peak demand periods and areas that need infrastructure reinforcement.
 
 \subsubsection{Load Forecasting Model}
-A load forecasting model is a computational method—often statistical or machine learning-based. It is used to predict future EV charging loads using past charging shortages, route flows , traffic congestion and charging station usage patterns. These models help predict upcoming power demand, optimize the placement of charging stations. They also guide power suppliers in planning feeder capacity expansion. With the rapidly expanding use of electric vehicles in Bangladesh, such forecasts are essential to prevent transformer overloading and grid instability.
+A load forecasting model is a computational method—often statistical or machine learning-based. It is used to predict future EV charging loads using past charging shortages, route flows , traffic congestion and charging station usage patterns. These models help predict upcoming power demand, optimize the placement of charging stations \cite{ml_ev_load2021}. They also guide power suppliers in planning feeder capacity expansion. With the rapidly expanding use of electric vehicles in Bangladesh, such forecasts are essential to prevent transformer overloading and grid instability.
 
 \subsubsection{Urban EV Mobility Pattern}
 Urban electric vehicle mobility patterns refer to the characteristic movement behavior of electric vehicles within a city. It includes typical routes, peak congestion times, center-level activity , trip length and charging intervals. By understanding mobility patterns, researchers can link electric load distribution to traffic dynamics . In Bangladeshi cities —where electric vehicles like Easy Bikes, E-Rickshaws follow regular routes between markets, hospitals and government institutions. This analyzing mobility patterns becomes essential for accurate simulation modeling and load forecasting.
@@ -217,7 +205,7 @@ Urban electric vehicle mobility patterns refer to the characteristic movement be
 Queue management is an infrastructure-level process -which coordinates the flow of vehicles at a charging station. It distinguishes between active charging slots (where energy is transferred) and waiting slots (where vehicles are queuing for service). Promotion logic refers to the systematic process of moving a vehicle from a waiting state to a charging state as soon as a slot becomes available. This typically follows a first-in, first-out (FIFO) protocol to ensure fairness and simulation accuracy \cite{queue_management2023}.
 
 \subsubsection{Rule-Based Recommendation System}
-A rule-based recommendation system is a decision-making algorithm -which uses some predefined "if-then" conditional statements to suggest the best optimal actions . In the case of EV charging, this system evaluates real-time telemetry. Such as a vehicle's SOC, distance to the nearest station and current queue length to recommend the most suitable charging locations . It also balances the overall load of the network with the needs of each vehicle.
+A rule-based recommendation system is a decision-making algorithm -which uses some predefined "if-then" conditional statements to suggest the best optimal actions. In the case of EV charging, this system evaluates real-time telemetry such as a vehicle's SOC, distance to the nearest station and current queue length to recommend the most suitable charging locations \cite{demand_response2023}. It also balances the overall load of the network with the needs of each vehicle.
 
 \subsubsection{Heterogeneous EV Fleet}
 A heterogeneous EV fleet refers to a collection of different types of electric vehicles within a single simulation or study. It is characterized by different physical sizes, battery capacities and power requirements. In urban modeling in Bangladesh, this primarily includes a mix of easy bikes, electric rickshaws and electric vans . It is essential to take this diversity into account to capture the complex and uneven energy usage patterns. This is typical of real-world traffic.
@@ -353,9 +341,9 @@ This section represents the detailed technical application of proposed research 
 
 For this research-work, the simulation environment was carefully configured to support high reliably modeling of electric vehicle (EV) dynamics and charging behavior under controlled yet realistic conditions. All the experiments and tests were conducted on a 64-bit Windows 10-based workstation to ensure consistency, stability and efficient execution of both simulation and data processing tasks.
 
-The main simulation platform used in this study is \Gls{sumo} (Simulation of Urban Mobility, version 1.25.0). It is an open-source microscopic traffic simulator, globally familiar for its ability to model the dynamics of individual vehicles and its built-in support for electric mobility features, including battery management, energy consumption and charging station management \cite{sumo2018}.
+The main simulation platform used in this study is \Gls{sumo} (Simulation of Urban Mobility, version 1.25.0) \cite{sumo2018}. It is an open-source microscopic traffic simulator, globally familiar for its ability to model the dynamics of individual vehicles and its built-in support for electric mobility features, including battery management, energy consumption and charging station management \cite{sumo2018}.
 
-We built the custom road network and simulation setup using \Gls{sumo}'s NetEdit, the graphical net-editor. It lets users design and tweak everything—roads, intersections, traffic signals, even where the charging stations are placed. With this tool, we were able to shape a real traffic scenario that reflects how things are laid out in urban areas like Khulna and Jashore city. For real-time interaction, we used the \Gls{traci} (\textit{Traffic Control Interface}). \Gls{traci} makes it possible for external programs to directly control the simulation, check system states and even modify vehicle behavior on the road.
+We built the custom road network and simulation setup using \Gls{sumo}'s NetEdit, the graphical net-editor. It lets users design and tweak everything—roads, intersections, traffic signals, even where the charging stations are placed. With this tool, we were able to shape a real traffic scenario that reflects how things are laid out in urban areas like Khulna and Jashore city. For real-time interaction, we used the \Gls{traci} (\textit{Traffic Control Interface}) \cite{traci2012}. \Gls{traci} makes it possible for external programs to directly control the simulation, check system states and even modify vehicle behavior on the road.
 
 We used Python 3.10.12 as the primary scripting language to control the simulation, collect data and integrate all analysis. With \Gls{traci}, we wrote Python scripts to handle each simulation step, set up queue management, enable smart charging features and collect real-time data while the simulation was running. 
 
@@ -365,13 +353,11 @@ Overall, this integrated ecosystem ensures seamless integration between simulati
 
 \subsection{Custom Road Network Design}
 
-In this research the created simulation environment represents a high-reliably, digitally constructed road network inspired by the structure of Khulna's arterial roads. The main purpose of this design is to realistically capture urban traffic patterns, vehicle interactions and their indirect impact on electric vehicles (\Gls{ev}) charging demand . The network is modeled as a connected graph, consisting of multiple nodes and edges, with a total estimated length of 8,654 meters. 
+In this research the created simulation environment represents a high-reliably, digitally constructed road network inspired by the structure of Khulna's arterial roads. The main purpose of this design is to realistically capture urban traffic patterns, vehicle interactions and their indirect impact on electric vehicles (\Gls{ev}) charging demand . The network is modeled as a connected graph, consisting of multiple nodes and edges, with a total estimated length of 8,654 meters. The network architecture was specifically designed to evaluate how vehicle density and road geometry influence energy consumption. 
 
-Important intersections and road segments are mapped to well-known urban landmarks such as Islami Bank Intersection, Royal Intersection, PTI Intersection and Rupsha Ferry Ghat. This ensures that the simulated environment closely reflects the geographical and infrastructural features of the real world. The entire network follows a left-hand traffic (LHS) system, which is standard in Bangladesh. To make traffic patterns feel real—especially the jams and car bunching—we've used static traffic lights at the busiest intersections. That's why the system puts lights at \textbf{Node 3 (Shordar Tower)} and \textbf{Node 8 (Galaxco More)}. Each light follows a fixed 90-second cycle with four phases: 42 seconds of green for the main direction, a quick 3-second yellow, then 42 seconds of green and another 3 seconds of yellow for the cross direction. 
+Each edge in the graph represents a real road segment, with specific characteristics such as the number of lanes, permitted speeds, and priority rules. By carefully adjusting these parameters, the simulation can simulate the different traffic conditions that exist in different parts of the city.
 
-This cycle creates that classic stop-and-go traffic, which ends up making cars group together naturally. Clustering really matters here because it shapes how charging demand plays out. When a group of vehicles with low battery levels all hit the charging stations at once due to traffic delays, sudden spikes in load demand can occur. By adding controlled traffic interruptions like stoplights into the simulation, it’s possible to capture those spikes more realistically. That’s a key step to build and test models that predict load accurately. Table~\ref{tab:road_network} breaks down the road network—showing how roads connect, their distances, lane setups, and speed limits. Figure~\ref{fig:khulna_osm} gives the real-world map from OpenStreetMap, and Figure~\ref{fig:sumo_network} shows the custom microscopic layout built in \Gls{sumo}. 
-
-This carefully designed road network serves as the foundation for the simulation. It ensures accurate representation of both traffic behavior and its impact on EV charging dynamics.
+Table~\ref{tab:road_network} provides a detailed description of these configurations. A detailed information about the connections between nodes, specific critical locations and operational constraints imposed on each part.
 
 \begin{table}[H]
 \caption{Microscopic Road Network Configuration and Edge Parameters}
@@ -403,12 +389,20 @@ E10 & Node2 & Khulna Zilla School Stadium & Node7 & PTI More & 850 & 2 & 40 \\
 \end{center}
 \end{table}
 
+\newpage
+Important intersections and road segments are mapped to well-known urban landmarks such as Islami Bank Intersection, Royal Intersection, PTI Intersection and Rupsha Ferry Ghat. This ensures that the simulated environment closely reflects the geographical and infrastructural features of the real world. The entire network follows a left-hand traffic (LHS) system, which is standard in Bangladesh. The selection of Khulna City as the basis for this study is due to its rapidly developing urban infrastructure and the increasing popularity of electric three-wheelers. The landmarks mentioned are high-traffic hubs where charging demand is naturally expected to be concentrated. By anchoring the simulation to these real-world coordinates, we ensure that the results have practical relevance for local urban planning. Figure~\ref{fig:khulna_osm} highlights these arterial connections within the broader city map, illustrating the spatial relationship between the simulated edges and the actual urban grid.
+
 \begin{figure}[H]
   \centering
   \includegraphics[width=0.85\textwidth]{images/Khulna_Highlighted_OSM.png}
   \caption{OpenStreetMap (OSM) highlighted view of the Khulna City road network.}
   \label{fig:khulna_osm}
 \end{figure}
+
+\newpage
+Figure~\ref{fig:sumo_network} shows the custom microscopic layout built in \Gls{sumo} using the \texttt{netedit} tool. To make traffic patterns feel real---especially the jams and car bunching---we've used static traffic lights at the busiest intersections. That's why the system puts lights at \textbf{Node 3 (Shordar Tower)} and \textbf{Node 8 (Galaxco More)}. Each light follows a fixed 90-second cycle with four phases: 42 seconds of green for the main direction, a quick 3-second yellow, then 42 seconds of green and another 3 seconds of yellow for the cross direction. 
+
+This cycle creates that classic stop-and-go traffic, which ends up making cars group together naturally. Clustering really matters here because it shapes how charging demand plays out. When a group of vehicles with low battery levels all hit the charging stations at once due to traffic delays, sudden spikes in load demand can occur. By adding controlled traffic interruptions like stoplights into the simulation, it’s possible to capture those spikes more realistically. That’s a key step to build and test models that predict load accurately.
 
 \begin{figure}[H]
   \centering
@@ -417,7 +411,11 @@ E10 & Node2 & Khulna Zilla School Stadium & Node7 & PTI More & 850 & 2 & 40 \\
   \label{fig:sumo_network}
 \end{figure}
 
+
+
 \subsection{Charging Station Placement}
+
+The strategic selection of charging locations is a critical factor for maintaining grid stability and ensuring vehicle accessibility across the urban network \cite{charging_station_placement2021}.
 
 According to the actual data in the \texttt{Test1.chargingstations.add.xml} file, the charging stations are spread out on both the front and reverse sides of important road sections. Those road sections/edges are as: E0, E1, E5, E6, and E7. This setup covers the entire 8.6~km loop, so vehicles can always find a charging spot, no matter which way they're headed.
 
@@ -780,15 +778,23 @@ This section provides a critical analysis of the machine learning model performa
 
 \subsubsection{Evaluation Metrics}
 
-To evaluate the predictive performance of the machine learning models, three standard regression metrics were utilized: Mean Absolute Error (MAE), Root Mean Square Error (RMSE), and the Coefficient of Determination ($R^2$). These metrics are mathematically defined as follows:
+To evaluate the predictive performance and robustness of the machine learning models, seven distinct metrics were utilized. These provide a dual perspective on both predictive error and overall statistical fit. The metrics are mathematically defined as follows:
 
 \begin{enumerate}
     \item \textbf{Mean Absolute Error (MAE):} Represents the average magnitude of errors in a set of predictions, without considering their direction.
     \[ \text{MAE} = \frac{1}{n} \sum_{i=1}^{n} |y_i - \hat{y}_i| \]
-    \item \textbf{Root Mean Square Error (RMSE):} Measures the square root of the average of squared differences between prediction and actual observation.
+    \item \textbf{Mean Squared Error (MSE):} Measures the average of the squares of the errors, giving higher weight to larger deviations.
+    \[ \text{MSE} = \frac{1}{n} \sum_{i=1}^{n} (y_i - \hat{y}_i)^2 \]
+    \item \textbf{Root Mean Square Error (RMSE):} Represents the square root of the MSE, providing an error metric in the same units as the target variable.
     \[ \text{RMSE} = \sqrt{\frac{1}{n} \sum_{i=1}^{n} (y_i - \hat{y}_i)^2} \]
+    \item \textbf{Mean Absolute Percentage Error (MAPE):} Measures the accuracy as a percentage, representing the average absolute percent error for each time point.
+    \[ \text{MAPE} = \frac{100\%}{n} \sum_{i=1}^{n} \left| \frac{y_i - \hat{y}_i}{y_i} \right| \]
+    \item \textbf{Accuracy (\%):} In this regression context, accuracy is derived from the percentage error to represent how close the predictions are to the actual values.
+    \[ \text{Accuracy} = 100 - \text{MAPE} \]
     \item \textbf{Coefficient of Determination ($R^2$):} Indicates the proportion of the variance in the dependent variable that is predictable from the independent variables.
     \[ R^2 = 1 - \frac{\sum_{i=1}^{n} (y_i - \hat{y}_i)^2}{\sum_{i=1}^{n} (y_i - \bar{y})^2} \]
+    \item \textbf{Weighted F1-Score:} To evaluate the model's ability to capture specific load levels (Low, Medium, High, Peak), the continuous predictions were categorized into bins, and the weighted F1-score was calculated to account for class imbalance.
+    \[ \text{F1}_{\text{weighted}} = \sum_{j=1}^{L} \left( \frac{n_j}{n} \times \text{F1}_j \right) \]
 \end{enumerate}
 
 where the symbols and characters utilized in the above mathematical formulations are defined as follows:
@@ -797,13 +803,16 @@ where the symbols and characters utilized in the above mathematical formulations
     \item \textbf{$y_i$}: The actual (ground truth) observed value of the \textit{system\_total\_load\_kW} for the $i^{th}$ sample.
     \item \textbf{$\hat{y}_i$}: The predicted value generated by the machine learning model for the $i^{th}$ sample.
     \item \textbf{$\bar{y}$}: The arithmetic mean of all actual observed values, serving as the baseline for $R^2$ calculation.
-    \item \textbf{$\sum$}: The summation operator, representing the total sum across all $n$ samples where $i$ ranges from $1$ to $n$.
-    \item \textbf{$| \cdot |$}: The absolute value operator, used to measure the magnitude of prediction error regardless of sign.
+    \item \textbf{$L$}: The number of load categories (e.g., Low, Medium, High, Peak).
+    \item \textbf{$n_j$}: The number of samples belonging to the $j^{th}$ category.
+    \item \textbf{$\text{F1}_j$}: The F1-score calculated for the $j^{th}$ category.
+    \item \textbf{$\sum$}: The summation operator, representing the total sum across the specified range.
+    \item \textbf{$| \cdot |$}: The absolute value operator, used to measure error magnitude regardless of sign.
 \end{itemize}
 
 \subsubsection{Model Evaluation and Comparative Analysis}
 
-The performance outputs of the evaluated models are detailed in Table~\ref{tab:ml_results}, providing a quantitative benchmark across linear and ensemble-based architectures.
+Performance results of the evaluated model's are given with details in Table~\ref{tab:ml_results}. Which provides a quantitative benchmark through linear and ensemble-based architectures.
 
 \begin{table}[H]
 \caption{ML Model Performance Comparison for System Load Prediction (5-Fold CV)}
@@ -826,7 +835,7 @@ GRU               & 81.451 & 8028.416 & 89.495 & 9.2371 & 0.9444 & 90.7629 & 0.5
 \end{center}
 \end{table}
 
-The consolidated results presented in Table~\ref{tab:ml_results} provide a comprehensive quantitative overview of the performance of each model architecture—linear, tree-based, and recurrent—tested on the simulation dataset. By including seven distinct metrics, the table offers a dual perspective on both predictive error (MAE, MSE, RMSE, MAPE) and overall statistical fit ($R^2$, Accuracy, F1-Score). These numbers serve as the baseline for a more detailed comparative analysis of model stability and precision.
+The combined results presented in Table~\ref{tab:ml_results}. It gives a comprehensive quantitative overview of the performance of each model architecture—linear, tree-based and recurrent—tested on the simulation dataset. By including seven distinct metrics, the table offers a dual perspective on both predictive error (MAE, MSE, RMSE, MAPE) and overall statistical fit ($R^2$, Accuracy, F1 Score). These numbers serve as the baseline for a more detailed comparative analysis of model stability and precision.
 
 A detailed breakdown of the model error magnitudes is provided in Figure~\ref{fig:mae_mse_standalone}, which highlights the Mean Absolute Error ($MAE$) and Mean Squared Error ($MSE$) scores.
 
@@ -848,7 +857,7 @@ Further evaluation of model consistency and relative error is shown in Figure~\r
     \label{fig:rmse_mape_standalone}
 \end{figure}
 
-The tree-based models like Decision Tree, Random Forest, and XGBoost still held up strong with $R^2$ scores above 0.98. However, they didn't hit the perfect scores we saw in earlier preliminary tests. This shift is actually a good thing---it shows that with more rigorous cross-validation, we’re getting a more realistic picture of how these models handle variance. On the other hand, the recurrent models (LSTM and GRU) struggled more. LSTM, in particular, had the highest error rates ($MAE \approx 84.20$~kW and $RMSE \approx 95.92$~kW). What this tells us is that while these models are great for patterns that stretch over time, the current "shuffled" state of the simulation data might be better suited for dense or linear architectures. Figure~\ref{fig:res_r2_standalone} shows the comparative distribution of $R^2$ scores across the models.
+The tree-based models like Decision Tree, Random Forest and XGBoost still held up strong with $R^2$ scores above 0.98. However it shows that with more rigorous cross-validation, we’re getting a more realistic picture of how these models handle variance. On the other hand, the recurrent models (LSTM and GRU) struggled more. LSTM, in particular, had the highest error rates ($MAE \approx 84.20$~kW and $RMSE \approx 95.92$~kW). What this tells us is that while these models are great for patterns that stretch over time, the current "shuffled" state of the simulation data might be better suited for dense or linear architectures. Figure~\ref{fig:res_r2_standalone} shows the comparative distribution of $R^2$ scores of the models.
 
 \begin{figure}[H]
     \centering
@@ -857,7 +866,7 @@ The tree-based models like Decision Tree, Random Forest, and XGBoost still held 
     \label{fig:res_r2_standalone}
 \end{figure}
 
-Furthermore, Figure~\ref{fig:res_acc_f1_standalone} highlights the classification-based performance scores. ANN is once again in the lead with a 95.28\% accuracy rate and a Weighted F1-Score of 0.9234. It just handles the nuances of the data better than anything else. 
+Additionally, Figure~\ref{fig:res_acc_f1_standalone} shows the classification-based performance scores. ANN is again at the top with an accuracy rate of 95.28\% and a weighted F1-score of 0.9234. It handles the preciseness of the data better than anything else.
 
 \begin{figure}[H]
     \centering
@@ -909,7 +918,7 @@ The simulation generated a dataset with 34,020 records and 25 features. Which is
 Here’s what stands out in this study:
 
 \begin{enumerate}
-  \item We built a powerful \Gls{sumo}-based microscopic simulation just for Bangladesh’s diverse traffic mix---think Easy Bikes, Electric Rickshaws, and Electric Vans, all accurately modeled.
+  \item We built a powerful \Gls{sumo}-based microscopic simulation \cite{sumo2018} just for Bangladesh’s diverse traffic mix---think Easy Bikes, Electric Rickshaws, and Electric Vans, all accurately modeled.
   \item There is a solid dataset for machine learning, which contains 34,020 records and 25 dynamic features. It’s more than enough to really dig into energy usage and build accurate load predictions.
   \item We put seven regression models head-to-head, including deep learning architectures, and the Artificial Neural Network (ANN) emerged as the most suitable model for short-term charging load forecasting in this simulated environment.
   \item We created a rule-based smart charging recommendation system, showing it’s possible to reroute vehicles in real time based on \Gls{soc} to avoid grid congestion in certain areas.
