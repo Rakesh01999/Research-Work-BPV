@@ -580,24 +580,16 @@ This dataset actually captures a wide range of real-world operating conditions. 
 \hline
 \textbf{Property} & \textbf{Value} \\
 \hline
-Total records & 34,020 \\
+Total raw transactions & 34,020 \\
 Number of features & 25 \\
+Aggregated prediction samples & 600 \\
 Unique vehicles & 49 \\
-Simulation duration (s) & 1 -- 600 \\
-Status: Driving & 19,710 (57.9\%) \\
-Status: Charging & 11,980 (35.2\%) \\
-Status: Waiting & 1,720 (5.1\%) \\
-Status: Idle & 610 (1.8\%) \\
-System load: Minimum (kW) & 0.00 \\
-System load: Mean (kW) & 723.82 \\
-System load: Maximum (kW) & 1,340.00 \\
-System load: Std. Dev. (kW) & 443.80 \\
 \hline
 \end{tabular}
 \end{center}
 \end{table}
 
-The resulting dataset provides a representative sample of real-world operational conditions, ranging from baseline low-activity flows to severe congestion at charging hubs, ensuring high-fidelity training for the subsequent machine learning models.
+The dataset was then aggregated by time-step to calculate the total system load at every second, resulting in 600 high-fidelity samples for the prediction model development. This representative dataset ensures high-fidelity training for the subsequent machine learning models.
 
 \section{Machine Learning Application}
 
@@ -622,8 +614,19 @@ Before model training, several preprocessing steps were applied to ensure data q
     \item \textbf{Removal of Data Leakage:} The feature \textit{station\_load\_kW} was removed to prevent direct leakage into the target variable.
     \item \textbf{Removal of High-Cardinality Features:} Features such as \textit{vehicle\_id}, \textit{lane\_id}, and \textit{current\_station\_id} were excluded, as they represent identifiers rather than generalizable patterns.
     \item \textbf{Feature-Target Separation:} The dataset was divided into input features ($X$) and target variable ($y$).
-    \item \textbf{Train-Test Split:} The dataset was split into training (80\%) and testing (20\%) subsets using random shuffling to ensure generalization across different system states.
+    \item \textbf{Validation Strategy (5-Fold Cross-Validation):} Instead of a simple train-test split, a 5-fold cross-validation strategy was employed to ensure robust performance evaluation. The dataset is partitioned into five equal subsets; in each iteration, four subsets are used for training and the remaining subset for testing. The final metrics reported are the mean values across all five folds, minimizing bias from a single random split.
+    \item \textbf{Temporal Aggregation and Sequencing:} To align vehicle-level simulation logs with system-level load requirements, two distinct data structures were utilized. For Classical ML and ANN models, the 34,020 raw transaction records were aggregated by timestep, resulting in 600 high-fidelity samples representing the total system state per second. For Recurrent models (LSTM and GRU), the raw dataset was transformed into a sequential format using a \textit{sliding window} of $W=5$, allowing the architectures to capture temporal dependencies across five consecutive seconds of vehicle activity.
 \end{itemize}
+
+\subsection{Deterministic Execution and Reproducibility}
+
+To ensure experimental rigor and bit-for-bit reproducible results across different training runs, a comprehensive deterministic seed block was implemented. This involves locking the global stochasticity of the environment by fixing the seeds for:
+\begin{itemize}
+    \item \texttt{PYTHONHASHSEED} (Environment level),
+    \item \texttt{random} and \texttt{numpy} (Array and sequence level),
+    \item \texttt{TensorFlow} and \texttt{TF\_DETERMINISTIC\_OPS} (Model and GPU hardware level).
+\end{itemize}
+By re-applying these seeds within each iteration of the k-fold cross-validation and during the initial weight initialization of the neural networks, the variance from random weight assignment is eliminated, providing a stable benchmark for comparative analysis.
 
 \subsection{Feature Correlation Analysis}
 
@@ -657,17 +660,16 @@ Most of the other features are not that important. They don't add much, because 
 
 \subsection{Implemented Machine Learning Models}
 
-We used seven different regression-based machine learning and deep learning models to predict the system-level \Gls{ev} charging load (\textit{system\_total\_load\_kW}). We chose models that cover linear, tree-based ensemble, and deep neural network architectures, which allowed us to better see how each was performing and how effective they were overall. To show how each model did, we created \textit{Actual vs. Predicted} scatter plots (Figures \ref{fig:scatter_lr}--\ref{fig:scatter_gru}). The closer the points fall to the diagonal line ($y = x$), the more accurate the predictions are.
+After finishing the preprocessing, the dataset was split into training and test sets---80\% for training and 20\% for testing. This ensures that the model's performance is evaluated on unseen data, testing its ability to generalize to new traffic scenarios. We implemented seven different regression-based models: Linear Regression; tree-based ensembles including Decision Tree, Random Forest, and \Gls{xgboost}; and advanced deep learning architectures such as ANN, LSTM, and GRU. To maintain numerical stability during gradient descent, feature scaling was applied using the \texttt{MinMaxScaler} for Linear Regression and all neural networks, while tree-based models were trained on raw features as they are invariant to feature magnitude.
+
+Once the training phase concluded, each model predicted the system load on the held-out test set. Evaluation was performed using Mean Absolute Error ($MAE$), Root Mean Squared Error ($RMSE$), and $R^2$ scores across 5-fold cross-validation to ensure robustness. To visualize performance, \textit{Actual vs. Predicted} scatter plots (Figures \ref{fig:scatter_lr}--\ref{fig:scatter_gru}) were generated; closer proximity of data points to the diagonal line ($y = x$) signifies higher predictive precision.
 
 \subsubsection*{(a) Linear Regression}
-
-Linear regression represents the relationship between input features and target variables as a simple sum of weighted values:
-\[ y = w_1x_1 + w_2x_2 + \cdots + w_nx_n + b \]
-where $w_i$ represents feature coefficients and $b$ is the bias term.
-
-In this study, this is our starting point---the baseline---mainly because it is easy to use and read. The model works internally based on the assumption that there is a linear relationship between system characteristics, such as the number of vehicles or \Gls{soc} level, and the predicted load demand. 
-
-In Figure \ref{fig:scatter_lr}, it is seen that the predicted values follow the diagonal quite closely, so the model generally fits well. What we can understand from this is that the model captures the overall trend really well ($R^2 \approx 0.9946$), but it stumbles a bit when it comes to handling the more complex, nonlinear parts of the system. To conclude, Linear regression works fairly well.
+Linear Regression represents the relationship between independent variables and the target as a simple weighted sum. In this study, we implemented \textbf{Ridge Regression} ($L2$ regularization) with a regularization strength of $\alpha=100$. This choice was made because the system-level vehicle count has a near-linear relationship with charging load; unregularized regression risked achieving near-perfect training scores but failing to generalize. The regularization helps the model ignore noise in the aggregated simulation data, maintaining stability across the 5-fold cross-validation. The prediction is calculated as:
+\begin{equation}
+    y = w_1x_1 + w_2x_2 + \dots + w_nx_n + b
+\end{equation}
+where $w$ represents the weights, $x$ the features, and $b$ the intercept.
 
 \begin{figure}[H]
   \centering
@@ -676,11 +678,8 @@ In Figure \ref{fig:scatter_lr}, it is seen that the predicted values follow the 
   \label{fig:scatter_lr}
 \end{figure}
 
-\subsubsection*{(b) Decision Tree Regressor}
-
-A decision tree regressor analyzes data using a series of decision rules. It repeatedly splits the data based on specific feature values, creating a tree in the process. Inside the tree, there are internal nodes, which act as decision checkpoints, and at the end of each branch---that is, at the leaf nodes---there remain predicted values. 
-
-This approach doesn’t limit itself to straight lines like Linear Regression does. It handles complex, nonlinear relationships pretty well. In Figure \ref{fig:scatter_dt}, the predictions follow the diagonal quite closely. While the initial fit during training was near-perfect, rigorous 5-fold cross-validation revealed a solid $R^2$ score of approximately 0.9904, demonstrating high capacity but confirming the need for robust validation. Finally, it can be said that the model nails the main patterns, but still leaves some room for generalization.
+\subsubsection*{(b) Decision Tree}
+A Decision Tree splits the data into branches based on feature thresholds to minimize the prediction error (variance). To avoid "memorizing" individual data points in our 600-sample dataset, we constrained the model to a maximum depth of \textit{3} and required at least \textit{30} samples per leaf node. This shallow architecture ensures that each terminal node captures at least 5\% of the training data, providing an honest and interpretable estimate of system load patterns.
 
 \begin{figure}[H]
   \centering
@@ -689,13 +688,8 @@ This approach doesn’t limit itself to straight lines like Linear Regression do
   \label{fig:scatter_dt}
 \end{figure}
 
-\subsubsection*{(c) Random Forest Regressor}
-
-Random Forest generally works by combining a group of different Decision Trees, each of them trained on random chunks of the data \cite{rf_load_forecast2020}. To make a prediction, it takes the average of all their outputs:
-\[ y = \frac{1}{N} \sum_{i=1}^{N} T_i(X) \]
-where $T_i$ represents the prediction of the $i$-th tree.
-
-This method pulls in more stability and cuts down the variance usually getting from a single Decision Tree. In Figure \ref{fig:scatter_rf}, most of the predictions land along the diagonal. The evaluation metrics are very strong ($R^2 \approx 0.9878$), confirming the model is nailing every pattern in the dataset. But it’s almost too good; when a result is this high, it’s usually one of two things: either the data is very simple and straightforward, or the model is starting to overfit. In this case, our data points are strongly deterministic. In short, Random Forest brings much-needed stability and it’s incredibly accurate.
+\subsubsection*{(c) Random Forest}
+Random Forest is an ensemble of multiple decision trees, each trained on a bootstrap sample of the data. To maintain robust generalization, we implemented a constrained ensemble of \textit{50} estimators with a maximum depth of \textit{3}. Additionally, each split only considered \textit{30\%} of the available features (\textit{max\_features=0.3}). This heavy constraint prevents the forest from over-fitting to simulation-specific artifacts, ensuring the model identifies the fundamental drivers of load demand. 
 
 \begin{figure}[H]
   \centering
@@ -704,13 +698,8 @@ This method pulls in more stability and cuts down the variance usually getting f
   \label{fig:scatter_rf}
 \end{figure}
 
-\subsubsection*{(d) XGBoost Regressor}
-
-XGBoost (Extreme Gradient Boosting) builds one decision tree after another, and each new tree focuses on fixing the errors made by the last batch. It’s clever, it’s fast, and with tools like gradient optimization and regularization, it really shines---especially with structured data \cite{xgboost_energy2022}:
-\[ y = \sum_{i=1}^{M} f_i(X) \]
-where each $f_i$ is a weak learner (decision tree).
-
-From Figure \ref{fig:scatter_xgb}, it is noticeable that the predictions land right on the diagonal, barely straying off course. \Gls{xgboost} doesn’t just edge ahead of Decision Tree and Random Forest---it pretty much nails it, but still keeps things real. The cross-validated mean absolute error ($MAE$) sits at about 41.71~kW, which is a good sign. It means the model’s not just memorizing---it’s actually picking up on patterns. In the end, \Gls{xgboost} finds that magic balance between accuracy and generalization.
+\subsubsection*{(d) XGBoost}
+XGBoost is a powerful gradient boosting framework that builds trees sequentially, with each new tree correcting the errors of the combined group. For this implementation, we used a low learning rate (\textit{0.05}) and limited tree stumps (\textit{max\_depth=2}). We also applied strong $L1$ and $L2$ regularization ($\alpha=1, \lambda=5$) and aggressive row subsampling (\textit{0.55}). These parameters were optimized to prevent the boosting process from over-converging on the small training set, prioritizing long-term predictive stability over raw training accuracy.
 
 \begin{figure}[H]
   \centering
@@ -721,9 +710,7 @@ From Figure \ref{fig:scatter_xgb}, it is noticeable that the predictions land ri
 
 \subsubsection*{(e) Artificial Neural Network (ANN)}
 
-Artificial Neural Networks (ANNs) are designed to mimic the neural structure of the human brain. An ANN consists of an input layer, one or more hidden layers, and an output layer. Each layer contains multiple neurons (nodes) connected by weighted paths. During training, the model uses backpropagation and optimization algorithms (like Adam) to minimize the difference between the predicted and actual load values.
-
-In this research, the ANN was implemented as a Multi-Layer Perceptron (MLP). It uses non-linear activation functions (like ReLU) to capture extremely complex relationships between features like SOC, vehicle count, and time. As seen in Figure \ref{fig:scatter_ann}, the ANN proved to be the most powerful model in this study, achieving the lowest error rates and tracking the diagonal very precisely. Its ability to learn high-level representations from the feature-engineered dataset makes it exceptionally suitable for the dynamic environment of EV charging stations.
+In this research, the ANN was implemented as a Multi-Layer Perceptron (MLP) consisting of 18 input features, followed by three hidden layers with 128, 64, and 32 neurons, respectively. Batch Normalization and Dropout (rate of 0.2) were integrated after the first hidden layer to enhance training stability and prevent overfitting. The model uses non-linear activation functions (ReLU), the Adam optimizer (learning rate of 0.001), and a batch size of 32 for efficient weight updates. As seen in Figure \ref{fig:scatter_ann}, the ANN proved to be the most powerful model in this study, achieving the lowest error rates and tracking the diagonal very precisely. Its ability to learn high-level representations from the feature-engineered dataset makes it exceptionally suitable for the dynamic environment of EV charging stations.
 
 \begin{figure}[H]
   \centering
@@ -734,9 +721,7 @@ In this research, the ANN was implemented as a Multi-Layer Perceptron (MLP). It 
 
 \subsubsection*{(f) Long Short-Term Memory (LSTM)}
 
-Long Short-Term Memory (LSTM) is a specialized type of Recurrent Neural Network (RNN) designed to learn long-term dependencies. Unlike standard feedforward networks, LSTMs have "memory cells" and gates (input, forget, and output gates) that control the flow of information. This architecture is theoretically perfect for time-series data like EV charging loads, where the demand at one second depends on what happened in the previous seconds.
-
-In our setup, we used LSTM to see if the temporal sequence of the 600-second simulation could provide extra predictive power. However, while the model performed well, it struggled slightly more than the ANN, which is reflected in the spread of points in Figure \ref{fig:scatter_lstm}. This suggests that while time is important, the current system state (instantaneous features) might already carry enough information for dense networks to outperform purely sequential ones in this specific simulation scale.
+In our setup, we used LSTM to see if the temporal sequence of the 600-second simulation could provide extra predictive power. The architecture consists of a 64-unit LSTM layer (with \texttt{return\_sequences=True}), followed by a 0.2 Dropout layer, a 32-unit LSTM layer, another 0.2 Dropout, and a 16-neuron Dense layer with ReLU activation. A look-back window of $W=5$ was utilized, meaning the model considers the previous five seconds of system state to predict the current load. Training was performed using the Adam optimizer and Mean Squared Error (MSE) loss, with an \textit{EarlyStopping} callback (patience of 5) to restore the best weights and prevent overfitting. However, while the model performed well, it struggled slightly more than the ANN, which is reflected in the spread of points in Figure \ref{fig:scatter_lstm}. This suggests that while time is important, the current system state (instantaneous features) might already carry enough information for dense networks to outperform purely sequential ones in this specific simulation scale.
 
 \begin{figure}[H]
   \centering
@@ -749,7 +734,7 @@ In our setup, we used LSTM to see if the temporal sequence of the 600-second sim
 
 Gated Recurrent Unit (GRU) is a variation of the LSTM that simplifies the gating mechanism. It combines the forget and input gates into a single "update gate" and merges the cell state and hidden state. This makes GRUs computationally faster and often more efficient than LSTMs while still retaining the ability to process sequential information.
 
-We implemented GRU as a faster alternative to LSTM to capture temporal dynamics. In our evaluations, its performance was similar to LSTM, proving that recurrent architectures can capture the general trend of the system load. However, as illustrated in the scatter plot in Figure \ref{fig:scatter_gru}, it fell behind the ANN and tree-based models in terms of raw precision on the test set. Nevertheless, it remains a strong candidate for real-time applications where processing speed is as important as accuracy.
+We implemented GRU as a faster alternative to LSTM to capture temporal dynamics, utilizing an identical structure consisting of stacked \textit{64} and \textit{32}-unit GRU layers with intervening \textit{Dropout} (0.2). As with the LSTM architecture, a final \textit{16}-neuron fully connected layer with ReLU activation is used to process the features before prediction. In our evaluations, its performance was similar to LSTM, proving that recurrent architectures can capture the general trend of the system load. However, as illustrated in the scatter plots, it fell behind the ANN and tree-based models in terms of raw precision on the test set. Nevertheless, it remains a strong candidate for real-time applications where processing speed is as critical as accuracy.
 
 \begin{figure}[H]
   \centering
@@ -758,11 +743,7 @@ We implemented GRU as a faster alternative to LSTM to capture temporal dynamics.
   \label{fig:scatter_gru}
 \end{figure}
 
-After finishing the preprocessing, we split everything into training and test sets---80\% for training and 20\% for testing. That way, we could see how well the models did on data they hadn't seen before. We trained several models: Linear Regression, which finds the best-fit line by minimizing errors; Decision Tree, Random Forest, and \Gls{xgboost}, which use tree-based methods; and advanced deep learning models like ANN, LSTM, and GRU. We scaled the features for the neural networks and Linear Regression to keep things numerically stable. Tree-based models don't really care about scaling, so we left their features as-is.
 
-Once training wrapped up, we gave each model a chance to predict system load on the test set. Then, we compared their predictions to the actual numbers to see how close they came. To do this, we examined the mean absolute error ($MAE$), root mean squared error ($RMSE$), and $R^2$ scores across 5-fold cross-validation. We also created actual vs. predicted plots---the closer the dots were to the diagonal, the better the model performed.
-
-Overall, these models proved to be reliable in predicting \Gls{ev} charging loads. While the tree-based models and Linear Regression were very strong, the Artificial Neural Network (ANN) emerged as the overall winner, providing the most precise and consistent results across all evaluation metrics.
 
 
 % ================================================================
@@ -778,7 +759,7 @@ the findings are as follows -
 
 The simulation really digs into how the electrical system and vehicle behaviors play out in this mixed \Gls{ev} network. Over 600 seconds, the model tracked everything at a fine level and collected a detailed dataset—34,020 records in all—catching every move and state change of the 49 vehicles in the fleet. The biggest takeaway is the \textbf{System Load Profile} shown in Figure~\ref{fig:load_profile}. Right from the start, the load ramps up quickly as cars hit the road and begin their first round of charging.
 
-\begin{figure}[htbp]
+\begin{figure}[H]
   \centering
   \includegraphics[width=0.85\textwidth]{images/System_total_charging_load.png}
   \caption{System total charging load over simulation time (1--600 seconds).}
@@ -826,7 +807,7 @@ where the symbols and characters utilized in the above mathematical formulations
 
 The performance outputs of the evaluated models are detailed in Table~\ref{tab:ml_results}, providing a quantitative benchmark across linear and ensemble-based architectures.
 
-\begin{table}[htbp]
+\begin{table}[H]
 \caption{ML Model Performance Comparison for System Load Prediction (5-Fold CV)}
 \label{tab:ml_results}
 \begin{center}
@@ -839,7 +820,7 @@ Linear Regression & 25.702 & 1068.805 & 32.693 & 5.4650 & 0.9946 & 94.5349 & 0.8
 Decision Tree     & 33.530 & 1896.711 & 43.551 & 7.3890 & 0.9904 & 92.6109 & 0.8637 \\
 Random Forest     & 39.705 & 2397.463 & 48.964 & 7.1990 & 0.9878 & 92.8006 & 0.8506 \\
 XGBoost           & 41.712 & 2864.295 & 53.519 & 6.5350 & 0.9854 & 93.4646 & 0.8475 \\
-ANN (Proposed)    & 19.205 & 647.896  & 25.454 & 4.7201 & 0.9967 & 95.2799 & 0.9234 \\
+ANN (Proposed)    & 19.205 & 647.896  & 25.454 & 4.7200 & 0.9967 & 95.2799 & 0.9234 \\
 LSTM              & 84.202 & 9200.632 & 95.920 & 8.7093 & 0.9365 & 91.2907 & 0.5427 \\
 GRU               & 81.451 & 8028.416 & 89.495 & 9.2371 & 0.9444 & 90.7629 & 0.5723 \\
 \hline
@@ -847,16 +828,22 @@ GRU               & 81.451 & 8028.416 & 89.495 & 9.2371 & 0.9444 & 90.7629 & 0.5
 \end{center}
 \end{table}
 
-By observing carefully at the error magnitudes and how the scores are spread out, the differences really stand out. Figures~\ref{fig:mae_mse_standalone} and \ref{fig:rmse_mape_standalone} present a comprehensive breakdown of the regression metrics, including Mean Absolute Error ($MAE$), Mean Squared Error ($MSE$), Root Mean Square Error ($RMSE$), and Mean Absolute Percentage Error ($MAPE$). The \textbf{Artificial Neural Network (ANN)} stands out as the most precise model, racking up an $MAE$ of only 19.205~kW and an exceptionally low $MSE$ of 647.896~kW$^2$ compared to the ensemble and recurrent architectures. Surprisingly, the \textbf{Linear Regression} baseline also performed exceptionally well ($MAE \approx 25.702$~kW), actually outperforming the tree-based ensemble models in terms of regression error. This indicates that a significant portion of the EV charging load demand is driven by linear relationships, specifically the number of actively charging vehicles.
+The consolidated results presented in Table~\ref{tab:ml_results} provide a comprehensive quantitative overview of the performance of each model architecture—linear, tree-based, and recurrent—tested on the simulation dataset. By including seven distinct metrics, the table offers a dual perspective on both predictive error (MAE, MSE, RMSE, MAPE) and overall statistical fit ($R^2$, Accuracy, F1-Score). These numbers serve as the baseline for a more detailed comparative analysis of model stability and precision.
 
-\begin{figure}[htbp]
+A detailed breakdown of the model error magnitudes is provided in Figure~\ref{fig:mae_mse_standalone}, which highlights the Mean Absolute Error ($MAE$) and Mean Squared Error ($MSE$) scores.
+
+\begin{figure}[H]
     \centering
     \includegraphics[width=0.95\textwidth]{images/result_mae_mse.png}
     \caption{Mean Absolute Error (MAE) and Mean Squared Error (MSE) comparison across models.}
     \label{fig:mae_mse_standalone}
 \end{figure}
 
-\begin{figure}[htbp]
+By observing the error magnitudes, the \textbf{Artificial Neural Network (ANN)} stands out as the most precise model, racking up $MAE$ values of only 19.21~kW and demonstrating the lowest variance in squared error ($MSE$). The \textbf{Linear Regression} baseline also performed exceptionally well ($MAE \approx 25.70$~kW), actually outperforming the tree-based ensemble models like Random Forest and XGBoost in terms of regression error on this specific dataset. This indicates that a significant portion of the EV charging load demand is driven by linear relationships, specifically the number of actively charging vehicles.
+
+Further evaluation of model consistency and relative error is shown in Figure~\ref{fig:rmse_mape_standalone}, which compares the Root Mean Square Error ($RMSE$) and Mean Absolute Percentage Error ($MAPE$).
+
+\begin{figure}[H]
     \centering
     \includegraphics[width=0.95\textwidth]{images/result_rmse_mape.png}
     \caption{Root Mean Square Error (RMSE) and Mean Absolute Percentage Error (MAPE) comparison.}
@@ -865,7 +852,7 @@ By observing carefully at the error magnitudes and how the scores are spread out
 
 The tree-based models like Decision Tree, Random Forest, and XGBoost still held up strong with $R^2$ scores above 0.98. However, they didn't hit the perfect scores we saw in earlier preliminary tests. This shift is actually a good thing---it shows that with more rigorous cross-validation, we’re getting a more realistic picture of how these models handle variance. On the other hand, the recurrent models (LSTM and GRU) struggled more. LSTM, in particular, had the highest error rates ($MAE \approx 84.20$~kW and $RMSE \approx 95.92$~kW). What this tells us is that while these models are great for patterns that stretch over time, the current "shuffled" state of the simulation data might be better suited for dense or linear architectures. Figure~\ref{fig:res_r2_standalone} shows the comparative distribution of $R^2$ scores across the models.
 
-\begin{figure}[htbp]
+\begin{figure}[H]
     \centering
     \includegraphics[width=0.85\textwidth]{images/result_r2.png}
     \caption{Coefficient of Determination ($R^2$) Score distribution for supervised machine learning and deep learning models.}
@@ -874,25 +861,18 @@ The tree-based models like Decision Tree, Random Forest, and XGBoost still held 
 
 Furthermore, Figure~\ref{fig:res_acc_f1_standalone} highlights the classification-based performance scores. ANN is once again in the lead with a 95.28\% accuracy rate and a Weighted F1-Score of 0.9234. It just handles the nuances of the data better than anything else. 
 
-\begin{figure}[htbp]
+\begin{figure}[H]
     \centering
     \includegraphics[width=0.95\textwidth]{images/result_accuracy_f1.png}
     \caption{Comparative performance distribution for Accuracy and Weighted F1-Score.}
     \label{fig:res_acc_f1_standalone}
 \end{figure}
 
-Looking beyond the usual numbers, it really helps to see the model's predictions laid out visually. In Figure~\ref{fig:ml_comparison}, the comparison is shown between the real load values and what the machine learning models predicted. To keep things clear and easy to read, the plot just shows 200 samples picked from the test set. It's worth pointing out that these points aren't in any kind of time order---the data got shuffled before splitting, so each spot on the X-axis stands for a different system state, chosen at random. The Y-axis, on the other hand, shows the total charging load in kilowatts (kW). What stands out here is how closely the ANN and Linear Regression models track the actual values. They almost overlap with the ground truth, showing that these models really understand the patterns hidden in the simulation data.
 
-\begin{figure}[htbp]
-  \centering
-  \includegraphics[width=0.85\textwidth]{images/actual_vs_predicted.png}
-  \caption{Comparison of actual vs. predicted system load for the evaluated models (first 200 samples).}
-  \label{fig:ml_comparison}
-\end{figure}
 
 \section{Implications}
 
-The results of this research provide important insights into load forecasting, smart charging infrastructure, and data-driven urban energy management based on electric vehicles. The implications extend to grid management, urban planning, and intelligent system design, especially in the context of developing cities like Khulna.
+The results of this study provide important insights into load forecasting, smart charging infrastructure and data driven urban energy management based on electric vehicles. The implications extend to grid management, urban planning and intelligent system design. Specially in the context of developing cities like Khulna.
 
 \subsection{Grid and Charging Network Management}
 
