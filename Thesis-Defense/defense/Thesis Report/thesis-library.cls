@@ -143,12 +143,12 @@
  {\authorname}\\[1cm]  %0.75
 
   {\supervisorsign}\\[1cm]
- {\par\noindent\rule{0.5\textwidth}{1pt}}\\[2cm]
- %{\supervisorNameStyle}\\[1cm]  %0.75
+ {\par\noindent\rule{0.5\textwidth}{1pt}}\\[0.0cm]
+ {\supervisorName}\\[2cm]  %0.75
 
-  % {\cosupervisorsign}\\[1cm]
+ %  {\cosupervisorsign}\\[1cm]
  % {\par\noindent\rule{0.5\textwidth}{1pt}}\\[0.0cm]
- % %{\cosupervisorNameStyle}\\[0.1cm]  %0.75
+ %{\cosupervisorNameStyle}\\[0.1cm]  %0.75
 
 \end{center}
 \end{titlepage}

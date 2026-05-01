@@ -598,7 +598,9 @@ Various supervised learning algorithms have been used in this project to estimat
 
 \subsection{Problem Formulation}
 Load prediction may be formally defined as follows:
-\[ y = f(X) \]
+\begin{equation}
+    y = f(X)
+\end{equation}
 where:
 \begin{itemize}
     \item $y$ refers to the output variable (\textit{system\_total\_load\_kW}),
@@ -782,18 +784,33 @@ Seven unique measures were adopted to measure the predictive performance and the
 
 \begin{enumerate}
 	\item \textbf{Mean Absolute Error (MAE)} - It reflects the average absolute value of errors without taking into consideration the direction of errors.
-	\[ \text{MAE} = \frac{1}{n} \sum_{i=1}^{n} |y_i - \hat{y}_i| \]
+	\begin{equation}
+    \text{MAE} = \frac{1}{n} \sum_{i=1}^{n} |y_i - \hat{y}_i|
+\end{equation}
 	\item \textbf{Mean Squared Error (MSE)} - It reflects the average of squared errors that gives more importance to large errors.
-	\[ \text{MSE} = \frac{1}{n} \sum_{i=1}^{n} (y_i - \hat{y}_i)^2 \] 
+	\begin{equation}
+    \text{MSE} = \frac{1}{n} \sum_{i=1}^{n} (y_i - \hat{y}_i)^2
+\end{equation} 
 	\item \textbf{Root Mean Square Error (RMSE)} - This reflects the square root of MSE giving an error metric that is comparable to the units of the dependent variable.
-	\[ \text{RMSE} = \sqrt{\frac{1}{n} \sum_{i=1}^{n} (y_i - \hat{y}_i)^2} \]
+	\begin{equation}
+    \text{RMSE} = \sqrt{\frac{1}{n} \sum_{i=1}^{n} (y_i - \hat{y}_i)^2}
+\end{equation}
 	\item \textbf{Mean Absolute Percentage Error (MAPE)} - It represents accuracy in percentages reflecting the average absolute percent error at each time point.
-	\[ \text{MAPE} = \frac{100\%}{n} \sum_{i=1}^{n} \left| \frac{y_i - \hat{y}_i}{y_i} \right| \]
+	\begin{equation}
+    \text{MAPE} = \frac{100\%}{n} \sum_{i=1}^{n} \left| \frac{y_i - \hat{y}_i}{y_i} \right|
+\end{equation}
 	\item \textbf{Accuracy (\%)} - As for regression problem, accuracy is computed by using MAPE.  
-	\[ \text{Accuracy} = 100 - \text{MAPE} \]
+	\begin{equation}
+    \text{Accuracy} = 100 - \text{MAPE}
+\end{equation}
 	\item \textbf{Coefficient of Determination ($R^2$)} - It shows the fraction of total variance explained by the regression model.
-	\[ R^2 = 1 - \frac{\sum_{i=1}^{n} (y_i - \hat{y}_i)^2}{\sum_{i=1}^{n} (y_i - \bar{y})^2} \]
-	\item \textbf{Weighted F1-Score} - In order to analyze whether the model is able to capture specific
+	\begin{equation}
+    R^2 = 1 - \frac{\sum_{i=1}^{n} (y_i - \hat{y}_i)^2}{\sum_{i=1}^{n} (y_i - \bar{y})^2}
+\end{equation}
+	\item \textbf{Weighted F1-Score} - In order to analyze whether the model is able to capture specific load levels (Low, Medium, High, Peak), the continuous predictions were categorized into bins, and the weighted F1-score was calculated to account for class imbalance.
+    \begin{equation}
+        \text{F1}_{\text{weighted}} = \sum_{j=1}^{L} \left( \frac{n_j}{n} \times \text{F1}_j \right)
+    \end{equation}
 \end{enumerate}
 
 
