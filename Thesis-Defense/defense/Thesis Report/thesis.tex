@@ -64,14 +64,14 @@
 \newcommand{\universityName}{Jashore University of Science and Technology}
 \newcommand{\regionName}{Jashore-7408, Bangladesh}
 \newcommand{\degreeyearName}{2026}
-\newcommand{\degreemonthName}{28 April}
+\newcommand{\degreemonthName}{May}
 \newcommand{\subtitle}{}
 \newcommand{\coSupervisorLabel}{}
 \newcommand{\coSupervisorName}{}
 \newcommand{\cosupervisorDesig}{}
 \newcommand{\cosupervisorAff}{}
 \newcommand{\approvalText}{This is to certify that \textbf{Rakesh Biswas} (ID: 200112) has successfully completed the B.Sc. thesis titled \textit{``EV Charging Load Demand Prediction Using Machine Learning
-in a SUMO-Based Simulation Environment''} at the Department of Computer Science and Engineering, Jashore University of Science and Technology, Jashore-7408, Bangladesh, in April 2026.}
+in a SUMO-Based Simulation Environment''} at the Department of Computer Science and Engineering, Jashore University of Science and Technology, Jashore-7408, Bangladesh, in May 2026.}
 \newcommand{\studentSign}{\underline{Signature of the Student}}
 \newcommand{\supervisorSign}{\underline{Signature of the Supervisor}}
 \newcommand{\cosupervisorSign}{}
@@ -122,7 +122,7 @@ In the last, I am immensely grateful- to my family for their patience, prayers, 
 \begin{flushright}
 Rakesh Biswas \\
 Department of CSE, JUST \\
-28 April 2026
+May 2026
 \end{flushright}
 
 % -------------------------------------------------------
@@ -853,25 +853,42 @@ GRU               & 81.451 & 8028.416 & 89.495 & 9.2371 & 0.9444 & 90.7629 & 0.5
 
 These results are summarized in Table~\ref{tab:ml_results}. This table provides a complete quantitative summary of the models' performance, namely linear, tree-based, and recurrent, used for training on the simulated dataset. With the inclusion of seven measures, it not only shows the models' predictive error measures (MAE, MSE, RMSE, and MAPE) but also their general fitting capability ($R^2$, Accuracy, F1 Score). These numbers will be the baseline for an in-depth comparison analysis of model stability and accuracy.
 
-The detailed values for the model error are shown in Figure~\ref{fig:mae_mse_standalone}.
+The detailed values for the model error are shown in Figure~\ref{fig:res_mae_standalone} and Figure~\ref{fig:res_mse_standalone}, which present the Mean Absolute Error ($MAE$) and Mean Squared Error ($MSE$) respectively.
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.95\textwidth]{images/result_mae_mse.png}
-    \caption{Mean Absolute Error (MAE) and Mean Squared Error (MSE) comparison across models.}
-    \label{fig:mae_mse_standalone}
+    \includegraphics[width=0.85\textwidth]{images/result_mae.png}
+    \caption{Mean Absolute Error (MAE) comparison across different machine learning models.}
+    \label{fig:res_mae_standalone}
 \end{figure}
 
-Through the analysis of the error magnitude, it is evident that the \textbf{Artificial Neural Network (ANN)} emerges as the model with the highest accuracy level, achieving $MAE$ scores of 19.21~kW while maintaining the smallest variation for squared errors ($MSE$). The \textbf{Linear Regression} benchmark model also exhibited excellent performance levels ($MAE\approx25.70$~kW) to the extent of surpassing tree ensemble algorithms such as Random Forest and XGBoost, which are considered regression benchmarks. From this, it is apparent that the majority of the EV charging demand is linearly dependent on the number of vehicles currently being charged.
-
-A further analysis of the model consistency and error ratio is presented in Figure~\ref{fig:rmse_mape_standalone}, which presents the Root Mean Square Error ($RMSE$) and Mean Absolute Percentage Error ($MAPE$).
-
+Through the analysis of the error magnitude, it is evident that the \textbf{Artificial Neural Network (ANN)} emerges as the model with the highest accuracy level, achieving an $MAE$ score of 19.21~kW. The \textbf{Linear Regression} benchmark model also exhibited excellent performance levels ($MAE\approx25.70$~kW) to the extent of surpassing tree ensemble algorithms such as Random Forest and XGBoost, which are considered regression benchmarks. 
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.95\textwidth]{images/result_rmse_mape.png}
-    \caption{Root Mean Square Error (RMSE) and Mean Absolute Percentage Error (MAPE) comparison.}
-    \label{fig:rmse_mape_standalone}
+    \includegraphics[width=0.85\textwidth]{images/result_mse.png}
+    \caption{Mean Squared Error (MSE) distribution for the evaluated models.}
+    \label{fig:res_mse_standalone}
+\end{figure}
+
+Furthermore, the ANN model maintains the smallest variation for squared errors ($MSE$), as shown in Figure~\ref{fig:res_mse_standalone}. From this, it is apparent that the majority of the EV charging demand is linearly dependent on the number of vehicles currently being charged, allowing high-capacity models like ANN to generalize effectively with minimal squared residuals.
+
+A further analysis of the model consistency and error ratio is presented in Figure~\ref{fig:res_rmse_standalone} and Figure~\ref{fig:res_mape_standalone}, which present the Root Mean Square Error ($RMSE$) and Mean Absolute Percentage Error ($MAPE$) respectively.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.85\textwidth]{images/result_rmse.png}
+    \caption{Comparison of Root Mean Square Error (RMSE) across different models.}
+    \label{fig:res_rmse_standalone}
+\end{figure}
+
+The $RMSE$ values further confirm the stability of the ANN model, which achieved a minimum score of 25.45 kW. In contrast, Figure~\ref{fig:res_mape_standalone} shows the Mean Absolute Percentage Error ($MAPE$), where ANN again maintains the lowest percentage error at 4.72\%, ensuring its reliability for real-time load demand prediction.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.85\textwidth]{images/result_mape.png}
+    \caption{Mean Absolute Percentage Error (MAPE \%) comparison for ML models.}
+    \label{fig:res_mape_standalone}
 \end{figure}
 
 On the other hand, the models based on decision trees - Decision Tree, Random Forest and XGBoost performed very well, as expected, with the $R^2$ performance metrics greater than 0.98. Though, as shown above, with stricter cross-validation criteria, there is a possibility to have a more honest view of models' abilities regarding variance. Nevertheless, the recurrent models – LSTM and GRU had difficulties with the task. The worst results in terms of error rates were obtained by LSTM model, whose performance was characterized by maximum errors: $MAE \approx 84.20$ kW and $RMSE \approx 95.92$ kW. Thus, although recurrent models perform really well with the data having some extended patterns, the currently "shuffled" state of the simulation data may require denser or linear architecture models.
@@ -883,13 +900,22 @@ On the other hand, the models based on decision trees - Decision Tree, Random Fo
     \label{fig:res_r2_standalone}
 \end{figure}
 
-Moreover, Figure~\ref{fig:res_acc_f1_standalone} presents the evaluation metrics related to classification accuracy. ANN takes the lead yet again, with a score of 95.28\% accuracy rate and 0.9234 for the weighted F1-score. It can deal with the precision of the dataset better than any other algorithm can.
+Moreover, Figure~\ref{fig:res_accuracy_standalone} presents the evaluation metrics related to classification accuracy. ANN takes the lead yet again, with a score of 95.28\% accuracy rate. It can deal with the precision of the dataset better than any other algorithm can.
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.95\textwidth]{images/result_accuracy_f1.png}
-    \caption{Comparative performance distribution for Accuracy and Weighted F1-Score.}
-    \label{fig:res_acc_f1_standalone}
+    \includegraphics[width=0.85\textwidth]{images/result_accuracy.png}
+    \caption{Model performance comparison based on prediction Accuracy (\%).}
+    \label{fig:res_accuracy_standalone}
+\end{figure}
+
+On the other hand, Figure~\ref{fig:res_f1_standalone} illustrates the performance in terms of Weighted F1-Score. The ANN model achieved a score of 0.9234, demonstrating its robustness in capturing the complex charging patterns across the dataset compared to other models.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.85\textwidth]{images/result_f1.png}
+    \caption{Weighted F1-Score distribution across different machine learning models.}
+    \label{fig:res_f1_standalone}
 \end{figure}
 
 
