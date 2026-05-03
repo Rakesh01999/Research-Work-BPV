@@ -231,6 +231,25 @@ A charging station is a road-side power supply point where electric vehicles (EV
 \subsubsection{Simulation of Urban Mobility (SUMO)}
 SUMO (Simulation of Urban Mobility) \cite{sumo2018} is an open-source, microscopic traffic simulation platform. It is used for modeling and analyzing transportation networks. SUMO supports user-defined road networks, custom vehicle flows, routing algorithms, and mobility patterns. Through its EV extension, Sumo can simulate battery discharge, energy consumption, regenerative braking and real-time charging events. Sumo provides a controlled environment for research on the EV ecosystem in Bangladesh. Here in SUMO urban traffic behavior can be simulated and the resulting charging demand can be measured without the need for large-scale real-world experiments.
 
+\begin{figure}[H]
+    \centering
+    \begin{subfigure}{0.48\textwidth}
+        \centering
+        \includegraphics[width=\linewidth]{images/Netedit.PNG}
+        \caption{NetEdit interface for road network design.}
+        \label{fig:netedit_ui}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}{0.48\textwidth}
+        \centering
+        \includegraphics[width=\linewidth]{images/SUMO.PNG}
+        \caption{SUMO simulation environment.}
+        \label{fig:sumo_ui}
+    \end{subfigure}
+    \caption{SUMO simulation tools: NetEdit and the main SUMO GUI.}
+    \label{fig:sumo_tools}
+\end{figure}
+
 \subsubsection{Traffic Control Interface (TraCI)}
 The Traffic Control Interface (TraCI) \cite{traci2012} is SUMO's external programming interface. It allows real-time interaction between the simulation and external applications. TraCI enables dynamic control of vehicle characteristics, simulation variable extraction, traffic signal management and continuous logging of EV parameters such as SOC, speed, energy consumption and charging events. In EV load prediction research, TraCI plays an important role in automated data collection. For prediction and visualization it also integrates SUMO outputs with Python-based analytical models.
 
