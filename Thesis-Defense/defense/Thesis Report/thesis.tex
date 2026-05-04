@@ -455,10 +455,38 @@ Figure~\ref{fig:sumo_network} presents the customized microscopic network design
 The effect causes the well-known start-stop traffic pattern, which eventually results in clustering. This process is important since it determines how the demand for charging will be formed. The arrival of a cluster of vehicles with depleted battery power to charging stations due to traffic congestion results in sharp peaks in load demand. Including elements of artificial traffic congestion like stoplights in the simulation makes it feasible to model these peaks in load demand. This is crucial in order to develop and validate models for load demand prediction.
 
 \begin{figure}[H]
-  \centering
-  \includegraphics[width=0.85\textwidth]{images/SUMO_custom_road_network.png}
-  \caption{Custom microscopic road network in SUMO \texttt{netedit}.}
-  \label{fig:sumo_network}
+    \centering
+    \begin{subfigure}{0.48\textwidth}
+        \centering
+        \includegraphics[width=\linewidth]{images/netedit_road_design.PNG}
+        \caption{Road design overview.}
+        \label{fig:netedit_overview}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}{0.48\textwidth}
+        \centering
+        \includegraphics[width=\linewidth]{images/junction-node-3,4.PNG}
+        \caption{Details of Node 3 and Node 4.}
+        \label{fig:junction_details}
+    \end{subfigure}
+
+    \vspace{1em}
+
+    \begin{subfigure}{0.48\textwidth}
+        \centering
+        \includegraphics[width=\linewidth]{images/charging_stations_with_slots(charging,waiting).PNG}
+        \caption{Charging station configurations.}
+        \label{fig:charging_slots}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}{0.48\textwidth}
+        \centering
+        \includegraphics[width=\linewidth]{images/SUMO_custom_road_network.png}
+        \caption{Complete microscopic network in SUMO.}
+        \label{fig:full_network}
+    \end{subfigure}
+    \caption{Custom microscopic road network in SUMO \texttt{netedit}: (a) design, (b) Nodes 3-4, (c) charging slots, and (d) complete network.}
+    \label{fig:sumo_network}
 \end{figure}
 
 
@@ -469,7 +497,7 @@ The location where charging will be done is essential for the system to remain s
 
 Based on the real data from the file \texttt{Test1.chargingstations.add.xml}, the charging stations have been placed on both sides of some key road segments. The segments/edges are: E0, E1, E5, E6, and E7. This ensures that the whole length of 8.6~km circuit is covered by charging stations, hence no matter the direction the vehicles travel, there will always be a station for charging.
 
-Not all stations provide equal energy levels. The charge rates range from 25~kW up to 50~kW at \texttt{pa\_8\_rev}. This difference allows the simulator to model different types of chargers found in the real world. In total, there are 62 slots for charging and 49 parking spaces for the waiting cars. This number is sufficient to consider unexpected increases in demand. Specifications for each station can be found in Table~\ref{tab:stations}.
+Not all stations provide equal energy levels. The charge rates range from 25~kW up to 50~kW at \texttt{pa\_8\_rev}. This difference allows the simulator to model different types of chargers found in the real world. In total, there are 62 slots for charging and 49 parking spaces for the waiting cars, as illustrated in Figure~\ref{fig:charging_slots}. This number is sufficient to consider unexpected increases in demand. Specifications for each station can be found in Table~\ref{tab:stations}.
 
 \begin{table}[H]
 \caption{Charging Station Technical Implementation Details.}
@@ -654,24 +682,21 @@ Load prediction may be formally defined as follows:
 \begin{equation}
     y = f(X)
 \end{equation}
-where:
-\begin{itemize}
-    \item $y$ refers to the output variable (\textit{system\_total\_load\_kW}),
-    \item $X$ refers to the set of input features,
-    \item $f$ refers to the learned function from the machine learning algorithm.
-\end{itemize}
-Some of the input features may be time-related, vehicle-related, or statistics of system-level charging.
+where $y$ refers to the output variable (\textit{system\_total\_load\_kW}), $X$ refers to the set of input features, and $f$ refers to the learned function derived from the machine learning algorithm. Some of the input features may be time-related, vehicle-related, or statistics of system-level charging.
 
 \subsection{Data Preprocessing}
 
-Before training the models, some preprocessing steps were implemented to ensure data quality and model efficiency:
-\begin{itemize}
-\item \textbf{Elimination of Data Leakage:} The feature 'station\_load\_kW' was dropped because it could potentially cause data leakage in the target column.
-    \item \textbf{Elimination of High Cardinality Variables:} Variables like :- 'vehicle\_id', 'lane\_id', and 'current\_station\_id' were not considered since they were more like
-\item \textbf{Separation of Feature and Target:} This dataset is split into feature variables-X and target variables-y.
-    \item \textbf{Validation Approach (5-Fold Cross Validation):} Unlike conventional methods that employ random splits into training and testing datasets, five-fold cross-validation is employed to validate this model's performance. It splits the data into five equally-sized segments. In each iteration, four segments are employed as training sets while the rest are considered testing sets.
-    \item \textbf{Temporal Aggregation and Ordering:} In order to match the simulation logs at the vehicle level with the load constraints at the system level, two separate data structures were employed. In case of Classical Machine Learning (ML) and Artificial Neural Networks (ANN) algorithms- the 34,020 raw transactions were aggregated based on each timestep. This results in 600 highly accurate samples of the complete system state for every second. On the other hand, in case of Recurrent models, LSTM and GRU, the raw dataset was ordered in a sequence-based fashion using W=5.
-\end{itemize}
+Before training the models, several preprocessing steps were implemented to ensure data quality and model efficiency:
+
+\noindent \textbf{Elimination of Data Leakage:} The feature 'station\_load\_kW' was dropped because it could potentially cause data leakage in the target column.
+
+\noindent \textbf{Elimination of High Cardinality Variables:} Variables such as 'vehicle\_id', 'lane\_id', and 'current\_station\_id' were not considered since they function as identifiers rather than predictive features.
+
+\noindent \textbf{Separation of Feature and Target:} The dataset was split into feature variables ($X$) and target variables ($y$).
+
+\noindent \textbf{Validation Approach (5-Fold Cross Validation):} Unlike conventional methods that employ random splits into training and testing datasets, five-fold cross-validation is employed to validate this model's performance. It splits the data into five equally-sized segments; in each iteration, four segments are employed as training sets while the rest are considered testing sets.
+
+\noindent \textbf{Temporal Aggregation and Ordering:} In order to match the simulation logs at the vehicle level with the load constraints at the system level, two separate data structures were employed. For Classical Machine Learning (ML) and Artificial Neural Networks (ANN) algorithms, the 34,020 raw transactions were aggregated based on each timestep, resulting in 600 highly accurate samples of the complete system state for every second. Conversely, for Recurrent models (LSTM and GRU), the raw dataset was ordered in a sequence-based fashion using a window size of $W=5$.
 
 \subsection{Deterministic Execution and Reproducibility}
 
