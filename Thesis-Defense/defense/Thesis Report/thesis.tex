@@ -144,12 +144,12 @@ May 2026
 \addcontentsline{toc}{chapter}{Abstract}
 
 The rapid growth of Electric Vehicle (EV)s presents both an important opportunity and considerable challenge for modern power grid management.
-To make optimize energy distribution, accurate prediction of EV charging load demand is really important. It decreases peak hour stress on electrical infrastructure and enables smart grid operations. 
+To make optimize energy distribution, accurate prediction of EV charging load demand is really important. It decreases unbalanced load stress on electrical infrastructure and enables smart grid operations. 
 
-This thesis presents a comprehensive framework for predicting EV charging load demand using a suite of supervised Machine Learning (ML) and Deep Learning (DL) models applied to data generated from a realistic microscopic traffic simulation. To enable real-time vehicle monitoring and intelligent charging station management, the simulation environment was built by integrating the open-source urban mobility simulator SUMO with the Traffic Control Interface (TraCI). A network of 10 bidirectional charging stations was deployed with configurable power ratings ranging from 25 kW to 50 kW. Also, separate charging and waiting queue slots were configured for each station. Unique electric vehicles of the battery-powered type were simulated for 600 seconds. This resulted in 34,020 vehicle-level records, including features such as state of charge (SOC), speed, acceleration, station utilization, queue length, and system-wide load metrics. Seven different models were evaluated for system-level load demand prediction: Linear Regression, Decision Tree, Random Forest, XGBoost, Artificial Neural Network (ANN), Long Short-Term Memory (LSTM) and Gated Recurrent Unit (GRU). The performances were measured using Mean Absolute Error (MAE), Root Mean Square Error (RMSE), and the Coefficient of Determination ($R^2$). 
-The results show that ANN model achieved the highest precision with an $R^2$ score of 0.9967, followed closely by Linear Regression and tree-based ensemble methods. 
+This thesis presents a comprehensive framework for predicting EV charging load demand using a suite of supervised Machine Learning (ML) and Deep Learning (DL) models applied to data generated from a realistic microscopic traffic simulation. To enable real-time vehicle monitoring and intelligent charging station management, the simulation environment was built by integrating the open-source urban mobility simulator SUMO with the Traffic Control Interface (TraCI). A network of 10 bidirectional charging stations was deployed with configurable power ratings ranging from 25 kW to 50 kW. Also, separate charging and waiting queue slots were configured for each station. Unique electric vehicles of the battery-powered type were simulated for 600 seconds. This resulted in 34,020 vehicle-level records, including features such as state of charge (SOC), speed, acceleration, station utilization, queue length and system-wide load metrics. Several different models were evaluated for system-level load demand prediction.
 
-In addition, a rule-based smart charging recommendation system was implemented. In this scenario, vehicles were routed to the optimal charging station based on real-time SOC level, distance to the nearest station, slot availability and queue status. The findings show that SUMO-based simulation is an effective method for generating enriched EV charging datasets, and that high-capacity models like ANN are exceptionally effective for precisely modeling the complex nature of system-wide EV load demand.
+In addition, a rule-based smart charging recommendation system was implemented. In this scenario, vehicles were routed to the optimal charging station based on real-time SOC level, distance to the nearest station, slot availability and queue status. The findings show that SUMO-based simulation is an effective method for generating enriched EV charging datasets.
+
 
 \vspace{0.5cm}
 \noindent\textbf{Keywords:} Electric Vehicle, Charging Load Prediction, Machine Learning,
@@ -408,10 +408,10 @@ In summary, such an integrated ecosystem provides an excellent platform for the 
 
 In the current study, the simulated environment created is a highly reliable digital representation of a network of roads, based on the pattern of the roads that serve as Khulna’s arteries. The primary objective of this network design is to create an environment that realistically captures the urban traffic flow and interactions among vehicles, along with the resulting impact on the \Gls{ev} charging demand. This network has been designed in the form of a connected graph, which includes a number of nodes and edges, covering a distance of 8,654 meters.
 
-The edges in the graph indicate the real road segments with certain attributes such as lane width, speed, and priority. Adjusting these values allows us to simulate different traffic scenarios that might exist in different parts of the city. Table~\ref{tab:road_network} describes these settings in more detail. Here we provide extensive information regarding how the nodes are connected, critical points, and restrictions on each section.
+The edges in the graph indicate the real road segments with certain attributes such as lane width, speed, and priority. Adjusting these values allows us to simulate different traffic scenarios that might exist in different parts of the city. Table~\ref{tab:road_network} describes these settings in more detail. In this configuration, all edges are bidirectional with two lanes in each direction, and the place names correspond to actual real-world Khulna City landmarks. Here we provide extensive information regarding how the nodes are connected, critical points, and restrictions on each section.
 
 \begin{table}[H]
-\caption{Microscopic Road Network Configuration and Edge Parameters}
+\caption{Microscopic Road Network Configuration and Edge Parameters.}
 \label{tab:road_network}
 \begin{center}
 \begin{small}
@@ -435,8 +435,7 @@ E10 & Node2 & Khulna Zilla School Stadium & Node7 & PTI More & 850 & 2 & 40 \\
 \end{tabular}
 }
 \end{small}
-\par\medskip
-\footnotesize \textit{Note: All edges are bidirectional (2 lanes in each direction). Place names correspond to real-world Khulna City landmarks.}
+
 \end{center}
 \end{table}
 
@@ -473,7 +472,7 @@ Based on the real data from the file \texttt{Test1.chargingstations.add.xml}, th
 Not all stations provide equal energy levels. The charge rates range from 25~kW up to 50~kW at \texttt{pa\_8\_rev}. This difference allows the simulator to model different types of chargers found in the real world. In total, there are 62 slots for charging and 49 parking spaces for the waiting cars. This number is sufficient to consider unexpected increases in demand. Specifications for each station can be found in Table~\ref{tab:stations}.
 
 \begin{table}[H]
-\caption{Charging Station Technical Implementation Details}
+\caption{Charging Station Technical Implementation Details.}
 \label{tab:stations}
 \begin{center}
 \begin{small}
@@ -508,7 +507,7 @@ As per the configuration values set in the \texttt{Test1.rou.xml} file, each cla
 All electric vehicles are uniformly characterized by a single emission type (\texttt{Energy/unknown}), a moment of inertia value of $0.010~\text{kg}\cdot\text{m}^2$, and an absolute velocity threshold value of $0.1~\text{m/s}$. In order to reflect the diversity of drivers' behavior, speed factors were randomly generated in the range of $0.74 \leq \alpha \leq 1.10$, whereas maximum vehicle velocities varied from $40 \leq v_{max} \leq 50~\text{km/h
 
 \begin{table}[H]
-\caption{Cross-Class Vehicle Parameter Comparison (Averaged Values)}
+\caption{Cross-Class Vehicle Parameter Comparison (Averaged Values).}
 \label{tab:class_comparison}
 \begin{center}
 \begin{small}
@@ -541,7 +540,7 @@ Visual Color (SUMO-GUI) & Magenta & Green & Blue \\
 The design of paths and the classification of vehicles into these categories are necessary to capture the complex nature of traffic flows. In our study, we have designed eight basic paths; four moving forward and four moving backward, which are carefully mapped out on the arterial edges of the road network of Khulna city, ensuring that there is two-way movement in the 8.6~km loop. These eight paths are listed in Table~\ref{tab:route_definitions}.
 
 \begin{table}[H]
-\caption{Base Route Definitions and Edge Sequences in SUMO}
+\caption{Base Route Definitions and Edge Sequences in SUMO.}
 \label{tab:route_definitions}
 \begin{center}
 \begin{small}
@@ -564,7 +563,7 @@ Reverse & route4\_reverse & -E8 $\rightarrow$ -E7 $\rightarrow$ -E10 $\rightarro
 By allocating 100 individual vehicular flows among these eight routes, fleet characterization improves the efficiency of this model. The assignment includes allocating particular types of vehicles (Easy-Bikes, E-Rickshaws, and E-Vans) with particular numbers of departures varying between 3 and 81 vehicles per hour. This custom diversity enables the simulation model to represent the actual traffic of cities or urban environments in Bangladesh. While one area can have several three-wheeled vehicles in the streets, another area will have few such vehicles. Through the inclusion of various departure times and locations, the traffic model will mimic the unpredictability of actual traffic. This allocation is beneficial for evaluating the performance of the load prediction models. That summary of the fleet composition and color-coding for easy identification in \Gls{sumo}-GUI in Table~\ref{tab:fleet_summary}.
 
 \begin{table}[H]
-\caption{EV Fleet Composition in SUMO Simulation}
+\caption{EV Fleet Composition in SUMO Simulation.}
 \label{tab:fleet_summary}
 \begin{center}
 \begin{small}
@@ -622,7 +621,7 @@ During a simulated run time of 600 seconds, this technique gathered 34,020 dynam
 The good thing is that the dataset includes information about many different conditions that are encountered in practice. This ranges from situations where there is no much load on the charging stations at all the way to situations where they are busy with lots of vehicles.
 
 \begin{table}[H]
-\caption{EV Charging Load Demand Dataset Summary}
+\caption{EV Charging Load Demand Dataset Summary.}
 \label{tab:dataset_summary}
 \begin{center}
 \begin{tabular}{|l|r|}
@@ -693,8 +692,8 @@ Thus, system-wise and temporal features are the main contributors in terms of th
 
 \begin{figure}[H]
   \centering
-  \includegraphics[width=0.85\textwidth]{images/correlation_heatmap.png}
-  \caption{Pearson correlation matrix of the simulated EV charging dataset.}
+  \includegraphics[width=0.98\textwidth]{images/correlation_heatmap.png}
+  \caption{Pearson correlation matrix of the simulated EV charging dataset for feature selection.}
   \label{fig:corr_matrix_method}
 \end{figure}
 
@@ -706,8 +705,8 @@ The others are not very significant in terms of contribution. This is since most
 
 \begin{figure}[H]
   \centering
-  \includegraphics[width=0.85\textwidth]{images/feature_importance.png}
-  \caption{Feature importance ranking derived from the XGBoost model branches.}
+  \includegraphics[width=0.98\textwidth]{images/feature_importance.png}
+  \caption{Feature importance ranking derived from the XGBoost model branches to identify key predictors.}
   \label{fig:feat_imp_method}
 \end{figure}
 
@@ -813,7 +812,7 @@ Simulation analysis has been thoroughly carried out to investigate the electrica
 
 \begin{figure}[H]
   \centering
-  \includegraphics[width=0.85\textwidth]{images/System_total_charging_load.png}
+  \includegraphics[width=0.95\textwidth]{images/System_total_charging_load.png}
   \caption{System total charging load over simulation time (1--600 seconds).}
   \label{fig:load_profile}
 \end{figure}
@@ -834,51 +833,37 @@ In this part of the study, we will present an evaluation of the machine learning
 
 \subsubsection{Evaluation Metrics}
 
-Seven unique measures were adopted to measure the predictive performance and the robustness of the ML models. This was necessary in order to evaluate the performance of our models from two dimensions: prediction error and statistical fit. Mathematically, the metrics are:
+Seven unique measures were adopted to evaluate the predictive performance and robustness of the machine learning models from two dimensions: prediction error and statistical fit. These include the Mean Absolute Error (MAE), which reflects the average absolute error magnitude; Mean Squared Error (MSE), which emphasizes large errors through squaring; and Root Mean Square Error (RMSE), providing an error metric in the original units of load (kW). To understand relative error, Mean Absolute Percentage Error (MAPE) is used, along with an overall Accuracy percentage derived from it. Finally, the Coefficient of Determination ($R^2$) assesses the fraction of total variance explained by the model, while the Weighted F1-Score is employed to evaluate the model's ability to capture specific load levels such as Low, Medium, High, and Peak. Mathematically, these metrics are defined as follows:
 
-\begin{enumerate}
-	\item \textbf{Mean Absolute Error (MAE)} - It reflects the average absolute value of errors without taking into consideration the direction of errors.
-	\begin{equation}
+\begin{equation}
     \text{MAE} = \frac{1}{n} \sum_{i=1}^{n} |y_i - \hat{y}_i|
 \end{equation}
-	\item \textbf{Mean Squared Error (MSE)} - It reflects the average of squared errors that gives more importance to large errors.
-	\begin{equation}
+
+\begin{equation}
     \text{MSE} = \frac{1}{n} \sum_{i=1}^{n} (y_i - \hat{y}_i)^2
-\end{equation} 
-	\item \textbf{Root Mean Square Error (RMSE)} - This reflects the square root of MSE giving an error metric that is comparable to the units of the dependent variable.
-	\begin{equation}
+\end{equation}
+
+\begin{equation}
     \text{RMSE} = \sqrt{\frac{1}{n} \sum_{i=1}^{n} (y_i - \hat{y}_i)^2}
 \end{equation}
-	\item \textbf{Mean Absolute Percentage Error (MAPE)} - It represents accuracy in percentages reflecting the average absolute percent error at each time point.
-	\begin{equation}
+
+\begin{equation}
     \text{MAPE} = \frac{100\%}{n} \sum_{i=1}^{n} \left| \frac{y_i - \hat{y}_i}{y_i} \right|
 \end{equation}
-	\item \textbf{Accuracy (\%)} - As for regression problem, accuracy is computed by using MAPE.  
-	\begin{equation}
+
+\begin{equation}
     \text{Accuracy} = 100 - \text{MAPE}
 \end{equation}
-	\item \textbf{Coefficient of Determination ($R^2$)} - It shows the fraction of total variance explained by the regression model.
-	\begin{equation}
+
+\begin{equation}
     R^2 = 1 - \frac{\sum_{i=1}^{n} (y_i - \hat{y}_i)^2}{\sum_{i=1}^{n} (y_i - \bar{y})^2}
 \end{equation}
-	\item \textbf{Weighted F1-Score} - In order to analyze whether the model is able to capture specific load levels (Low, Medium, High, Peak), the continuous predictions were categorized into bins, and the weighted F1-score was calculated to account for class imbalance.
-    \begin{equation}
-        \text{F1}_{\text{weighted}} = \sum_{j=1}^{L} \left( \frac{n_j}{n} \times \text{F1}_j \right)
-    \end{equation}
-\end{enumerate}
 
+\begin{equation}
+    \text{F1}_{\text{weighted}} = \sum_{j=1}^{L} \left( \frac{n_j}{n} \times \text{F1}_j \right)
+\end{equation}
 
-where the variables and symbols used in the above equations are as described below:
-\begin{itemize}
-    \item \textbf{$n$}: The total number of data points or samples used in the testing dataset.
-    \item \textbf{$y_i$}: The true (observed) value of the variable \textit{system\_total\_load\_kW} in the $i^{th}$ data point.
-    \item \textbf{$\hat{y}_i$}: The estimated value provided by the machine learning model for the $i^{th}$ data point.
-    \item \textbf{$\bar{y}$}: The average of all true (observed) values, which acts as the baseline for the computation of the coefficient of determination ($R^2$).
-    \item \textbf{$L$}: The number of categories into which the loads are classified (for example, Low, Medium, High, and Peak).
-    \item \textbf{$n_j$}: The number of data points falling within the $j^{th}$ category.
-    \item \textbf{$\text{F1}_j$}: The F1 score obtained for the $j^{th}$ category.
-    \item \textbf{$\sum$}: The summation symbol, indicating the sum across the indicated range
-\end{itemize}
+In the equations above, the variables and symbols are defined as follows: $n$ is the total number of data points or samples used in the testing dataset; $y_i$ is the true (observed) value of the variable \textit{system\_total\_load\_kW} in the $i^{th}$ data point; $\hat{y}_i$ is the estimated value provided by the machine learning model; $\bar{y}$ is the average of all true values acting as a baseline for $R^2$; $L$ represents the number of load categories (Low, Medium, High, and Peak); $n_j$ is the number of data points in the $j^{th}$ category; $\text{F1}_j$ is the F1 score for that category; and $\sum$ is the summation symbol indicating the sum across the specified range.
 
 \subsubsection{Model Evaluation and Comparative Analysis}
 
