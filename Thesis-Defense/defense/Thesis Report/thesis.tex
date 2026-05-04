@@ -11,6 +11,7 @@
 \usepackage{listings}
 \usepackage{caption}
 \usepackage{subcaption}
+\captionsetup[table]{skip=0pt} % Minimized space between table caption and table
 \usepackage[utf8]{inputenc}
 \usepackage{float}
 
@@ -717,7 +718,7 @@ Thus, system-wise and temporal features are the main contributors in terms of th
 
 \begin{figure}[H]
   \centering
-  \includegraphics[width=0.98\textwidth]{images/correlation_heatmap.png}
+  \includegraphics[width=\textwidth]{images/correlation_heatmap.png}
   \caption{Pearson correlation matrix of the simulated EV charging dataset for feature selection.}
   \label{fig:corr_matrix_method}
 \end{figure}
@@ -844,7 +845,7 @@ Simulation analysis has been thoroughly carried out to investigate the electrica
 
 The maximum value of power demand occurred when the most active chargers, for example \texttt{pa\_8\_rev}, were overloaded and was equal to 1,340~kW. In general, it could be stated that the mean value was about 723.82~kW, while the value of standard deviation reached 443.80~kW. Such variation may occur because of sudden appearance of a large number of vehicles at the intersections or hubs when power demand increased and decreased soon after it.
 
-The \textbf{Status Distribution of Vehicles} defines the amount of time allocated to different statuses. The biggest share of time is consumed by the driving process, which equals 58\%. Clearly, there will always be enough vehicles available for charging. Also, about 35\% of the entries show that the vehicle is charging; therefore, this type uses energy and forms the load. One more type, visible in 5\% of all entries, is waiting.
+The status distribution of vehicles defines the amount of time allocated to different statuses. The biggest share of time is consumed by the driving process, which equals 58\%. Clearly, there will always be enough vehicles available for charging. Also, about 35\% of the entries show that the vehicle is charging; therefore, this type uses energy and forms the load. One more type, visible in 5\% of all entries, is waiting.
 
 Not only does it happen somewhere; the road system plays an important role here. Specific roads, such as \texttt{pa\_2} and \texttt{pa\_7}, where the traffic is particularly high, emerge constantly, causing the accumulation of cars in order to charge. Therefore, the areas with heavy traffic become bottlenecks in terms of charging demand.
 
@@ -990,7 +991,7 @@ The findings from this research give crucial insights into the topic areas of lo
 
 \subsection{Grid and Charging Network Management}
 
-The highly accurate predictions of \gls{ml} algorithms ($R^2 \approx 0.9967$) reveal that predicting the charging load at the level of the entire \Gls{ev} fleet based on simulated data is feasible. Thus, the power grid can apply a \textbf{proactive management strategy} that predicts the load before reaching its peak value. This strategy aligns well with the latest discoveries in integrated approaches to forecasting that consider the cooperation between simulations and \gls{dl} to improve urban power grids \cite{siddiqui2025electric}. Furthermore, the simulation demonstrates that smart charging policies combined with queuing reduce the burden of charging demands on charging stations. Clearly, integrating proactive techniques with simulation results yields better performance and reliability in the grid network.
+The highly accurate predictions of \gls{ml} algorithms ($R^2 \approx 0.9967$) reveal that predicting the charging load at the level of the entire \Gls{ev} fleet based on simulated data is feasible. Thus, the power grid can apply a proactive management strategy that predicts the load before reaching its peak value. This strategy aligns well with the latest discoveries in integrated approaches to forecasting that consider the cooperation between simulations and \gls{dl} to improve urban power grids \cite{siddiqui2025electric}. Furthermore, the simulation demonstrates that smart charging policies combined with queuing reduce the burden of charging demands on charging stations. Clearly, integrating proactive techniques with simulation results yields better performance and reliability in the grid network.
 
 \subsection{Data-Driven Feature Insights}
 
@@ -1000,7 +1001,7 @@ Through the examination of the results obtained using feature importance and cor
 
 It becomes evident that it is crucial to be thoughtful when choosing the locations for setting up the charging stations in cities since busy intersections and popular places attract lots of cars and act like a vacuum cleaner, sucking all the resources and potentially becoming severe obstacles. Besides, the increase in cars’ number at such a point will not only make the process of movement much slower but will also affect the power network negatively. The developed framework enables one to conduct a series of virtual tests in order to minimize risks and find the most optimal location for the installation of charging stations (e.g., Khulna).
 
-\subsection{Simulation as a Digital Twin Framework}
+\subsection{Virtual Simulation Environment}
 
 The sumo simulation environment is analogous to having a virtual replica of city traffic and charging infrastructure. Such a simulation could provide insight into the movement and charging processes involved in a dynamic way. This would enable the creation of quality data sets required for machine learning as well as the execution of different traffic and charging scenarios without any dangers involved and without ever hitting the road. This is especially helpful for regions that lack the actual data concerning electric vehicles.
 
@@ -1021,7 +1022,7 @@ The simulated data had 34,020 entries and 25 attributes. Monitoring each vehicle
 
 
 \section{Concluding Remarks}
-What makes our analysis unique?
+This study provides several distinct contributions to the field of electric vehicle charging load prediction, particularly within the context of urban mobility in developing regions. By integrating microscopic traffic simulation with high-performance machine learning models, the research addresses the critical gap in localized dataset availability. The unique strengths and key highlights of this analysis are summarized as follows:
 
 \begin{enumerate}
   \item The construction of a highly efficient SUMO-based microscopic simulator \cite{sumo2018} tailored specifically to handle the wide variety of vehicles used in Bangladesh – namely Easy Bikes, Electric Rickshaws, and Electric Vans.
