@@ -14,6 +14,7 @@
 \captionsetup[table]{skip=0pt} % Minimized space between table caption and table
 \usepackage[utf8]{inputenc}
 \usepackage{float}
+\usepackage{cite}
 
 % -------------------------------------------------------
 % Acronyms / Abbreviations
@@ -165,11 +166,11 @@ SUMO Simulation, Artificial Neural Network (ANN), Random Forest, XGBoost, Smart 
 \printchaptertitle{Introduction}
 \newpage
 
-The global transportation sector is undergoing a radical change due to the urgent need to reduce greenhouse gas emissions and to reduce dependence on fossil fuels. For totally decarbonizing road transport, \Gls{ev}s have emerged as one of the most promising technologies. According to the \Gls{iea} \cite{ev_growth2023}, the number of electric vehicles worldwide exceeded 26 million in 2022 and is forecast to continue to grow rapidly in the coming decades. With the rapid growth of electric vehicle usage, the increasing demand for electricity for charging is becoming a serious concern for both power system managers and urban planners \cite{smart_charging2022}. Recently, advanced integrated frameworks and deep learning hybrids have been proposed to address the increasingly complex nature of these load patterns \cite{siddiqui2025electric, ran2025ev}.
+The global transportation sector is undergoing a radical change due to the urgent need to reduce greenhouse gas emissions and to reduce dependence on fossil fuels. For totally decarbonizing road transport, \Gls{ev}s have emerged as one of the most promising technologies. According to the \Gls{iea} \cite{ev_growth2025}, the number of electric vehicles worldwide is forecast to continue to grow rapidly in the coming decades, with significant infrastructure expansion required to meet climate targets. With the rapid growth of electric vehicle usage, the increasing demand for electricity for charging is becoming a serious concern for both power system managers and urban planners \cite{smart_charging2022}. Recently, advanced integrated frameworks and deep learning hybrids have been proposed to address the increasingly complex nature of these load patterns \cite{siddiqui2025electric, ran2025ev}.
 
-The number of vehicles or \Gls{ev}s is growing really fast. This means we need systems to control energy use so that we can use energy in the best way possible. In countries like Bangladesh we see a lot of three-wheeled vehicles like Easy Bikes, Electric Rickshaws and Electric Vans. These electric vehicles are very important for people to move around in cities and towns.. When people charge these electric vehicles it can be a problem because they do not charge them at the same time \cite{ev_bangladesh2023}. This can cause changes in how much electricity is being used, which can be very hard on the power grid. Electric vehicles or EVs are used a lot in Bangladesh and other places so we need to find ways to charge them that will not cause problems, for the power grid.
+The adoption of \Gls{ev}s is growing exceptionally fast, necessitating systems to optimize energy use and prevent grid instability. In countries like Bangladesh, the landscape is dominated by electric three-wheeled vehicles such as Easy Bikes, Electric Rickshaws, and Electric Vans. These vehicles are vital for urban mobility but pose significant challenges due to uncoordinated charging patterns \cite{ev_bangladesh2023}. Current market dynamics and energy readiness assessments highlight that while the transition is inevitable, infrastructure investment remains crucial for a sustainable green future in the region \cite{lightcastle_ev_2025}. When these vehicles charge simultaneously, especially during peak hours, it creates severe stress on the power grid. Thus, accurate load prediction tools are essential for city authorities and electricity distributors to ensure grid reliability and plan for future charging network expansions \cite{ml_ev_load2021}.
 
-Electric vehicles \Gls{ev}s communicate directly with the power grid. When lots of vehicles charge at the same time especially during peak hours it can cause big problems for the distribution network. This can lead to voltage violations and transformer overloads. Also it can increase energy costs \cite{peak_load_shaving2021}. Electric vehicles can do this because they use a lot of power. Therefore we need to manage vehicle charging loads in a good way. We need tools that can predict when and where electric vehicles will charge. This will help us understand the demand patterns, across the vehicle charging station network. We need to know this so we can plan for vehicles\cite{ml_ev_load2021}.
+Electric vehicles \Gls{ev}s communicate directly with the power grid. When lots of vehicles charge at the same time especially during peak hours it can cause big problems for the distribution network. This can lead to voltage violations and transformer overloads. Also it can increase energy costs \cite{peak_load_shaving2021}. Electric vehicles can do this because they use a lot of power. Therefore we need to manage vehicle charging loads in a good way. We need tools that can predict when and where electric vehicles will charge. This will help us understand the demand patterns, across the vehicle charging station network. We need to know this so we can plan for vehicles.
 
 In this field, one of the key challenges is to accurately predict system-level charging load demand. Reliable load prediction enables better planning of charging stations, improved power distribution and the prevention of overload situations.
 
@@ -270,17 +271,17 @@ Queue management is an infrastructure-level process -which coordinates the flow 
 A rule-based recommendation system is a decision-making algorithm -which uses some predefined "if-then" conditional statements to suggest the best optimal actions. In the case of EV charging, this system evaluates real-time telemetry such as a vehicle's SOC, distance to the nearest station and current queue length to recommend the most suitable charging locations \cite{demand_response2023}. It also balances the overall load of the network with the needs of each vehicle.
 
 \subsubsection{Heterogeneous EV Fleet}
-A heterogeneous EV fleet refers to a collection of different types of electric vehicles within a single simulation or study. It is characterized by different physical sizes, battery capacities and power requirements. In urban modeling in Bangladesh, this primarily includes a mix of easy bikes, electric rickshaws and electric vans . It is essential to take this diversity into account to capture the complex and uneven energy usage patterns. This is typical of real-world traffic.
+A heterogeneous EV fleet refers to a collection of different types of electric vehicles within a single simulation or study. It is characterized by different physical sizes, battery capacities and power requirements. In urban modeling in Bangladesh, this primarily includes a mix of easy bikes, electric rickshaws and electric vans \cite{rickshaw_tech2023}. It is essential to take this diversity into account to capture the complex and uneven energy usage patterns. This is typical of real-world traffic.
 
 \subsubsection{Spatiotemporal Demand Pattern}
-Spatiotemporal demand pattern refers to the distribution of electrical load, across both space ( geographical location of charging nodes ) and time (simulation period or daily interval) . By analyzing these patterns, researchers and service providers can identify charging 'hotspots' and peak demand times. Wchich, enabling more precise grid reinforcement and infrastructure planning.
+Spatiotemporal demand pattern refers to the distribution of electrical load, across both space ( geographical location of charging nodes ) and time (simulation period or daily interval) \cite{parking_area_ev2022}. By analyzing these patterns, researchers and service providers can identify charging 'hotspots' and peak demand times. Wchich, enabling more precise grid reinforcement and infrastructure planning.
 
 \section{Problem Statement}
 
 The fast increasing of electric vehicles (EVs), specially in urban transportation systems, has created significant challenges in accurately prediction the charging load demand on the electricity grid. 
 In Bangladesh, where electric three-wheelers such as e-bikes and electric rickshaws are widely used~\cite{ev_bangladesh2023}, the electricity distribution infrastructure is often already under stress during peak hours.
 The addition of EV charging intensifies this challenge due to the highly dynamic and nonlinear charging behavior . Which is influenced by factors such as -vehicle movement, battery state of charge , charging station availability and vehicle  distribution at the system-level.
-A major limitation of existing research is the lackings of comprehensive and large scale real world datasets . That capture both vehicle and station level features, especially in developing areas. Besides, many conventional and statistical methods fail to effectively model the complex relationships between these variables. Where some advanced models can be computationally expensive and less intuitive for practical application in resource-limited environments .
+A major limitation of existing research is the lackings of comprehensive and large scale real world datasets . That capture both vehicle and station level features, especially in developing areas. Besides, many conventional and statistical methods fail to effectively model the complex relationships between these variables. Where some advanced models can be computationally expensive and less intuitive for practical application in resource-limited environments \cite{kyriakopoulos_experimental_2026}.
 So, there is a critical need for a data-driven, effective  and understandable approach to system level EV charging load demand prediction. This study addresses those challenges by using a simulation-based dataset that includes detailed system and vehicle characteristics . It implementes and evaluates multiple machine learning models to accurately predict the overall load demand (\textit{total system load kW}) under changing system conditions.
 
 \section{Objectives}
@@ -311,9 +312,9 @@ This study seeks to answer the following research questions :
 \section{Significance of the Study}
 
 The significance of this research lies  in contributing to the growing challenge of managing electric vehicle (EV) charging demand through a data driven and scalable approach.  With the rapid growth of electric vehicles, specially in developing regions like Bangladesh~\cite{ev_bangladesh2023} —power distribution systems are increasingly facing unpredictable and highly variable load patterns due to unbalanced charging behavior.
-This study provides a realistic framework for accurately predicting system-level EV charging load (\texttt{system\_total\_load\_kW}) using a comprehensive simulation-based dataset . It incorporates both vehicle-level dynamics and system-level operational characteristics.
+This study provides a realistic framework for accurately predicting system-level EV charging load (\texttt{system\_total\_load\_kW}) using a comprehensive simulation-based dataset \cite{sumo2018}. It incorporates both vehicle-level dynamics and system-level operational characteristics.
 By applying and comparing multiple machine learning models, this study shows that advanced yet in computationally inexpensive techniques, particularly tree-based models- can effectively capture the complex nonlinear relationships inherent in the EV charging ecosystem. The study results highlight that load demand is largely driven by a few key system-level factors. Which is enabling stakeholders to better understand the underlying determinants of energy consumption.
-It has a direct impact on grid management, which includes improved demand prediction, optimal power distribution, improved planning of charging infrastructure and peak load stress mitigation on transformers and substations.
+It has a direct impact on grid management, which includes improved demand prediction, optimal power distribution, improved planning of charging infrastructure and peak load stress mitigation on transformers and substations \cite{smart_charging2022}.
 Moreover, the use of understandable models and feature importance analysis ensures that the results are not only accurate but also interpretable. This is making them suitable for application in resource limited environments. Overall , this research bridges the gap between simulation-based data generation and real-world applicability. And this is providing a strong foundation for future research and practical applications in intelligent energy management systems for EV-integrated smart grids.
 
 % ================================================================
@@ -334,20 +335,20 @@ Chen et al.~\cite{featurengineering_ev2022} integrated probabilistic load flow a
 
 \section{Machine Learning for Load Forecasting}
 
-ML has become the dominant paradigm for short-term electricity load prediction. Zhang et al. \cite{ml_ev_load2021} proposed a complete deep learning framework for EV charging load forecasting. Which incorporated historical demand, time-of-day characteristics and weather data and achieved significant improvements over classical autoregressive models. Wang et al. \cite{rf_load_forecast2020} applied random forest (RF) regression in short term load forecasting at EV charging stations. That is demonstrating robustness against noisy sensor data and missing values. Gradient boosting methods have also achieved state-of-the-art results. Chen et al. \cite{xgboost_energy2022} applied XGBoost to one day EV load forecasting That is exploiting its regularization ability to prevent overfitting on small datasets. Tayeb and Hyndman \cite{decision_tree_load2019} compared gradient boosting with conventional time series methods. And they found that tree-based algorithms always performed better than ARIMA algorithms for nonlinear load behavior. While linear regression continues to be an important starting point for load forecasting. Guo et al. \cite{regression_ev2020} showed that linear models can capture the dominant trends in EV charging demand when the features are carefully designed, specially when polynomial and interaction terms are included. More recently, Siddiqui et al. \cite{siddiqui2025electric} demonstrated that by combining deep feature extraction with boosting techniques—integrated DeepBoost approach can further refine forecasting accuracy. Same way, Ran et al. \cite{ran2025ev} introduced a refined CNN-LSTM-AM model to specifically target multi-scale temporal dependencies in EV-charging data, setting new benchmarks for sequential load prediction.
+ML has become the dominant paradigm for short-term electricity load prediction. Zhang et al. \cite{ml_ev_load2021} proposed a complete deep learning framework for EV charging load forecasting. Which incorporated historical demand, time-of-day characteristics and weather data and achieved significant improvements over classical autoregressive models. Wang et al. \cite{rf_load_forecast2020} applied random forest (RF) regression in short term load forecasting at EV charging stations. That is demonstrating robustness against noisy sensor data and missing values. Gradient boosting methods have also achieved state-of-the-art results. Chen et al. \cite{xgboost_energy2022} applied XGBoost to one day EV load forecasting That is exploiting its regularization ability to prevent overfitting on small datasets. Taieb and Hyndman \cite{decision_tree_load2019} compared gradient boosting with conventional time series methods. And they found that tree-based algorithms always performed better than ARIMA algorithms for nonlinear load behavior. While linear regression continues to be an important starting point for load forecasting. Guo et al. \cite{regression_ev2020} showed that linear models can capture the dominant trends in EV charging demand when the features are carefully designed, specially when polynomial and interaction terms are included. More recently, Siddiqui et al. \cite{siddiqui2025electric} demonstrated that by combining deep feature extraction with boosting techniques—integrated DeepBoost approach can further refine forecasting accuracy. Similarly, Ran et al. \cite{ran2025ev} introduced a refined CNN-LSTM-AM model to specifically target multi-scale temporal dependencies in EV-charging data. These advancements are further supported by recent research into explainable machine learning that enhances prediction transparency and accuracy \cite{sustainability_xai_2025}.
 
 \section{SUMO-Based EV Simulation}
 
-SUMO has been widely adopted for EV research because of its open-source nature, extensibility and  support for battery models. 
+SUMO has been widely adopted for EV research because of its open-source nature, extensibility and support for battery models. 
 Lopez et al.~\cite{sumo2018} describe the core capabilities of SUMO, including models of electric vehicle energy consumption, parking areas and a Traffic Control Interface (TraCI) API for external control.
 Wegener et al.~\cite{traci2012} introduced the TraCI interface, that enables real time monitoring and manipulation of simulated vehicles.
 This makes it ideal for implementing adaptive charging management algorithms .
-Helbing and Triber~\cite{ev_simulation2020} established the theoretical foundations for microscopic car-following models. That are the basis of SUMO's vehicle dynamics. The integration of these dynamics with electric powertrain models allows for accurate simulation of energy consumption patterns. And this directly affects the state of charge (SOC) trajectory and charging events.
+Helbing and Treiber~\cite{ev_simulation2020} established the theoretical foundations for microscopic car-following models. That are the basis of SUMO's vehicle dynamics. The integration of these dynamics with electric powertrain models allows for accurate simulation of energy consumption patterns. And this directly affects the state of charge (SOC) trajectory and charging events. Recent frameworks have expanded these capabilities to include integrated V2G simulation platforms like V2Sim \cite{qian_v2sim_2024}.
 
 \section{Smart Charging and Recommendation Systems}
 
 Yilmaz and Crain~\cite{smart_charging2022} gave a comprehensive review of vehicle-to-grid technologies, identifying intelligent charging coordination as a key enabler of grid stability . 
-Ding et al.~\cite{queue_management2023} proposed a two-stage robust optimization for distributed energy management. That concept is related to the queue-aware routing logic implemented in this work.
+Ding et al.~\cite{queue_management2023} proposed a two-stage robust optimization for distributed energy management. While originally designed for photovoltaic inverters, the underlying logic of managing stochastic peak loads through centralized-optimal dispatch is directly applicable to the queue-aware routing and smart charging strategies developed in this study.
 For EV charging coordination, Nguyen et al.~\cite{demand_response2023} developed an adaptive dynamic programming method . Which showed that real-time SOC aware routing can significantly reduce the average waiting time. 
 This motivates the rule based recommendation engine developed in the present study. Which selects stations based on SOC priority level and slot availability.
 
@@ -451,7 +452,7 @@ These intersections and road sections are linked to various landmarks in the cit
 
 Figure~\ref{fig:sumo_network} presents the customized microscopic network designed in \gls{sumo} with the use of the \texttt{netedit} application. In order to provide realism in the way vehicles flow---in particular, to ensure that traffic jams and vehicle bunching are captured---we have included traffic lights as fixed objects in the most congested areas. This is the reason why we decided to place traffic lights on \textbf{Node 3 (Shordar Tower)} and \textbf{Node 8 (Galaxco More)}. Every traffic light operates on a 90-second cycle that consists of four stages, which are described below.
 
-The effect causes the well-known start-stop traffic pattern, which eventually results in clustering. This process is important since it determines how the demand for charging will be formed. The arrival of a cluster of vehicles with depleted battery power to charging stations due to traffic congestion results in sharp peaks in load demand. Including elements of artificial traffic congestion like stoplights in the simulation makes it feasible to model these peaks in load demand. This is crucial in order to develop and validate models for load demand prediction.
+The effect causes the well-known start-stop traffic pattern, which eventually results in clustering. This process is important since it determines how the demand for charging will be formed \cite{ev_simulation2020}. The arrival of a cluster of vehicles with depleted battery power to charging stations due to traffic congestion results in sharp peaks in load demand. Including elements of artificial traffic congestion like stoplights in the simulation makes it feasible to model these peaks in load demand. This is crucial in order to develop and validate models for load demand prediction.
 
 \begin{figure}[H]
     \centering
@@ -496,7 +497,7 @@ The location where charging will be done is essential for the system to remain s
 
 Based on the real data from the file \texttt{Test1.chargingstations.add.xml}, the charging stations have been placed on both sides of some key road segments. The segments/edges are: E0, E1, E5, E6, and E7. This ensures that the whole length of 8.6~km circuit is covered by charging stations, hence no matter the direction the vehicles travel, there will always be a station for charging.
 
-Not all stations provide equal energy levels. The charge rates range from 25~kW up to 50~kW at \texttt{pa\_8\_rev}. This difference allows the simulator to model different types of chargers found in the real world. In total, there are 62 slots for charging and 49 parking spaces for the waiting cars, as illustrated in Figure~\ref{fig:charging_slots}. This number is sufficient to consider unexpected increases in demand. Specifications for each station can be found in Table~\ref{tab:stations}.
+Not all stations provide equal energy levels. The charge rates range from 25~kW up to 50~kW at \texttt{pa\_8\_rev}. This difference allows the simulator to model different types of chargers found in the real world \cite{smart_charging2022}. In total, there are 62 slots for charging and 49 parking spaces for the waiting cars, as illustrated in Figure~\ref{fig:charging_slots}. This number is sufficient to consider unexpected increases in demand. Specifications for each station can be found in Table~\ref{tab:stations}.
 
 \begin{table}[H]
 \caption{Charging Station Technical Implementation Details.}
@@ -527,11 +528,11 @@ pa\_8\_rev     & -E7   & 50 & 10 & 6 \\
 
 \subsection{Vehicle Configuration in SUMO}
 
-In order to make sure that the simulation is truly an accurate model of the real world movement pattern of urban Bangladesh, the vehicles are modeled with great care and attention to detail, considering their heterogeneity in physical and electrical properties. We have modeled 100 vehicles, classified into three main categories, namely: 34 Easy Bikes, 33 E-Rickshaws, and 33 Electric Vans (E-Vans). The heterogeneity in the vehicles is crucial to the design of the simulation. With different physical parameters, such as maximum battery storage, vehicle weight, and speed factor, we can simulate the stochastic charging load.
+In order to make sure that the simulation is truly an accurate model of the real world movement pattern of urban Bangladesh, the vehicles are modeled with great care and attention to detail, considering their heterogeneity in physical and electrical properties \cite{sumo_energy2024}. We have modeled 100 vehicles, classified into three main categories, namely: 34 Easy Bikes, 33 E-Rickshaws, and 33 Electric Vans (E-Vans). This selection aligns with the latest national priorities for sustainable urban transport in Bangladesh \cite{bd_ev_industry2024}. The heterogeneity in the vehicles is crucial to the design of the simulation. With different physical parameters, such as maximum battery storage, vehicle weight, and speed factor, we can simulate the stochastic charging load accurately \cite{rickshaw_tech2023}.
 
 As per the configuration values set in the \texttt{Test1.rou.xml} file, each class of vehicles is configured based on their unique working features. The \textbf{Easy Bikes} are provided with a very high battery capacity of 12~kWh, along with the highest front surface area of $2.41~\text{m}^2$, as they are the most powerful mobility option for the scenario. On the other hand, the \textbf{E-Rickshaws} have a battery capacity between 5.76 and 7.20~kWh, with an elevated height of 1.8~m. Lastly, the \textbf{E-Van} has been implemented as a light and low-height vehicle, with a battery capacity of 5.76~kWh and height of 0.8~m.
 
-All electric vehicles are uniformly characterized by a single emission type (\texttt{Energy/unknown}), a moment of inertia value of $0.010~\text{kg}\cdot\text{m}^2$, and an absolute velocity threshold value of $0.1~\text{m/s}$. In order to reflect the diversity of drivers' behavior, speed factors were randomly generated in the range of $0.74 \leq \alpha \leq 1.10$, whereas maximum vehicle velocities varied from $40 \leq v_{max} \leq 50~\text{km/h
+All electric vehicles are uniformly characterized by a single emission type (\texttt{Energy/unknown}), a moment of inertia value of $0.010~\text{kg}\cdot\text{m}^2$, and an absolute velocity threshold value of $0.1~\text{m/s}$. In order to reflect the diversity of drivers' behavior, speed factors were randomly generated in the range of $0.74 \leq \alpha \leq 1.10$, whereas maximum vehicle velocities varied from $40 \leq v_{max} \leq 50~\text{km/h}$ \cite{parking_area_ev2022}.
 
 \begin{table}[H]
 \caption{Cross-Class Vehicle Parameter Comparison (Averaged Values).}
@@ -613,11 +614,11 @@ E-Van      & 33  & 5,760          & 11.1 -- 13.9 & Blue \\
 
 The algorithm for intelligent charging constitutes the central nervous system of the simulation system itself. In that it controls all of the real-time decisions relating to the charging schedule of the various electric cars. And this algorithm is contained within the \texttt{Smart\-Charging\-Station\-Monitor} class. It is coded in the \texttt{load\_demand\_prediction.py} program.
 
-The course is able to interact with the simulation engine \Gls{sumo} through \Gls{traci}, while at the same time maintaining a constant awareness of the battery level of all vehicles and their quantity at each station at every one second interval, for a total fleet of 100 cars. The monitor operates with specific criteria for the control of charging initiation and termination. When the State of Charge (\Gls{soc}) decreases to 30\%, then charging becomes active. The objective here is to achieve an \Gls{soc} value of 70\% at the completion of each charging episode. In order to prevent any simulation anomalies due to overly optimistic assumptions, the average charging time is dynamically evaluated. The computation is performed based on energy deficits and charging station availability.
+The course is able to interact with the simulation engine \Gls{sumo} through \Gls{traci}, while at the same time maintaining a constant awareness of the battery level of all vehicles and their quantity at each station at every one second interval, for a total fleet of 100 cars. The monitor operates with specific criteria for the control of charging initiation and termination. When the State of Charge (\Gls{soc}) decreases to 30\%, then charging becomes active. The objective here is to achieve an \Gls{soc} value of 70\% at the completion of each charging episode \cite{soc_prediction2021}. In order to prevent any simulation anomalies due to overly optimistic assumptions, the average charging time is dynamically evaluated. The computation is performed based on energy deficits and charging station availability.
 
 The monitoring system oversees all of the stations that support bi-directional charging, as well as all active EV agents through certain in-memory data structures. These include \texttt{station\_\allowbreak charging\_\allowbreak slots} and \texttt{station\_\allowbreak waiting\_\allowbreak queue}, which employs a \texttt{collections.\allowbreak deque}. In addition to the aforementioned data structures, \texttt{currently\_\allowbreak charging} and \texttt{currently\_\allowbreak waiting} provide an easy way to look up the current state of each EV. The complete set of \texttt{vehicle\_\allowbreak states}, which includes metadata for each vehicle, such as charging times, \Gls{soc} value at time of session start, and station assignments through the route.
 
-Upon reaching the state where the SOC level of the vehicle has dropped below the 30\% mark, the system applies a route-based nearest-neighbor algorithm. Using route length as the criterion, the vehicle checks the engine for information by using the command \texttt{traci.\allowbreak simulation.\allowbreak findRoute}, which enables the system to factor in the route length through the road network, taking into consideration the fact that streets have one-way lanes. The reachable charging stations are then ranked using five criteria for station assignment:
+Upon reaching the state where the SOC level of the vehicle has dropped below the 30\% mark, the system applies a route-based nearest-neighbor algorithm. Using route length as the criterion, the vehicle checks the engine for information by using the command \texttt{traci.\allowbreak simulation.\allowbreak findRoute}, which enables the system to factor in the route length through the road network, taking into consideration the fact that streets have one-way lanes \cite{demand_response2023}. The reachable charging stations are then ranked using five criteria for station assignment:
 
 \begin{enumerate}
     \item \textbf{Rule 1:} If the nearest station has an available charging slot, route the vehicle there.
@@ -627,7 +628,7 @@ Upon reaching the state where the SOC level of the vehicle has dropped below the
     \item \textbf{Rule 5:} If all candidate stations are full, do not reroute.
 \end{enumerate}
 
-The route is changed when the target vehicle is decided upon through the use of \texttt{traci.\allowbreak vehicle.\allowbreak setRoute} and \texttt{traci.\allowbreak vehicle.\allowbreak setParkingAreaStop}, which allows the stop to be registered to the schedule of the simulation. In the case where the vehicle will use a waiting queue, the \textbf{FIFO Queue Promotion Process} is implemented on every time step. If an idle charging queue opens up, then the vehicle at the beginning of the deque at the station is pulled out using \texttt{popleft()}, the vehicle is resumed using \texttt{traci.vehicle.resume()}, and it is assigned to the charging spot. The telemetry for queuing delay is thus minimized while also being very accurate. At the end of the simulation or when the vehicle exits the network, the methods \texttt{handle\_charging\_complete} and \texttt{cleanup\_departed\_vehicle} gather the final telemetry and clear their respective state maps.
+The route is changed when the target vehicle is decided upon through the use of \texttt{traci.\allowbreak vehicle.\allowbreak setRoute} and \texttt{traci.\allowbreak vehicle.\allowbreak setParkingAreaStop}, which allows the stop to be registered to the schedule of the simulation. In the case where the vehicle will use a waiting queue, the \textbf{FIFO Queue Promotion Process} is implemented on every time step. If an idle charging queue opens up, then the vehicle at the beginning of the deque at the station is pulled out using \texttt{popleft()}, the vehicle is resumed using \texttt{traci.vehicle.resume()}, and it is assigned to the charging spot. This centralized dispatch logic ensures that the telemetry for queuing delay is minimized while also being very accurate \cite{queue_management2023}. At the end of the simulation or when the vehicle exits the network, the methods \texttt{handle\_charging\_complete} and \texttt{cleanup\_departed\_vehicle} gather the final telemetry and clear their respective state maps.
 
 \subsection{Simulation Execution with TraCI}
 
@@ -674,7 +675,7 @@ Time-step aggregation was employed on the dataset in order to obtain the total l
 
 \section{Machine Learning Application}
 
-Various supervised learning algorithms have been used in this project to estimate the total electric load demand of the system, called \textit{system\_total\_load\_kW}. This prediction can be considered a regression problem since the target value is being predicted based on certain features of the system and vehicles \cite{regression_ev2020}.
+Various supervised learning algorithms have been used in this project to estimate the total electric load demand of the system, called \textit{system\_total\_load\_kW}. This prediction can be considered a regression problem since the target value is being predicted based on certain features of the system and vehicles \cite{regression_ev2020, ml_ev_load2021}.
 
 \subsection{Problem Formulation}
 Load prediction may be formally defined as follows:
@@ -693,7 +694,7 @@ Before training the models, several preprocessing steps were implemented to ensu
 
 \noindent \textbf{Separation of Feature and Target:} The dataset was split into feature variables ($X$) and target variables ($y$).
 
-\noindent \textbf{Validation Approach (5-Fold Cross Validation):} Unlike conventional methods that employ random splits into training and testing datasets, five-fold cross-validation is employed to validate this model's performance. It splits the data into five equally-sized segments; in each iteration, four segments are employed as training sets while the rest are considered testing sets.
+\noindent \textbf{Validation Approach (5-Fold Cross Validation):} Unlike conventional methods that employ random splits into training and testing datasets, five-fold cross-validation is employed to validate this model's performance. It splits the data into five equally-sized segments; in each iteration, four segments are employed as training sets while the rest are considered testing sets. This ensures that the results are robust and not biased by any particular data subset \cite{decision_tree_load2019}.
 
 \noindent \textbf{Temporal Aggregation and Ordering:} In order to match the simulation logs at the vehicle level with the load constraints at the system level, two separate data structures were employed. For Classical Machine Learning (ML) and Artificial Neural Networks (ANN) algorithms, the 34,020 raw transactions were aggregated based on each timestep, resulting in 600 highly accurate samples of the complete system state for every second. Conversely, for Recurrent models (LSTM and GRU), the raw dataset was ordered in a sequence-based fashion using a window size of $W=5$.
 
@@ -706,8 +707,7 @@ Reusing these seeds in each loop of the k-fold cross validation process and init
 
 \subsection{Feature Correlation Analysis}
 
-Feature correlation study will be useful for determining which input features have high correlation with the output variable-\textit{system\_total\_load\_kW}.
-Pearson's correlation study determines the level of consistency of the features with the output feature.
+Feature correlation study will be useful for determining which input features have high correlation with the output variable-\textit{system\_total\_load\_kW}. Pearson's correlation study determines the level of consistency of the features with the output feature, providing a basis for feature selection \cite{featurengineering_ev2022}.
 
 \textit{system\_charging\_vehicles} possesses the highest level of correlation with the target (approaching 0.996). Put differently, the key factor that determines the amount of load on the system is the number of vehicles that are being charged. Time-dependent factors such as \textit{timestep\_sec} and \textit{minute\_of\_hour} have high levels of correlation, indicating that demand increases as time goes by in a simulation run.
 Other general system features such as— \textit{system\_total\_vehicles}, \textit{system\_moving\_vehicles}, and \textit{system\_waiting\_vehicles} are also highly correlated to the demand load. However, when it comes to other parameters like \textit{speed}, \textit{acceleration}, or \textit{status}, there is nothing happening. Such features are not correlated at all.
@@ -735,7 +735,7 @@ The others are not very significant in terms of contribution. This is since most
 \end{figure}
 
 \subsection{Implemented Machine Learning Models}
-Upon preprocessing, the entire dataset was divided into training and testing sets. Specifically, 80\% of the data was used for training, and the remaining 20\% was set aside for testing purposes. This helps in checking the generalization capabilities of the model by ensuring that its performance is tested on unseen data. Seven different regression-based models were employed: Linear Regression; ensemble methods based on trees like Decision Tree, Random Forest, and \Gls{xgboost}; and more complex deep learning models like ANN, LSTM, and GRU. Feature scaling was performed using the \texttt{MinMaxScaler} for Linear Regression and all neural networks, whereas tree-based models were trained without feature scaling since their predictions are scale-invariant.
+Upon preprocessing, the entire dataset was divided into training and testing sets. Specifically, 80\% of the data was used for training, and the remaining 20\% was set aside for testing purposes. This helps in checking the generalization capabilities of the model by ensuring that its performance is tested on unseen data. Seven different regression-based models were employed: Linear Regression; ensemble methods based on trees like Decision Tree, Random Forest, and \Gls{xgboost}; and more complex deep learning models like ANN, LSTM, and GRU \cite{kyriakopoulos_experimental_2026}. Feature scaling was performed using the \texttt{MinMaxScaler} for Linear Regression and all neural networks, whereas tree-based models were trained without feature scaling since their predictions are scale-invariant.
 
 After completing the training stage, each model estimated the load of the power system on the test set. The accuracy of the predictions was assessed using mean absolute error ($MAE$), root-mean-square error ($RMSE$), and $R^2$ statistics based on the results obtained in five-fold cross-validation. Actual vs. predicted scatter plots (Figs. \ref{fig:scatter_lr}–\ref{fig:scatter_gru}) are provided to visualize the accuracy of predictions, and more data points located near the line $y=x$ indicate better prediction accuracy.
 
@@ -775,7 +775,7 @@ Random Forest was trained on \textit{50} decision trees with a maximum depth of 
 \end{figure}
 
 \subsubsection*{(d) XGBoost}
-XGBoost used a learning rate of \textit{0.05}, a maximum tree depth of \textit{2}, and strong $L1$ and $L2$ regularization terms ($\alpha=1, \lambda=5$). All these factors, along with row subsampling (\texttt{subsample = 0.55}), prevent over-convergence on the simulation dataset and prioritize long-term predictive stability.
+XGBoost used a learning rate of \textit{0.05}, a maximum tree depth of \textit{2}, and strong $L1$ and $L2$ regularization terms ($\alpha=1, \lambda=5$). All these factors, along with row subsampling (\texttt{subsample = 0.55}), prevent over-convergence on the simulation dataset and prioritize long-term predictive stability \cite{xgboost_energy2022}.
 
 \begin{figure}[H]
   \centering
@@ -786,7 +786,7 @@ XGBoost used a learning rate of \textit{0.05}, a maximum tree depth of \textit{2
 
 \subsubsection*{(e) Artificial Neural Network (ANN)}
 
-The architecture of ANN has been designed to have three hidden layers (neurons: 128, 64, 32), along with Batch Normalization and 0.2 Dropout. The ANN was trained for 150 iterations with a batch size of 16 using Adam optimization algorithm. It can be observed from Figure \ref{fig:scatter_ann} that the ANN performed very well in extracting higher order non-linearity in the data.
+The architecture of ANN has been designed to have three hidden layers (neurons: 128, 64, 32), along with Batch Normalization and 0.2 Dropout. The ANN was trained for 150 iterations with a batch size of 16 using Adam optimization algorithm. It can be observed from Figure \ref{fig:scatter_ann} that the ANN performed very well in extracting higher order non-linearity in the data, consistent with recent findings in deep-feature-based forecasting \cite{siddiqui2025electric}.
 
 \begin{figure}[H]
   \centering
@@ -806,9 +806,7 @@ The LSTM architecture consisted of two hidden layers with 64 and 32 nodes each, 
   \label{fig:scatter_lstm}
 \end{figure}
 
-\subsubsection*{(g) Gated Recurrent Unit (GRU)}
-
-The GRU model, which is known for being quicker than LSTM, was developed using the same architecture with 64 and 32 hidden unit layers. The model effectively detected the trends in time, but its accuracy was comparable to that of LSTM, with the ANN and trees performing better.
+The GRU model, which is known for being quicker than LSTM, was developed using the same architecture with 64 and 32 hidden unit layers. The model effectively detected the trends in time, but its accuracy was comparable to that of LSTM, with the ANN and trees performing better. These results highlight the challenges of capturing multi-scale temporal dependencies in stochastic charging environments \cite{ran2025ev}.
 
 \begin{figure}[H]
   \centering
@@ -843,13 +841,13 @@ Simulation analysis has been thoroughly carried out to investigate the electrica
   \label{fig:load_profile}
 \end{figure}
 
-The maximum value of power demand occurred when the most active chargers, for example \texttt{pa\_8\_rev}, were overloaded and was equal to 1,340~kW. In general, it could be stated that the mean value was about 723.82~kW, while the value of standard deviation reached 443.80~kW. Such variation may occur because of sudden appearance of a large number of vehicles at the intersections or hubs when power demand increased and decreased soon after it.
+The maximum value of power demand occurred when the most active chargers, for example \texttt{pa\_8\_rev}, were overloaded and was equal to 1,340~kW. In general, it could be stated that the mean value was about 723.82~kW, while the value of standard deviation reached 443.80~kW. Such variation may occur because of sudden appearance of a large number of vehicles at the intersections or hubs when power demand increased and decreased soon after it \cite{ev_simulation2020}.
 
 The status distribution of vehicles defines the amount of time allocated to different statuses. The biggest share of time is consumed by the driving process, which equals 58\%. Clearly, there will always be enough vehicles available for charging. Also, about 35\% of the entries show that the vehicle is charging; therefore, this type uses energy and forms the load. One more type, visible in 5\% of all entries, is waiting.
 
 Not only does it happen somewhere; the road system plays an important role here. Specific roads, such as \texttt{pa\_2} and \texttt{pa\_7}, where the traffic is particularly high, emerge constantly, causing the accumulation of cars in order to charge. Therefore, the areas with heavy traffic become bottlenecks in terms of charging demand.
 
-Apart from that framework itself, an extra feature of recommending the charging sites was introduced to make the process smoother. The system resulted in generating 1,169 recommendations guiding the cars from congested charging stations to those where the capacity was enough for more vehicles. In spite of the fact that this intelligent routing was not the heart of our model prediction algorithm, it ensured that the data obtained would be representative of an intelligent and organized system, not a random mess. This allowed us to obtain more effective machine learning models, which have been formed due to the adjustments of the system and can be easily applied in practice.
+Apart from that framework itself, an extra feature of recommending the charging sites was introduced to make the process smoother. The system resulted in generating 1,169 recommendations guiding the cars from congested charging stations to those where the capacity was enough for more vehicles. In spite of the fact that this intelligent routing was not the heart of our model prediction algorithm, it ensured that the data obtained would be representative of an intelligent and organized system, not a random mess \cite{demand_response2023}. This allowed us to obtain more effective machine learning models, which have been formed due to the adjustments of the system and can be easily applied in practice.
 
 \section{Discussion of Results}
 
@@ -893,7 +891,7 @@ In the equations above, the variables and symbols are defined as follows: $n$ is
 
 \subsubsection{Model Evaluation and Comparative Analysis}
 
-Results from performance evaluation of the proposed model have been provided in Table~\ref{tab:ml_results}. This is done using linear as well as ensemble approaches.
+Results from performance evaluation of the proposed model have been provided in Table~\ref{tab:ml_results}. This is done using linear as well as ensemble approaches, following experimental frameworks established in recent comparative studies of EV load forecasting \cite{kyriakopoulos_experimental_2026}.
 
 \begin{table}[H]
 \caption{ML Model Performance Comparison for System Load Prediction (5-Fold CV)}
@@ -999,19 +997,19 @@ Through the examination of the results obtained using feature importance and cor
 
 \subsection{Urban Infrastructure Planning}
 
-It becomes evident that it is crucial to be thoughtful when choosing the locations for setting up the charging stations in cities since busy intersections and popular places attract lots of cars and act like a vacuum cleaner, sucking all the resources and potentially becoming severe obstacles. Besides, the increase in cars’ number at such a point will not only make the process of movement much slower but will also affect the power network negatively. The developed framework enables one to conduct a series of virtual tests in order to minimize risks and find the most optimal location for the installation of charging stations (e.g., Khulna).
+It becomes evident that it is crucial to be thoughtful when choosing the locations for setting up the charging stations in cities since busy intersections and popular places attract lots of cars and act like a vacuum cleaner, sucking all the resources and potentially becoming severe obstacles. Besides, the increase in cars’ number at such a point will not only make the process of movement much slower but will also affect the power network negatively. The developed framework enables one to conduct a series of virtual tests in order to minimize risks and find the most optimal location for the installation of charging stations \cite{charging_station_placement2021}.
 
 \subsection{Virtual Simulation Environment}
 
-The SUMO simulation environment serves as a virtual representation of city traffic and charging infrastructure. This framework provides detailed insights into vehicle movement and charging dynamics in a controlled setting. It enables the generation of high-quality, high-frequency datasets required for machine learning and allows the testing of various traffic scenarios without real-world risks or logistical barriers. This approach is particularly valuable for regions like Bangladesh, where empirical electric vehicle data is currently scarce.
+The SUMO simulation environment serves as a virtual representation of city traffic and charging infrastructure. This framework provides detailed insights into vehicle movement and charging dynamics in a controlled setting \cite{ev_simulation2020}. It enables the generation of high-quality, high-frequency datasets required for machine learning and allows the testing of various traffic scenarios without real-world risks or logistical barriers. This approach is particularly valuable for regions like Bangladesh, where empirical electric vehicle data is currently scarce.
 
 \subsection{Machine Learning for Load Forecasting}
 
-From a comparative analysis of the ML models, it becomes obvious that tree-based algorithms such as Decision Trees, Random Forests, and \Gls{xgboost} overshadow their counterparts—the linear models. \Gls{xgboost} is the algorithm that strikes the perfect balance between predictive power and generalization. It should be noted that the accuracy is extremely high, almost unreal, which means that the data have highly regular patterns. Summing up all the observations from this research, one can conclude that machine learning is an excellent technique to use in predicting structured \Gls{ev} loads. In line with this conclusion, further research shows that while tree-based models work well in structured environments, hybrid structures like CNN-LSTM-AM should be used to account for more complicated patterns \cite{ran2025ev}.
+From a comparative analysis of the ML models, it becomes obvious that tree-based algorithms such as Decision Trees, Random Forests, and \Gls{xgboost} overshadow their counterparts—the linear models. \Gls{xgboost} is the algorithm that strikes the perfect balance between predictive power and generalization. It should be noted that the accuracy is extremely high, almost unreal, which means that the data have highly regular patterns. Summing up all the observations from this research, one can conclude that machine learning is an excellent technique to use in predicting structured \Gls{ev} loads. In line with this conclusion, further research shows that while tree-based models work well in structured environments, hybrid structures like CNN-LSTM-AM should be used to account for more complicated patterns \cite{ran2025ev, kyriakopoulos_experimental_2026}.
 
 \subsection{Roadmap for Smart and Sustainable Electrification}
 
-In contrast to previous studies, this one proposes an operational model for electric vehicles deployment in developing cities. Simulations produce realistic data, from which machine learning-based forecasting is performed and intelligent charging systems with queuing design are developed. These processes combine to form the \textbf{Monitor-Predict-Control} framework that allows the development of control strategies for managing \Gls{ev}. Thus, institutions and policy makers receive opportunities for designing evidence-based policies for transport and energy sector development. This ensures that the integration of \Gls{ev} will not threaten the power grid operation.
+In contrast to previous studies, this one proposes an operational model for electric vehicles deployment in developing cities. Simulations produce realistic data, from which machine learning-based forecasting is performed and intelligent charging systems with queuing design are developed. These processes combine to form the \textbf{Monitor-Predict-Control} framework that allows the development of control strategies for managing \Gls{ev}. Thus, institutions and policy makers receive opportunities for designing evidence-based policies for transport and energy sector development \cite{ev_growth2025}. This ensures that the integration of \Gls{ev} will not threaten the power grid operation.
 
 \printchaptertitle{Conclusion}
 
@@ -1064,7 +1062,7 @@ charging behavior of the electric vehicle. Due to this, our model will definitel
 \vspace{0.5em}
 \noindent\textbf{Intelligent Charging Optimization:} In this paper, a simple intelligent charging system based on rules is implemented. This provides a simple technique for allocating the energy demand of different vehicles among several charging stations. However, there exists a lot of room for improvement, where more advanced optimization techniques can be applied.
 Future works may include more sophisticated approaches like reinforcement learning,
-genetic algorithms or multi-objective optimization, which provide a self-learning mechanism.
+genetic algorithms or multi-objective optimization, which provide a self-learning mechanism \cite{demand_response2023}.
 Such intelligent systems can automatically decide where to allocate each vehicle in terms of charging,
 based on real-time data related to traffic conditions, station occupancy and power grid limitations.
 This will lead to better load management and lower peak demands on the power grid.
@@ -1079,17 +1077,14 @@ will make the simulation more realistic. Through these improvements, it will bec
 to analyze the performance of the load forecasting models under various circumstances.
 
 \vspace{0.5em}
-\noindent\textbf{Renewable Energy Integration:} The incorporation of renewable energy sources into the system of EV charging stations could also be considered for future study on this topic. This would include
-the creation of a model where EV charging stations use solar panels or hybrid energy systems for their operation. Another potential direction could involve the study of the efficient utilization
-of renewable energy generation to satisfy the charging needs. In this case, studying the time frame for balancing generation and consumption as well as energy storage techniques would be required.
-Through adding renewable energy to the model, transportation would become sustainable.
+\noindent\textbf{Renewable Energy Integration:} The incorporation of renewable energy sources into the system of EV charging stations could also be considered for future study on this topic. This would include the creation of a model where EV charging stations use solar panels or hybrid energy systems for their operation. Another potential direction could involve the study of the efficient utilization of renewable energy generation to satisfy the charging needs, potentially using explainable AI to optimize distribution \cite{sustainability_xai_2025}. In this case, studying the time frame for balancing generation and consumption as well as energy storage techniques would be required. Through adding renewable energy to the model, transportation would become sustainable.
 
 \vspace{0.5em}
 \noindent \textbf{Deployment of Real-Time Systems:}
 The final point for future work is that there should be efforts made towards deployment of the systems in real-time. This involves incorporating machine learning algorithms within the Internet of Things (IoT) enabled Smart Grids where data is constantly collected and analyzed. Using efficient frameworks such as DeepBoost \cite{siddiqui2025electric} may prove to be beneficial in terms of real-time monitoring applications. Deployment of these real-time systems will involve tracking the demands for charging, forecasting trends and managing resources through automation. With these measures, decision making for service providers and policy makers will be greatly assisted. Besides, it will enable bridging the gap between theoretical research and practical transport and energy management.
 
 \renewcommand{\bibname}{References}
-\bibliographystyle{IEEEtran}
+\bibliographystyle{ieeetr}
 \bibliography{references}
 
 \end{document}
