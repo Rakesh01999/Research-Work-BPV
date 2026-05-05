@@ -440,7 +440,6 @@ E10 & Node2 & Khulna Zilla School Stadium & Node7 & PTI More & 850 & 2 & 40 \\
 \end{center}
 \end{table}
 
-\newpage
 These intersections and road sections are linked to various landmarks in the city, such as Islami Bank Intersection, Royal Intersection, PTI Intersection and Rupsha Ferry Ghat. Thus, the created network resembles the real-world geography in terms of location and road connectivity. The whole network uses the left-hand traffic (LHS) system, which is typical for Bangladesh. The choice of Khulna City for the current investigation is motivated by the fact that it is characterized by rapid development of urban infrastructure and use of electric three-wheelers. The chosen landmarks represent the high-traffic points where the need for charging may be expected. The use of this real-life location allows ensuring the relevance of the results obtained from the simulation. The interconnection of roads in Khulna City can be seen in Fig.~\ref{fig:khulna_osm}.
 
 \begin{figure}[H]
@@ -450,7 +449,6 @@ These intersections and road sections are linked to various landmarks in the cit
   \label{fig:khulna_osm}
 \end{figure}
 
-\newpage
 Figure~\ref{fig:sumo_network} presents the customized microscopic network designed in \gls{sumo} with the use of the \texttt{netedit} application. In order to provide realism in the way vehicles flow---in particular, to ensure that traffic jams and vehicle bunching are captured---we have included traffic lights as fixed objects in the most congested areas. This is the reason why we decided to place traffic lights on \textbf{Node 3 (Shordar Tower)} and \textbf{Node 8 (Galaxco More)}. Every traffic light operates on a 90-second cycle that consists of four stages, which are described below.
 
 The effect causes the well-known start-stop traffic pattern, which eventually results in clustering. This process is important since it determines how the demand for charging will be formed. The arrival of a cluster of vehicles with depleted battery power to charging stations due to traffic congestion results in sharp peaks in load demand. Including elements of artificial traffic congestion like stoplights in the simulation makes it feasible to model these peaks in load demand. This is crucial in order to develop and validate models for load demand prediction.
@@ -731,7 +729,7 @@ The others are not very significant in terms of contribution. This is since most
 
 \begin{figure}[H]
   \centering
-  \includegraphics[width=0.98\textwidth]{images/feature_importance.png}
+  \includegraphics[width=\textwidth]{images/feature_importance.png}
   \caption{Feature importance ranking derived from the XGBoost model branches to identify key predictors.}
   \label{fig:feat_imp_method}
 \end{figure}
@@ -742,11 +740,12 @@ Upon preprocessing, the entire dataset was divided into training and testing set
 After completing the training stage, each model estimated the load of the power system on the test set. The accuracy of the predictions was assessed using mean absolute error ($MAE$), root-mean-square error ($RMSE$), and $R^2$ statistics based on the results obtained in five-fold cross-validation. Actual vs. predicted scatter plots (Figs. \ref{fig:scatter_lr}–\ref{fig:scatter_gru}) are provided to visualize the accuracy of predictions, and more data points located near the line $y=x$ indicate better prediction accuracy.
 
 \subsubsection*{(a) Linear Regression}
-Linear Regression shows the relationship between independent variables and the target as a simple weighted sum. In this research, we implemented \textbf{Ridge Regression} ($L2$ regularization). Where regularization strength of $\alpha=100$. This choice was made because the system-level vehicle count has a near linear relationship with charging load. Unregularized regression risked achieving near-perfect training scores but failing to generalize. The regularization helps model to ignore noise in the aggregated simulation data. It also maintains stability across the five fold cross-validation. The prediction is calculated as:
+Linear Regression was applied using Ridge Regression ($L2$ regularization), with $\alpha=100$, to facilitate generalization during the 5-fold cross-validation. Such a decision will mitigate overfitting in the simulation data aggregate due to the nearly linear nature of the vehicle count-to-charging load correlation. 
+The prediction formula is given by:
 \begin{equation}
     y = w_1x_1 + w_2x_2 + \dots + w_nx_n + b
 \end{equation}
-where $w$ represents the weights, $x$ the features, and $b$ the intercept.
+where $w$ is the weight, $x$ is the feature, and $b$ is the intercept.
 
 \begin{figure}[H]
   \centering
@@ -756,7 +755,7 @@ where $w$ represents the weights, $x$ the features, and $b$ the intercept.
 \end{figure}
 
 \subsubsection*{(b) Decision Tree}
-A Decision Tree splits the data into branches based on feature thresholds to minimize the prediction error(variance). To avoid individual data points-"memorizing" in our 600-sample dataset, we constrained the model to a maximum depth of \textit{3} and required at least \textit{30} samples per leaf node. This shallow architecture ensures that each terminal node captures at least 5\% of the training data. That provides an honest and interpretable estimate of system load patterns.
+The decision tree model is restricted to a depth of \textit{3} levels, with at least \textit{30} observations in each leaf node. The model’s limited depth ensures that it will not overfit to any particular step within the simulation, providing a reliable representation of system loads.
 
 \begin{figure}[H]
   \centering
@@ -766,7 +765,7 @@ A Decision Tree splits the data into branches based on feature thresholds to min
 \end{figure}
 
 \subsubsection*{(c) Random Forest}
-Random Forest is an ensemble of multiple decision trees. Where each trained on a bootstrap sample of the data. To maintain robust generalization, we implemented a constrained ensemble of \textit{50} estimators with a maximum depth of \textit{3}. Besides, each split only considered \textit{30\%} of the available features (\textit{max\_features=0.3}). This heavy constraint prevents the forest from over fitting to simulation-specific artifacts. Through which it is ensured that the model identifies the fundamental drivers of load demand.
+Random Forest was trained on \textit{50} decision trees with a maximum depth of \textit{3}. Through the restriction that at most \textit{30\%} of all features be used for splitting, Random Forest ensures that the most critical predictors of load demands are found by the model.
 
 \begin{figure}[H]
   \centering
@@ -776,7 +775,7 @@ Random Forest is an ensemble of multiple decision trees. Where each trained on a
 \end{figure}
 
 \subsubsection*{(d) XGBoost}
-XGBoost is a powerful gradient boosting framework. It builds trees sequentially, with every new tree corrects the errors of the combined group. To apply this into our work, we used a low learning rate (\textit{0.05}) and limited tree stumps (\textit{max\_depth=2}). We also implemented strong $L1$ and $L2$ regularization ($\alpha=1, \lambda=5$) and aggressive row subsampling (\textit{0.55}). These parameters were optimized to prevent the boosting process from over converging on the small training set. Rather, it prioritizes long-term predictive stability over raw training accuracy.
+XGBoost used a learning rate of \textit{0.05}, a maximum tree depth of \textit{2}, and strong $L1$ and $L2$ regularization terms ($\alpha=1, \lambda=5$). All these factors, along with row subsampling (\texttt{subsample = 0.55}), prevent over-convergence on the simulation dataset and prioritize long-term predictive stability.
 
 \begin{figure}[H]
   \centering
@@ -787,7 +786,7 @@ XGBoost is a powerful gradient boosting framework. It builds trees sequentially,
 
 \subsubsection*{(e) Artificial Neural Network (ANN)}
 
-In this research, the ANN was implemented as a Multi-Layer Perceptron(MLP). Which is consisting of 18 input features and followed by three hidden layers with 128, 64, and 32 neurons, respectively. Batch Normalization and Dropout (rate of 0.2) were integrated after the first hidden layer to enhance training stability and prevent overfitting. The model uses non-linear activation functions (ReLU), the Adam optimizer (learning rate of 0.001), and a batch size of 32 for efficient weight updates. As seen in Figure \ref{fig:scatter_ann}, the ANN emerged as the most potent model, with the lowest errors and accurate alignment with the diagonal trend. This is due to its superior capability of learning higher-order features based on the preprocessed data set. It is thus well suited for the dynamic setting of EV charging stations.
+The architecture of ANN has been designed to have three hidden layers (neurons: 128, 64, 32), along with Batch Normalization and 0.2 Dropout. The ANN was trained for 150 iterations with a batch size of 16 using Adam optimization algorithm. It can be observed from Figure \ref{fig:scatter_ann} that the ANN performed very well in extracting higher order non-linearity in the data.
 
 \begin{figure}[H]
   \centering
@@ -798,7 +797,7 @@ In this research, the ANN was implemented as a Multi-Layer Perceptron(MLP). Whic
 
 \subsubsection*{(f) Long Short-Term Memory (LSTM)}
 
-In our model, we employed LSTM to explore whether the temporal pattern present within the 600 seconds' simulation period can bring about additional predictive value. Our architecture is comprised of an LSTM layer (size 64; \texttt{return\_sequences=True}), 0.2 Dropout, an LSTM layer (size 32), 0.2 Dropout, and a Dense layer with 16 neurons with ReLU activations. A look back window of $W = 5$ was used. That means that the model considers the previous five seconds of system state to estimate the current load. Training was performed using the Adam optimizer and Mean Squared Error ($MSE$) loss, with an \textit{EarlyStopping} callback (patience of 5) to restore the best weights and prevent overfitting. However, when the model performed well, it struggled slightly more than the ANN, which is reflected in the spread of points in Figure \ref{fig:scatter_lstm}. This provides suggestion that- while time is important, the current system state (instantaneous features) might already carry enough information for dense networks to outperform purely sequential ones in this specific simulation scale.
+The LSTM architecture consisted of two hidden layers with 64 and 32 nodes each, dropout of 0.2, and dense layer of 16 nodes. The lookback window size $W = 5$ was employed to extract short-term dependencies. Although the predictions were accurate, the outcomes indicate that instantaneous features contain enough information to estimate the load.
 
 \begin{figure}[H]
   \centering
@@ -809,9 +808,7 @@ In our model, we employed LSTM to explore whether the temporal pattern present w
 
 \subsubsection*{(g) Gated Recurrent Unit (GRU)}
 
-Gated Recurrent Unit (GRU) is a variation of the LSTM that simplifies the gating mechanism. It combines the forget and input gates into a single "update gate" and merges the cell state and hidden state. This makes GRUs computationally faster and often more efficient than LSTMs while still retaining the ability to process sequential information.
-
-We implemented GRU as a faster alternative to LSTM to capture temporal dynamics, utilizing an identical structure consisting of stacked \textit{64} and \textit{32}-unit GRU layers with intervening \textit{Dropout} (0.2). As with the LSTM architecture, a final \textit{16}-neuron fully connected layer with ReLU activation is used to process the features before prediction. In our evaluations, its performance was similar to LSTM, proving that recurrent architectures can capture the general trend of the system load. However, as illustrated in the scatter plots, it fell behind the ANN and tree-based models in terms of raw precision on the test set. Nevertheless, it remains a strong candidate for real-time applications where processing speed is as critical as accuracy.
+The GRU model, which is known for being quicker than LSTM, was developed using the same architecture with 64 and 32 hidden unit layers. The model effectively detected the trends in time, but its accuracy was comparable to that of LSTM, with the ANN and trees performing better.
 
 \begin{figure}[H]
   \centering
@@ -820,8 +817,11 @@ We implemented GRU as a faster alternative to LSTM to capture temporal dynamics,
   \label{fig:scatter_gru}
 \end{figure}
 
+\subsection{Model Selection Rationale and Comparative Summary}
 
+The chosen machine learning algorithms range from easily interpreted linear models to sophisticated neural network architectures. The tree ensemble algorithms (Random Forest and XGBoost) were selected because of their superior performance in tabular data classification, and the recurrent networks (LSTM and GRU) were employed to detect any potential serial dependencies.
 
+The \textbf{ANN model yielded the highest accuracy} ($R^2 \approx 0.9967$) due to its ability to capture complex non-linear dependencies between system level parameters (like active charging EVs) and power consumption. Neural networks are highly effective in high frequency datasets where there is a strong relationship between the state of the physical system and the generated electrical load. This explains the high accuracy of the ANN and Ridge Regression models, implying that the current state of the system is enough information to predict the load accurately.
 
 % ================================================================
 % CHAPTER 4: RESULTS AND DISCUSSION
@@ -1003,7 +1003,7 @@ It becomes evident that it is crucial to be thoughtful when choosing the locatio
 
 \subsection{Virtual Simulation Environment}
 
-The sumo simulation environment is analogous to having a virtual replica of city traffic and charging infrastructure. Such a simulation could provide insight into the movement and charging processes involved in a dynamic way. This would enable the creation of quality data sets required for machine learning as well as the execution of different traffic and charging scenarios without any dangers involved and without ever hitting the road. This is especially helpful for regions that lack the actual data concerning electric vehicles.
+The SUMO simulation environment serves as a virtual representation of city traffic and charging infrastructure. This framework provides detailed insights into vehicle movement and charging dynamics in a controlled setting. It enables the generation of high-quality, high-frequency datasets required for machine learning and allows the testing of various traffic scenarios without real-world risks or logistical barriers. This approach is particularly valuable for regions like Bangladesh, where empirical electric vehicle data is currently scarce.
 
 \subsection{Machine Learning for Load Forecasting}
 
@@ -1022,7 +1022,7 @@ The simulated data had 34,020 entries and 25 attributes. Monitoring each vehicle
 
 
 \section{Concluding Remarks}
-This study provides several distinct contributions to the field of electric vehicle charging load prediction, particularly within the context of urban mobility in developing regions. By integrating microscopic traffic simulation with high-performance machine learning models, the research addresses the critical gap in localized dataset availability. The unique strengths and key highlights of this analysis are summarized as follows:
+\noindent This study provides several distinct contributions to the field of electric vehicle charging load prediction, particularly within the context of urban mobility in developing regions. By integrating microscopic traffic simulation with high-performance machine learning models, the research addresses the critical gap in localized dataset availability. The unique strengths and key highlights of this analysis are summarized as follows:
 
 \begin{enumerate}
   \item The construction of a highly efficient SUMO-based microscopic simulator \cite{sumo2018} tailored specifically to handle the wide variety of vehicles used in Bangladesh – namely Easy Bikes, Electric Rickshaws, and Electric Vans.
@@ -1031,11 +1031,11 @@ This study provides several distinct contributions to the field of electric vehi
   \item Development of the rule-based smart charging strategy, illustrating how real-time rerouting of vehicles according to \Gls{soc} can be implemented to alleviate any potential grid congestion.
 \end{enumerate}
 
-Simulation data can be seen from our findings to be very effective in cases where \Gls{ev}-based charging datasets are difficult to access, particularly in rapidly changing environments such as Bangladesh. In this study, we have provided policymakers and electricity companies with an approach based on data to follow during the transportation electrification era.
+\noindent Simulation data can be seen from our findings to be very effective in cases where \Gls{ev}-based charging datasets are difficult to access, particularly in rapidly changing environments such as Bangladesh. In this study, we have provided policymakers and electricity companies with an approach based on data to follow during the transportation electrification era.
 
 \section{Limitations}
 
-In spite of having attained reliable findings on the prediction of EV load and simulation, there are various limitations attached to this research. These should be considered while assessing the findings and suggesting improvements for the future.
+\noindent In spite of having attained reliable findings on the prediction of EV load and simulation, there are various limitations attached to this research. These should be considered while assessing the findings and suggesting improvements for the future.
 
 \vspace{0.5em}
 \noindent\textbf{Reliance on Simulation Data:} 
@@ -1053,7 +1053,7 @@ charging behavior of the electric vehicle. Due to this, our model will definitel
 
 \section{Recommendations for Further Research}
 
-To facilitate further expansion of the research scope and relevance, several suggestions for future works are given below:
+\noindent To facilitate further expansion of the research scope and relevance, several suggestions for future works are given below:
 
 \vspace{0.5em}
 \noindent\textbf{Inclusion of Real-Life Data:} In order to ensure validity and applicability in practice, researchers have to rely heavily on real-life EV charging and traffic data. The \Gls{sumo} simulation provides control and precision, yet, lacking a significant amount of real-life data, fails to cover many critical points. The actual traffic situation tends to be unpredictable due to multiple reasons: driver’s behaviour is highly irregular, current infrastructure is often not able to meet the current needs, demand may vary significantly in a variety of ways that might go unnoticed in simulations. Including data from EV stations, smart metering systems, or transportation agencies will allow the model of the future to benefit from practical experience, making the prediction much more complicated, but also realistic and applicable. It will greatly enhance applicability of the developed model by connecting it to the real life and allowing integration into smart grid applications (in countries such as Bangladesh).
