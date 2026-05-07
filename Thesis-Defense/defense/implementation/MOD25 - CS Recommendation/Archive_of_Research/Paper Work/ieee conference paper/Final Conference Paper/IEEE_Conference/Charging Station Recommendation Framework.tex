@@ -33,19 +33,21 @@
 \title{A Simulation-Based Multi-Criteria Charging Station Recommendation Framework for
 Electric Vehicles Using SUMO and TraCI}
 
-\author{
-\IEEEauthorblockN{Rakesh Biswas, Monishanker Halder, Md. Mahmudul Amin Shakil}
-\IEEEauthorblockA{\textit{Department of Computer Science \& Engineering}\\
-\textit{Jashore University of Science and Technology (JUST)}\\
-Jashore, Bangladesh\\
-200112.cse@student.just.edu.bd, m.halder@just.edu.bd, 200106.cse@student.just.edu.bd}
-}
+% \author{
+% \IEEEauthorblockN{Rakesh Biswas, Monishanker Halder, Md. Mahmudul Amin Shakil}
+% \IEEEauthorblockA{\textit{Department of Computer Science \& Engineering}\\
+% \textit{Jashore University of Science and Technology (JUST)}\\
+% Jashore, Bangladesh\\
+% 200112.cse@student.just.edu.bd, m.halder@just.edu.bd, 200106.cse@student.just.edu.bd}
+% }
+% \author{\IEEEauthorblockN{Anonymous Authors}}
+
 
 \maketitle
 
 %-------------------------------------------------------
 \begin{abstract}
-The rapid growth of electric three-wheelers in Bangladesh has strained urban power infrastructure. This paper presents a simulation-based EV charging station recommendation framework developed using Eclipse SUMO and TraCI. Modeling a realistic urban scenario in Khulna city with a heterogeneous fleet, the proposed multi-criteria decision model monitors vehicle SoC, occupancy, and grid load to provide real-time recommendations. Experimental results show a 90.1\% potential recommendation rate, significantly outperforming the 66\% nearest-only baseline, while effectively reducing congestion. The simulation recorded a peak demand of 1.37 MW, providing a dataset of 33,721 records for future smart grid studies.
+The increasing popularity of electric three-wheelers in Bangladesh has caused stress on urban power infrastructure. This study suggests an EV Charging Station Recommendation System based on the implementation of Eclipse SUMO \& TraCI. Using Eclipse SUMO \& TraCI, a realistic scenario in the Khulna city with the use of heterogeneous vehicles is considered for the proposed multi-criteria decision making model for providing the recommendations of the stations based on SoC, occupancy, and load information. An experiment was conducted which shows a promising recommendation rate of 90.1\%, whereas the recommendation rate of only considering nearest stations is merely 66\%. The simulation showed a peak of 1.37 MW, which resulted in the collection of 33,721 data points for further analysis.
 \end{abstract}
 
 \begin{IEEEkeywords}
@@ -118,7 +120,7 @@ evaluation with nearest only baseline using four performance metrics;
 \section{Related Work}
 %=======================================================
 
-Current research in EV infrastructure planning often utilizes multi-objective optimization and multi-criteria decision-making (MCDM) like AHP and TOPSIS to site stations and manage demand \cite{b1, b2, b5, b6}. Real-time routing and AI-based selection methods, including reinforcement learning, have been explored using simulators like SUMO to balance grid loads and reduce traffic \cite{b7, b10, b12, b17}. Siddiqui et al. \cite{b8} highlighted the importance of feature engineering for forecasting accuracy. However, a gap remains in addressing corridor-limited fleets like South Asian Easy Bikes in an advisory mode that preserves simulation integrity while handling heterogeneous battery capacities \cite{b15}. This paper fills these gaps by providing a calibrated SUMO model and a multi-criteria algorithm evaluated against realistic load-balancing metrics.
+Recent studies on planning infrastructure for EVs have relied on multi-objective optimization and MCDM techniques such as AHP and TOPSIS for station location and demand management \cite{b1, b2, b5, b6}. Real-time routing and AI-driven selection strategies such as reinforcement learning were explored via simulation environments such as SUMO to address grid loading problems and minimize traffic \cite{b7, b10, b12, b17}. The significance of feature engineering for forecasting was pointed out by Siddiqui et al. \cite{b8}. Still, there is a need to fill the research gap related to corridor-based fleets such as South Asian Easy Bikes through advising, keeping simulation consistency while accounting for different capacities of the batteries used \cite{b15}. This paper aims to fill those gaps with a simulated SUMO environment and multi-criteria algorithm.
 
 
 %=======================================================
@@ -305,21 +307,13 @@ using Euclidean distance for computational efficiency at every 1 second
 polling interval. The top two candidates (closest and second-closest).
 Then go through the decision logic below.
 
-\subsection{SoC Priority Classification}
+\subsection{Priority classification of recommendations based on SoC of the vehicle}
 
-Based on the vehicle's current SoC , each recommendation event is tagged with one of 3 priority levels 
-: CRITICAL (SoC $<$ 20\%), HIGH
-(20\% $\leq$ SoC $<$ 30\%), and MEDIUM (30\% $\leq$ SoC $<$ 50\%).
-Priority-level tagging serves a significant purpose. It controls the
-urgency of console alerts during simulation (CRITICAL and HIGH events
-trigger verbose output).
+For every recommendation event generated by the system, the SoC of the vehicle is considered to assign one of the 3 priority levels – CRITICAL (when SoC $<$ 20\%), HIGH (20\% $\leq$ SoC $<$ 30\%) and MEDIUM (30\% $\leq$ SoC $<$ 50\%). Assigning priority level to every recommendation event plays an important role for the following reasons:
 \begin{itemize}
-  \item \textbf{CRITICAL} (SoC $<$ 20\%): immediate action required
-        --- risk of battery depletion in transit.
-  \item \textbf{HIGH} (20\% $\leq$ SoC $<$ 30\%): urgent --- vehicle
-        should charge at the next available opportunity.
-  \item \textbf{MEDIUM} (30\% $\leq$ SoC $<$ 50\%): proactive
-        recommendation --- vehicle can reach the station comfortably.
+  \item \textbf{CRITICAL} (SoC $<$ 20\%): Immediate attention is needed since there is a chance of battery exhaustion during the journey.
+  \item \textbf{HIGH} (20\% $\leq$ SoC $<$ 30\%): Urgent attention is required since it needs to charge at the next possible station.
+  \item \textbf{MEDIUM} (30\% $\leq$ SoC $<$ 50\%): Proactive recommendation since the vehicle will be able to arrive at the station comfortably.
 \end{itemize}
 
 \subsection{Directional Constraint and Advisory Mode}
@@ -518,13 +512,25 @@ Advisory Mode (both saturated)    & 108 &  9.2\% \\
 
 \subsection{Station Utilisation Distribution}
 
-Station pa\_8 received the highest recommendation share (32.4\% of all
-events). Which reflects its large slot capacity (5 charging + 3 waiting
-forward, 10 + 6 reverse) and power rating up to 50 kW combined with a
-central network position. Stations pa\_7 and pa\_3\_rev came in second
-and third with 14.7\% and 14.0\% respectively. Significantly, all ten
-stations received at least 1.5\% of recommendations, confirming that
-the multi-criteria scoring model \cite{b7, b12} widely distributes demand.
+Station pa\_8 had the greatest proportion of recommendations (32.4\%), which is attributed to its larger size and location in a central point. All the ten stations had recommendations, indicating that the multi-criteria score-based approach \cite{b7, b12} is capable of distributing demand well. Figure~\ref{fig:entry_exit} shows dynamics in the simulation in real time of station pa\_2, whereby part (a) shows multiple vehicle arrivals at t=126.5 s, while part (b) illustrates the vehicle departures at t=385.0 s.
+
+\begin{figure}[htbp]
+  \centering
+  \begin{subfigure}[b]{0.45\columnwidth}
+    \centering
+    \includegraphics[width=\linewidth]{figures/entry.PNG}
+    \caption{}
+  \end{subfigure}
+  \hfill
+  \begin{subfigure}[b]{0.45\columnwidth}
+    \centering
+    \includegraphics[width=\linewidth]{figures/exit.PNG}
+    \caption{}
+  \end{subfigure}
+  \caption{Snapshots of vehicle (a) entry and (b) exit at charging station pa\_2 corridors.}
+  \label{fig:entry_exit}
+\end{figure}
+
 
 \subsection{Comparative Evaluation: Proposed vs. Nearest-Only Baseline}
 
@@ -660,23 +666,26 @@ during CRITICAL/HIGH events) in 27.9\% of all events = 326 events.
   \label{eq:hpsdr_base}
 \end{equation}
 
-\textbf{Interpretation}: An HPSDR of 27.9\% demonstrates that the
-framework doesn't apply a blanket nearest-station rule even under
-battery urgency --- it actively reasons about availability and routes
-critically depleted vehicles to the best accessible station. The 27.9
-percentage-point advantage over the baseline is particularly significant
-in the Khulna context, where running out of charge mid-route leaves an
-Easy Bike or E-Rickshaw stranded, blocking traffic and causing immediate
-income loss for the driver. The baseline achieves HPSDR = 0\% because
-it has no mechanism to deviate from the nearest station regardless of
-urgency level.
+\textbf{Interpretation}: A value of HPSDR of 27.9\% shows that the
+framework does not simply assume the nearest-station policy
+even under high levels of battery urgency but, rather,
+reasons about availability and allocates the most critically
+affected vehicles to the nearest possible station. A 27.9\%
+difference between our framework and the baseline is highly
+relevant in the case of Khulna, where being out of battery
+midway on a journey means that the Easy Bike or E-Rickshaw
+gets stuck and causes traffic as well as income loss for
+the operator. Baseline HPSDR is equal to 0\% since there is
+no way the baseline framework can diverge from the nearest
+station due to the lack of an urgency level parameter.
 
-\subsubsection{Average Distance to Recommended Station}: This metric reports the mean Euclidean
-straight-line distance (in metres) from a vehicle's position at the
-moment of recommendation to the station it is recommended to visit. It
-serves as the primary cost metric to assess the trade-off incurred by
-congestion-aware routing: redirecting vehicles to alternative stations
-necessarily increases travel distance.
+\subsubsection{Average Distance to Recommended Station} This measure gives
+the average straight-line distance (in meters) between a
+vehicle’s location at the time of recommendation and the
+recommended station. It acts as the cost factor to be
+balanced against the benefit gained from congestion avoidance
+since routing away from the nearest station increases
+travel distance.
 
 
 \textbf{Calculation Formula}:
